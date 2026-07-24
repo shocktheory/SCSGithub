@@ -1,53 +1,62 @@
-import { SCHEMA_VERSION } from '@domain/schemaVersion';
+import { useEffect, useState } from 'react';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { queryClient } from '../lib/data';
+import { ensureSeeded } from '../storage/bootstrap';
+import { AppShell } from './AppShell';
+import { NAV } from './nav';
+import { OverviewPage } from '../features/overview/OverviewPage';
+import { OSRegistryPage } from '../features/os/OSRegistryPage';
+import { ProductsPage } from '../features/products/ProductsPage';
+import { ProductCommandPage } from '../features/products/ProductCommandPage';
+import { PublicationsPage } from '../features/publications/PublicationsPage';
+import { SettingsPage } from '../features/settings/SettingsPage';
+import { PlaceholderPage } from '../features/PlaceholderPage';
 
 /**
- * Phase 0 shell.
- *
- * This is an intentionally inert placeholder that proves the toolchain compiles
- * and the design tokens render. No feature UI (the 11 navigation sections) is
- * built yet — that begins in Phase 1 after Product Owner review.
+ * SCS application root.
+ * HashRouter is used so the static build deep-links correctly on the PHP host
+ * without server rewrite rules (deploy-safe for shocktheoryos.com).
  */
 export function App() {
+  const [ready, setReady] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    ensureSeeded()
+      .then(() => setReady(true))
+      .catch((e) => setError(e instanceof Error ? e.message : 'Failed to initialize storage'));
+  }, []);
+
+  if (error) return <Fallback>Storage error: {error}</Fallback>;
+  if (!ready) return <Fallback>Loading workspace…</Fallback>;
+
   return (
-    <main
-      style={{
-        minHeight: '100dvh',
-        display: 'grid',
-        placeItems: 'center',
-        padding: 'var(--space-6)',
-      }}
-    >
-      <section
-        style={{
-          maxWidth: 560,
-          background: 'var(--surface)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-card)',
-          padding: 'var(--space-7)',
-        }}
-      >
-        <p
-          style={{
-            margin: 0,
-            fontSize: 12,
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            color: 'var(--text-muted)',
-          }}
-        >
-          ShockTheory Constitutional System
-        </p>
-        <h1 style={{ margin: '8px 0 12px', fontSize: 28, fontWeight: 600 }}>
-          Executive operating environment
-        </h1>
-        <p style={{ margin: 0, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-          Phase 0 scaffold. The toolchain, design tokens, and typed domain model are in
-          place. Feature sections begin in Phase 1 after Product Owner review.
-        </p>
-        <p style={{ marginTop: 'var(--space-5)', fontSize: 13, color: 'var(--text-muted)' }}>
-          Data schema v{SCHEMA_VERSION}
-        </p>
-      </section>
-    </main>
+    <QueryClientProvider client={queryClient}>
+      <HashRouter>
+        <AppShell>
+          <Routes>
+            <Route path="/" element={<OverviewPage />} />
+            <Route path="/os" element={<OSRegistryPage />} />
+            <Route path="/products" element={<ProductsPage />} />
+            <Route path="/products/:id" element={<ProductCommandPage />} />
+            <Route path="/publications" element={<PublicationsPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            {NAV.filter((n) => !n.live).map((n) => (
+              <Route key={n.path} path={n.path} element={<PlaceholderPage item={n} />} />
+            ))}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </AppShell>
+      </HashRouter>
+    </QueryClientProvider>
+  );
+}
+
+function Fallback({ children }: { children: React.ReactNode }) {
+  return (
+    <div style={{ minHeight: '100dvh', display: 'grid', placeItems: 'center', color: 'var(--text-muted)', fontSize: 14 }}>
+      {children}
+    </div>
   );
 }

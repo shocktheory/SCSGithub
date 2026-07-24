@@ -1,0 +1,140 @@
+/*
+ * SCS component styling — one coherent visual family.
+ * Executive, calm, premium. Soft glass surfaces, very light borders, low-contrast
+ * elevation, generous spacing. Motion communicates state, never decoration.
+ */
+
+/* ---------------- Surfaces ---------------- */
+.scs-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: var(--space-5);
+  position: relative;
+}
+.scs-card--glass {
+  background: linear-gradient(180deg, rgba(32, 55, 99, 0.28) 0%, rgba(22, 27, 37, 0.55) 100%);
+  backdrop-filter: blur(8px);
+}
+.scs-card--interactive {
+  transition: transform var(--duration-scs) var(--ease-scs),
+    border-color var(--duration-scs) var(--ease-scs),
+    background var(--duration-scs) var(--ease-scs);
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.scs-card--interactive:hover {
+  transform: translateY(-2px);
+  border-color: rgba(65, 143, 255, 0.4);
+  background: var(--surface-raised);
+}
+
+/* ---------------- Badges ---------------- */
+.scs-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+.scs-badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  flex: none;
+}
+/* Authority states — proposed must never read as approved. */
+.scs-badge--approved   { color: var(--status-approved); background: rgba(95, 208, 160, 0.12); border-color: rgba(95, 208, 160, 0.28); }
+.scs-badge--proposed   { color: var(--status-proposed); background: rgba(143, 169, 255, 0.12); border-color: rgba(143, 169, 255, 0.28); }
+.scs-badge--verified   { color: var(--color-soft-sky); background: rgba(129, 184, 231, 0.12); border-color: rgba(129, 184, 231, 0.26); }
+.scs-badge--reported   { color: var(--text-muted); background: rgba(138, 147, 166, 0.10); border-color: rgba(138, 147, 166, 0.24); }
+.scs-badge--superseded { color: var(--status-superseded); background: rgba(138, 147, 166, 0.08); border-color: rgba(138, 147, 166, 0.20); text-decoration: line-through; }
+.scs-badge--review     { color: var(--status-review); background: rgba(240, 198, 116, 0.12); border-color: rgba(240, 198, 116, 0.28); }
+.scs-badge--risk       { color: var(--status-risk); background: rgba(232, 145, 122, 0.12); border-color: rgba(232, 145, 122, 0.28); }
+.scs-badge--neutral    { color: var(--text-secondary); background: rgba(185, 185, 185, 0.08); border-color: var(--border); }
+
+/* ---------------- Buttons ---------------- */
+.scs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 9px 16px;
+  border-radius: var(--radius-control);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform var(--duration-scs) var(--ease-scs),
+    background var(--duration-scs) var(--ease-scs),
+    border-color var(--duration-scs) var(--ease-scs);
+  font-family: inherit;
+}
+.scs-btn:active { transform: translateY(1px); }
+.scs-btn--primary { background: var(--gradient-primary); color: var(--text-on-accent); }
+.scs-btn--primary:hover { filter: brightness(1.05); }
+.scs-btn--secondary { background: rgba(255, 255, 255, 0.04); border-color: var(--border); color: var(--text-primary); }
+.scs-btn--secondary:hover { border-color: rgba(65, 143, 255, 0.5); background: rgba(65, 143, 255, 0.08); }
+.scs-btn--tertiary { background: transparent; color: var(--color-soft-sky); padding: 8px 10px; }
+.scs-btn--tertiary:hover { background: rgba(65, 143, 255, 0.08); }
+
+/* ---------------- Page header ---------------- */
+.scs-page-header { margin-bottom: var(--space-6); }
+.scs-page-header__eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 6px;
+}
+.scs-page-header__title { font-size: 26px; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+.scs-page-header__subtitle { color: var(--text-secondary); margin: 8px 0 0; max-width: 68ch; line-height: 1.55; }
+
+/* ---------------- Empty state (every empty state teaches) ---------------- */
+.scs-empty {
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-card);
+  padding: var(--space-7) var(--space-6);
+  text-align: center;
+  background: rgba(255, 255, 255, 0.015);
+}
+.scs-empty__title { font-size: 16px; font-weight: 600; margin: 0 0 8px; }
+.scs-empty__body { color: var(--text-secondary); margin: 0 auto; max-width: 52ch; line-height: 1.6; font-size: 14px; }
+
+/* ---------------- Gate timeline ---------------- */
+.scs-timeline { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.scs-timeline__step { display: flex; align-items: center; gap: 4px; }
+.scs-timeline__node {
+  width: 10px; height: 10px; border-radius: 999px;
+  border: 2px solid var(--border); background: transparent; flex: none;
+}
+.scs-timeline__node--done { background: var(--status-approved); border-color: var(--status-approved); }
+.scs-timeline__node--active { background: var(--color-electric-blue); border-color: var(--color-electric-blue); box-shadow: 0 0 0 4px rgba(65, 143, 255, 0.16); }
+.scs-timeline__connector { width: 22px; height: 2px; background: var(--border); }
+.scs-timeline__label { font-size: 12px; color: var(--text-muted); margin-left: 4px; }
+
+/* ---------------- Seed / demo flag ---------------- */
+.scs-seed-flag {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11.5px; font-weight: 600; color: var(--status-review);
+  background: rgba(240, 198, 116, 0.10); border: 1px solid rgba(240, 198, 116, 0.28);
+  padding: 3px 10px; border-radius: 999px;
+}
+
+/* ---------------- Metadata rows ---------------- */
+.scs-meta { display: grid; gap: 10px; }
+.scs-meta__row { display: grid; grid-template-columns: 148px 1fr; gap: 12px; align-items: baseline; }
+.scs-meta__key { font-size: 12.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.scs-meta__val { font-size: 14px; color: var(--text-primary); }
+@media (max-width: 560px) {
+  .scs-meta__row { grid-template-columns: 1fr; gap: 2px; }
+}
