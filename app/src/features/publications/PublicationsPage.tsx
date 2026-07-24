@@ -1,6 +1,6 @@
 import { useCollection, indexById } from '../../lib/data';
-import { PageHeader, Card, MetaGrid, StatusBadge, AuthorityBadge, GateTimeline, SectionTitle } from '../../design-system/components';
-import { FAMILY_LABEL, publicationTimeline, authorityTone } from '../../lib/derive';
+import { PageHeader, SectionTitle, PublicationCard } from '../../design-system/components';
+import { FAMILY_LABEL } from '../../lib/derive';
 import type { Publication, PublicationPhase, Product, AICollaborator } from '../../domain/entities';
 
 const FAMILY_QUESTION: Record<Publication['family'], string> = {
@@ -24,7 +24,7 @@ export function PublicationsPage() {
       <PageHeader
         eyebrow="Publication system"
         title="Publications"
-        subtitle="The three official publication families, each phase-gated. Product status and publication status are kept distinct."
+        subtitle="The three official publication families, each phase-gated — living constitutional artifacts, not archived documents. Product status and publication status are kept distinct."
       />
 
       {FAMILY_ORDER.map((family) => {
@@ -38,32 +38,13 @@ export function PublicationsPage() {
             </p>
             <div style={{ display: 'grid', gap: 14 }}>
               {familyPubs.map((pub) => (
-                <Card key={pub.id}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap', marginBottom: 16 }}>
-                    <div>
-                      <div style={{ fontSize: 12, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        Vol {pub.volume} · {productById.get(pub.product)?.name ?? pub.product}
-                      </div>
-                      <div style={{ fontSize: 17, fontWeight: 600, marginTop: 3 }}>{pub.title}</div>
-                    </div>
-                    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                      <StatusBadge label={pub.status} tone={authorityTone(pub.authorityStatus)} />
-                      <AuthorityBadge state={pub.authorityStatus} />
-                    </div>
-                  </div>
-                  <GateTimeline steps={publicationTimeline(pub, phases.data ?? [])} />
-                  <div style={{ marginTop: 16 }}>
-                    <MetaGrid
-                      rows={[
-                        ['Product', productById.get(pub.product)?.name ?? '—'],
-                        ['Current owner', pub.ownerAI ? (aiById.get(pub.ownerAI)?.name ?? pub.ownerAI) : '—'],
-                        ['Version', pub.version],
-                        ['Confidentiality', pub.confidentiality],
-                        ['Notes', pub.notes ?? '—'],
-                      ]}
-                    />
-                  </div>
-                </Card>
+                <PublicationCard
+                  key={pub.id}
+                  pub={pub}
+                  phases={phases.data ?? []}
+                  productName={productById.get(pub.product)?.name}
+                  ownerName={pub.ownerAI ? aiById.get(pub.ownerAI)?.name : undefined}
+                />
               ))}
             </div>
           </section>

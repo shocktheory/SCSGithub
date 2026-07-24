@@ -3,6 +3,31 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-phase1-rev01] — 2026-07-24
+
+Executive Snapshot — Product Owner Review, Revision 01. Maturity step from dashboard toward
+constitutional operating environment. No redesign; the approved visual language is preserved.
+
+### Changed
+- Renamed "Overview" → **Executive Snapshot** (approved constitutional terminology).
+- Page reorganized into executive layers: Current Operating State → Immediate Decisions →
+  Risks & Constitutional Awareness → Recommended Next Action → Products → Publications →
+  AI Coordination → Recent Constitutional Activity.
+- **Current Operating State** is now a hero / Mission Control panel — the visual anchor, read first.
+- **Immediate Decisions** surfaces quantities before descriptions (approvals waiting,
+  constitutional reviews, unresolved decisions).
+- **Recommended Next Action** elevated to the highest-hierarchy card ("If you do one thing today").
+- **Products** now communicate maturity, constitutional status, current phase, operational health.
+- **Publications** presented as living constitutional artifacts (type, volume, current gate, state).
+- **AI Work → AI Coordination** workspace: current assignment, expected deliverable, waiting on,
+  status, dependencies, risks per collaborator.
+
+### Added
+- **Constitutional Awareness** — a data-driven "compiler" that surfaces constitutional signals
+  (e.g. canonical statements missing approved wording, an undated locked change).
+- **Recent Constitutional Activity** timeline driven by sync-code updates.
+- Reusable ProductCard, PublicationCard, AICoordinationRow, StatTile, MaturityMeter components.
+
 ## [0.1.0-phase1] — 2026-07-24
 
 Phase 1 — Functional shell, registries, seed data, local persistence.

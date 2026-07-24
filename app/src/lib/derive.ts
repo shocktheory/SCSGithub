@@ -1,5 +1,5 @@
 import type { AuthorityState } from '../domain/authority';
-import type { Publication, PublicationPhase } from '../domain/entities';
+import type { Product, Publication, PublicationPhase } from '../domain/entities';
 import type { TimelineStep } from '../design-system/components';
 
 /** Map an authority state to a StatusBadge tone (color is never the only signal). */
@@ -18,6 +18,38 @@ export const FAMILY_LABEL: Record<Publication['family'], string> = {
   workflow: 'Workflow Playbook',
   component: 'Component Playbook',
 };
+
+/** The publication's current phase/gate label ("what gate is it at"). */
+export function currentGateLabel(pub: Publication, phases: PublicationPhase[]): string {
+  const current = phases.find((p) => p.id === pub.currentPhase);
+  if (current) return current.name;
+  return '—';
+}
+
+/**
+ * Product maturity (0–1) derived from its publications' phase progress, with a
+ * plain-language label. No maturity is invented — a product with no publications
+ * reads as "Early".
+ */
+export function productMaturity(
+  product: Product,
+  pubs: Publication[],
+  phases: PublicationPhase[],
+): { value: number; label: string } {
+  const own = pubs.filter((p) => p.product === product.id);
+  if (own.length === 0) return { value: 0.08, label: 'Early' };
+
+  const scores = own.map((pub) => {
+    const own = phases.filter((ph) => ph.publication === pub.id).sort((a, b) => a.order - b.order);
+    if (own.length === 0) return pub.authorityStatus === 'approved' ? 1 : 0.05;
+    const approved = own.filter((ph) => ph.authorityStatus === 'approved').length;
+    const active = own.some((ph) => ph.id === pub.currentPhase) ? 0.5 : 0;
+    return Math.min(1, (approved + active) / own.length);
+  });
+  const value = scores.reduce((a, b) => a + b, 0) / scores.length;
+  const label = value < 0.25 ? 'Early' : value < 0.5 ? 'Developing' : value < 0.78 ? 'Maturing' : 'Mature';
+  return { value, label };
+}
 
 /** Build a phase-gate timeline for a publication from its phases. */
 export function publicationTimeline(pub: Publication, phases: PublicationPhase[]): TimelineStep[] {

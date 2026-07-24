@@ -11,6 +11,7 @@ import type {
   Artifact,
   CanonicalStatement,
   NextAction,
+  Update,
 } from '../domain/entities';
 
 /**
@@ -256,8 +257,9 @@ const aiCollaborators: AICollaborator[] = [
     name: 'Claude',
     role: 'Publication design, product writing, documentation, and assigned code projects.',
     assignedProduct: 'prod-kidlytics',
-    currentTask: 'SCS build — Phase 1 functional shell.',
-    waitingState: 'Working',
+    currentTask: 'SCS build — Executive Snapshot Revision 01.',
+    waitingState: 'Product Owner review',
+    expectedNextAction: 'Begin Phase 2 (Governance) on approval.',
     openQuestions: [],
     conflictsDetected: [],
     authorityStatus: 'reported',
@@ -288,11 +290,20 @@ const assignments: Assignment[] = [
     id: 'assign-claude-scs',
     collaborator: 'ai-claude',
     product: 'prod-kidlytics',
-    task: 'SCS build — Phase 1 functional shell.',
-    waitingState: 'Working',
-    expectedOutput: 'Functional shell for Product Owner review.',
+    task: 'SCS build — Executive Snapshot Revision 01.',
+    waitingState: 'Product Owner review',
+    expectedOutput: 'Revised Executive Snapshot for Product Owner review.',
     authorityStatus: 'reported',
     confidence: 'high',
+  },
+  {
+    id: 'assign-sos-govern',
+    collaborator: 'ai-sos',
+    task: 'Constitutional governance and advisory oversight of SCS.',
+    waitingState: 'Governing / advising',
+    expectedOutput: 'Ongoing constitutional guardianship.',
+    authorityStatus: 'reported',
+    confidence: 'medium',
   },
 ];
 
@@ -374,6 +385,68 @@ const canonicalStatements: CanonicalStatement[] = [
   },
 ];
 
+// Constitutional activity — only real, honest events. Cue's Phase-4 approval is
+// spec-stated but undated here, so its date is left empty rather than invented.
+const updates: Update[] = [
+  {
+    id: 'upd-phase1-review',
+    code: 'ST-SYNC',
+    date: '2026-07-24',
+    summary: 'SCS Executive Snapshot Revision 01 built for Product Owner review.',
+    source: 'Claude',
+    scope: 'SCS',
+    affectedSystems: ['os-scs'],
+    decisionsCreated: [],
+    documentsUpdated: [],
+    syncStatus: 'Awaiting review',
+    authorityStatus: 'reported',
+    confidence: 'high',
+  },
+  {
+    id: 'upd-phase1',
+    code: 'ST-OS',
+    date: '2026-07-24',
+    summary: 'SCS Phase 1 functional shell delivered and approved as the design baseline.',
+    source: 'Product Owner',
+    scope: 'SCS',
+    affectedSystems: ['os-scs'],
+    decisionsCreated: [],
+    documentsUpdated: [],
+    syncStatus: 'Approved',
+    authorityStatus: 'approved',
+    confidence: 'high',
+  },
+  {
+    id: 'upd-phase0',
+    code: 'ST-OS',
+    date: '2026-07-24',
+    summary: 'Phase 0 architecture approved; stack, data model, and deployment path locked.',
+    source: 'Product Owner',
+    scope: 'SCS',
+    affectedSystems: ['os-scs'],
+    decisionsCreated: [],
+    documentsUpdated: [],
+    syncStatus: 'Approved',
+    authorityStatus: 'approved',
+    confidence: 'high',
+  },
+  {
+    id: 'upd-cue-phase4',
+    code: 'ST-LOCK',
+    date: '',
+    summary: 'Cue Experience Playbook — Phase 4 approved; Phase 5 authorized.',
+    source: 'Kidlytics',
+    scope: 'Kidlytics',
+    affectedSystems: ['prod-kidlytics'],
+    decisionsCreated: [],
+    documentsUpdated: ['pub-cue'],
+    syncStatus: 'Recorded',
+    authorityStatus: 'approved',
+    confidence: 'medium',
+    notes: 'Date not specified in source — left empty rather than invented.',
+  },
+];
+
 const nextActions: NextAction[] = [
   {
     id: 'next-chipn',
@@ -392,7 +465,6 @@ const empty: CollectionName[] = [
   'canonicalConcepts',
   'benchmarks',
   'risks',
-  'updates',
   'reviewItems',
   'relationships',
 ];
@@ -414,7 +486,7 @@ export const seedWorkspace: WorkspaceBackup = {
     assignments,
     benchmarks: [],
     risks: [],
-    updates: [],
+    updates,
     artifacts,
     reviewItems: [],
     nextActions,

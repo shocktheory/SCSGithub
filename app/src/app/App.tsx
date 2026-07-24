@@ -5,7 +5,7 @@ import { queryClient } from '../lib/data';
 import { ensureSeeded } from '../storage/bootstrap';
 import { AppShell } from './AppShell';
 import { NAV } from './nav';
-import { OverviewPage } from '../features/overview/OverviewPage';
+import { ExecutiveSnapshotPage } from '../features/snapshot/ExecutiveSnapshotPage';
 import { OSRegistryPage } from '../features/os/OSRegistryPage';
 import { ProductsPage } from '../features/products/ProductsPage';
 import { ProductCommandPage } from '../features/products/ProductCommandPage';
@@ -36,7 +36,7 @@ export function App() {
       <HashRouter>
         <AppShell>
           <Routes>
-            <Route path="/" element={<OverviewPage />} />
+            <Route path="/" element={<ExecutiveSnapshotPage />} />
             <Route path="/os" element={<OSRegistryPage />} />
             <Route path="/products" element={<ProductsPage />} />
             <Route path="/products/:id" element={<ProductCommandPage />} />

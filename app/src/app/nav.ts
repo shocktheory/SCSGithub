@@ -31,7 +31,7 @@ export interface NavItem {
  * shape of SCS is visible without pretending features exist.
  */
 export const NAV: NavItem[] = [
-  { path: '/', label: 'Overview', icon: LayoutDashboard, live: true, phase: 1 },
+  { path: '/', label: 'Executive Snapshot', icon: LayoutDashboard, live: true, phase: 1 },
   { path: '/os', label: 'ShockTheory OS', icon: Network, live: true, phase: 1 },
   { path: '/products', label: 'Products', icon: Package, live: true, phase: 1 },
   { path: '/publications', label: 'Publications', icon: BookOpen, live: true, phase: 1 },
