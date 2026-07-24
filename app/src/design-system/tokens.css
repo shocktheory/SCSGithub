@@ -1,0 +1,73 @@
+/*
+ * SCS Design Tokens — the constitutional design system.
+ * SCS is experienced through BLUE (ShockTheory the company is recognized by green).
+ *
+ * All color pairings below were validated against WCAG 2.2 AA on 2026-07-24.
+ * See ACCESSIBILITY.md for the full contrast table. Do not introduce raw hex
+ * values in components — reference these tokens so hierarchy stays coherent.
+ */
+
+:root {
+  /* ---- Brand blue/indigo palette (benchmark direction, accessibility-validated) ---- */
+  --color-electric-blue: #418fff; /* primary accent */
+  --color-steel-blue: #3169a2;    /* secondary blue; white text passes (5.72:1) */
+  --color-soft-sky: #81b8e7;      /* light accent */
+  --color-periwinkle: #8fa9ff;    /* indigo accent */
+  --color-deep-navy: #161b25;     /* dark primary / base background */
+  --color-midnight-slate: #203763;/* raised surface tint */
+
+  /* ---- Surfaces (dark-first; this is an executive dark environment) ---- */
+  --bg: #12161f;                  /* ambient base, slightly deeper than deep-navy */
+  --surface: #161b25;             /* card surface (deep-navy) */
+  --surface-raised: #1b2333;      /* elevated surface */
+  --border: #2a3242;              /* very light border / soft divider */
+  --divider: #21283440;
+
+  /* ---- Text (validated on --bg / --surface) ---- */
+  --text-primary: #f9f9f9;        /* 16.4:1 on navy */
+  --text-secondary: #b9b9b9;      /* 8.8:1 on navy, 6.0:1 on slate */
+  --text-muted: #8a93a6;          /* 5.6:1 on navy — replaces benchmark #444750 (which is border-only) */
+  --text-on-accent: #12161f;      /* deep navy text ON the blue gradient — 5.4–7.6:1 (white would fail at 3.2:1) */
+
+  /* ---- Gradients (energy without distraction; never rainbow) ---- */
+  --gradient-primary: linear-gradient(135deg, var(--color-electric-blue) 0%, var(--color-periwinkle) 100%);
+  --gradient-surface: linear-gradient(180deg, var(--color-deep-navy) 0%, #1b2740 100%);
+
+  /* ---- Radius ---- */
+  --radius-card: 16px;
+  --radius-control: 10px;
+
+  /* ---- Motion (communicate what changed; soft, short, purposeful) ---- */
+  --ease-scs: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --duration-scs: 180ms;
+
+  /* ---- Spacing scale (generous; clarity before density) ---- */
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+  --space-5: 24px; --space-6: 32px; --space-7: 48px; --space-8: 64px;
+
+  /* ---- Semantic status (calm, non-alarming; never color alone — pair with label/icon) ---- */
+  --status-approved: #5fd0a0;
+  --status-proposed: #8fa9ff;
+  --status-review: #f0c674;
+  --status-risk: #e8917a;
+  --status-superseded: #8a93a6;
+}
+
+/* Light theme is a first-class deliverable (Phase 4), scoped here for later. */
+:root[data-theme='light'] {
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --border: #d8deea;
+  --text-primary: #12161f;
+  --text-secondary: #3f4757;
+  --text-muted: #5c6575;
+  --text-on-accent: #12161f;
+}
+
+/* Reduced motion is a constitutional requirement, not a nicety. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-scs: 0ms;
+  }
+}
