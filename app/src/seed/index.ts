@@ -463,6 +463,21 @@ const canonicalStatements: CanonicalStatement[] = [
 // spec-stated but undated here, so its date is left empty rather than invented.
 const updates: Update[] = [
   {
+    id: 'upd-scs-completion-rev2',
+    code: 'ST-REVIEW',
+    date: '2026-07-25',
+    summary: 'SCS Platform Completion Program — Product Owner review returned it for architectural refinement (highly favorable direction). #SCS submitted Rev 2: capability-based completion model (Domain→Capability→Requirements→Evidence); added Platform Architecture Completion, consolidated Operational Readiness, added Platform Evolution Governance, separated Platform Trust from Security, and reorganized the narrative around platform domains (governance-first). Strong sections and constitutional constraints preserved. Planning only — no implementation, no Phase 6 records, baseline unaltered.',
+    source: 'Sonja (Product Owner) · #SCS',
+    scope: 'SCS',
+    affectedSystems: ['os-scs', 'prod-scs'],
+    decisionsCreated: [],
+    documentsUpdated: ['dlv-008'],
+    syncStatus: 'Rev 2 revisions submitted for review',
+    authorityStatus: 'reported',
+    demonstration: false,
+    confidence: 'high',
+  },
+  {
     id: 'upd-scs-completion-mandate',
     code: 'ST-OS',
     date: '2026-07-25',

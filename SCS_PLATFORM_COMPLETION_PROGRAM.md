@@ -1,222 +1,260 @@
-# SCS Platform Completion Program
+# SCS Platform Completion Program (Rev 2)
 
-**Status:** Proposed — submitted to the **SCS Platform Completion Program Review** gate.
-**Authority:** Product Owner Platform Completion Mandate — *Complete the SCS Platform* (2026-07-25).
-**Baseline of record:** SCS Production Baseline v1.0 (accepted; commit `a1b3a29`).
+**Status:** Proposed (Rev 2 — revised per Product Owner review) — submitted to the **SCS Platform Completion Program Review** gate.
+**Authority:** Product Owner Platform Completion Mandate (2026-07-25) + Product Owner Review Response — *Revise for Acceptance* (2026-07-25).
+**Baseline of record:** SCS Production Baseline v1.0 (accepted; commit `a1b3a29`) — **not altered**.
 **Prepared by:** #SCS (implementation; no constitutional authority — acceptance is a Product Owner act).
 
-> **Planning only.** No Phase 6 implementation, authentication, deployment, confidential data, integrations, OS-CAP-001, or launch was begun. Approval of this roadmap does **not** authorize any implementation phase or launch — each remains a separate governed directive. No canonical identifiers are assigned; the baseline is not altered.
+> **Documentation revision only.** No Phase 6 implementation, authentication, authorization, deployment, hosting, confidential-data readiness, production access, launch, or governed Phase 6 records. The accepted foundation is unchanged; completed phases are not renumbered; implementation scope is not expanded. No canonical identifiers assigned.
+
+> **Constitutional constraints (reinforced throughout):** planning does not authorize implementation · implementation does not imply acceptance · technical readiness does not authorize launch · Product Owner authority is retained at every gate · no phase self-approves · no phase automatically authorizes the next.
 
 ---
 
-## 1. Executive completion-program summary
+## 0. Executive Summary of Revisions (Deliverable)
 
-SCS has an accepted foundation (Phases 0–5 + Production Baseline v1.0): a static React client with a proven local/remote persistence seam, a runtime-verified Slim 4 + MySQL backend, governed commands, optimistic concurrency, import tooling, and a full governance model. **This is a foundation, not a finished platform.** To be *complete*, SCS must become **secure, operational, and production-ready** in its approved environment — with authentication, authorization, complete server-side authority, audit, administration, verified hosting, exercised reliability/recovery, a full test matrix, operational documentation, and Product-Owner-authorized launch.
+This revision elevates the Completion Program from an engineering plan to the **constitutional roadmap for completing a governance platform.** Six architectural improvements:
 
-This program defines completion, lays out **narrow reviewable phases 6–12**, tracks every requirement in a **Completion Register**, proposes a **governed completion-measurement method** with an honest current estimate (**≈ 26% accepted** against the completion definition), and prepares the **proposed Phase 6 package** — while preserving phase governance (no phase self-approves; nothing begins automatically; the Product Owner retains authority over scope, acceptance, hosting, confidential data, cutover, and launch).
+1. **Capability-based completion model** — completion is now expressed as **Domain → Capability → Requirements → Verification Evidence.** The Completion Register still exists but rolls up through named capabilities, so the model expands in future without being redefined.
+2. **Platform Architecture Completion** — a dedicated capability recognizing that the *architecture itself* must reach completion (extensibility, API governance, versioning governance, SDK strategy, architectural-evolution policy).
+3. **Consolidated Operational Readiness** — monitoring, alerting, metrics, backup, restore, rollback, disaster recovery, incident response, and operational support are grouped into one capability so operational readiness is unmistakable.
+4. **Platform Evolution Governance** — a capability defining how a completed platform *evolves* (backward compatibility, deprecation, schema evolution, migration strategy, feature lifecycle, version evolution).
+5. **Security separated from Platform Trust** — Security remains its own domain (technical protection); a distinct **Trust** domain covers attribution, approval integrity, transparency, auditability, Operational History, and accountability (governance/user trust).
+6. **Governance-first narrative** — the completion story is organized around platform **domains** (Governance · Identity · Authority · Trust · Operations · Security · Reliability · Platform Architecture · Platform Evolution · Launch). Engineering work remains represented but serves the governance architecture, not the reverse.
+
+The prior strong sections (executive summary, completion definition, phase governance, narrow phases, register concept, capability inventory, measurement methodology, dependency/critical path, Phase 6 package, decision queue, readiness) are preserved and re-expressed through the capability model.
+
+---
+
+## 1. Executive Completion-Program Summary
+
+SCS is fundamentally a **governance platform**: it exists to record, govern, derive, and present authoritative constitutional and product state — with a software substrate underneath. It has an accepted foundation (Phases 0–5 + Production Baseline v1.0): a proven local/remote persistence seam, a runtime-verified Slim 4 + MySQL backend, governed commands, optimistic concurrency, import tooling, and a full governance model. **This is a foundation, not a finished platform.**
+
+Completion is now a **binding requirement**: SCS must become **secure, operational, and production-ready** for authorized ShockTheory use — and it must define **how it evolves** thereafter. This program defines completion as a **capability hierarchy across ten platform domains**, sequences it through **narrow, independently-gated Phases 6–12**, tracks it in a **capability-based Completion Register**, and estimates current progress at **≈ 25% accepted** (capability-weighted). Phase governance is preserved end to end.
 
 ---
 
 ## 2. Definition of SCS Platform Completion
 
-SCS is **complete** only when all approved completion requirements are **Implemented + Verified + Product-Owner-Accepted + Operationalized** in the approved environment. The completion requirement set (from the mandate):
-
-**A. Identity & Authentication** · **B. Roles & Permissions** · **C. Server-Side Authority & Derivation** · **D. Audit & Operational History** · **E. Governed Product Operations** · **F. Notifications & Work Awareness** · **G. Administration & Operations** · **H. Production Hosting** · **I. Security & Confidential-Data Readiness** · **J. Reliability & Recovery** · **K. Quality & Verification** · **L. Operational Documentation** · **M. Production Launch & Operational Acceptance.**
-
-Completion is **not**: accepted architecture, written code, green builds, local execution, backend persistence, documentation, demonstration data, or an accepted baseline — those are necessary but insufficient. **Technical readiness ≠ launch authority.**
+SCS is **complete** only when every approved capability's requirements are **Implemented + Verified + Product-Owner-Accepted + Operationalized** in the approved environment, **and** the platform's **architecture and evolution governance** are themselves accepted. Completion is **not**: accepted architecture, written code, green builds, local execution, backend persistence, documentation, demonstration data, or an accepted baseline — necessary but insufficient. **Technical readiness ≠ launch authority.**
 
 ---
 
-## 3. Governance model (completion under phase governance)
+## 3. Completion Architecture (the capability hierarchy)
+
+```
+Completion Domain            (a major platform concern — governance-first)
+    └─ Capability            (a coherent, nameable platform ability)
+         └─ Requirement      (a specific, testable obligation)
+              └─ Verification Evidence   (executed proof: tests, CI runs, reviews, acceptances)
+```
+
+- **Domains** tell the *governance story* (why the platform matters).
+- **Capabilities** are the stable units of completion — they roll requirements up and let the model grow without redefinition.
+- **Requirements** are what must be built/controlled; **Verification Evidence** is executed proof (never asserted).
+- The **Completion Register** (§6) records status + evidence at the requirement level and **rolls up** to capability and domain.
+
+---
+
+## 4. Completion Domains & Capabilities
+
+*Governance-first ordering. Every capability maps the earlier completion areas A–M plus the new architectural capabilities, so nothing is lost.*
+
+| Domain | Capability | Covers (requirements summary) | Phase | Maps areas |
+| --- | --- | --- | --- | --- |
+| **Governance** | Governed Product Operations | Product Records, Assignment Directives, Deliverables, Review Gates, PO dispositions, decisions, activity/Operational History, status dimensions, provenance, linked records, accepted baselines, governed lifecycle changes | 1–8 | E |
+| **Governance** | Phase & Program Governance | narrow phases, gates, dispositions, no self-approval, no auto-authorization | all | (constitutional) |
+| **Identity** | Authentication & Identity Lifecycle | identity, authentication, secure sessions, login/logout, recovery, MFA, session expiry, actor identification, auth audit evidence | 6 | A |
+| **Authority** | Roles & Permissions | role model, permission model, authorization middleware, record/action access, PO & agent authority enforcement, least privilege, denied-action handling, permission tests, admin role management | 6 | B |
+| **Authority** | Server-Side Authority & Derivation | complete canonical server-side derivation, authoritative-record inputs, derivation-version tracking, reproducibility, non-authoritative client state, governed commands, prohibited generic authority mutation, deterministic-output tests | 7 | C |
+| **Trust** *(new)* | Platform Trust | attribution, approval integrity, transparency, auditability, Operational History, accountability | 8 | (from D, elevated) |
+| **Operations** | Administration & Governed Configuration | user/role admin, environment admin, governed config, safe import, approved export, archival ops, support procedures, system-health visibility, error review | 8–10 | G |
+| **Operations** | Notifications & Work Awareness | in-platform attention states (assigned/awaiting review/changed/accepted/returned/blocked); approved channels only | 9 | F |
+| **Operations** | Operational Readiness *(consolidated)* | monitoring, alerting, operational metrics, backup, restore, rollback, disaster recovery, incident response, operational support | 10 | (from H/J, consolidated) |
+| **Operations** | Hosting & Deployment | verified host, supported runtime, DB provisioning, secure env/secrets, TLS, restricted admin access, deploy process, migration execution, env separation, capacity/reliability assessment | 10 | H |
+| **Security** | Security & Confidential-Data Readiness | encryption in transit, protection at rest, secrets handling, secure config, dependency review, input validation, parameterized DB access, access logging, backup protection, vuln remediation, retention/deletion/archival | 10–11 | I |
+| **Reliability** | Reliability & Recovery (system properties) | transactional integrity, concurrency protection, idempotency, graceful failure, structured errors, health checks, data-integrity verification, **exercised** backup/restore/rollback/DR | 10 | J |
+| **Platform Architecture** *(new)* | Platform Architecture Completion | platform extensibility, API governance, versioning governance, SDK strategy (if applicable), architectural-evolution policy | 7–10 | (new) |
+| **Platform Evolution** *(new)* | Platform Evolution Governance | backward compatibility, deprecation policy, schema evolution, migration strategy, feature lifecycle, version evolution | 12+ | (new) |
+| **Launch** | Production Launch & Operational Acceptance | approved deployment, authorized data migration, controlled cutover, operational access, final verification, production acceptance, Production Baseline v2.0 | 12 | M |
+| *(cross-cutting)* | Quality & Verification | frontend/backend/db/migration/integration/e2e/authorization/negative-permission/concurrency/security/accessibility/responsive/browser/performance/backup-restore/deploy-rollback/UAT — no unavailable test reported as passed | 6–11 | K |
+| *(cross-cutting)* | Operational Documentation | architecture, data model, environment setup, deploy/migration/backup-restore runbooks, incident procedure, access-admin guide, ops-support guide, security-boundary record, known limitations, change-management, traceability, production baseline | 10–11 | L |
+
+**Note on Reliability vs Operational Readiness:** *Reliability & Recovery* covers the system's inherent properties (integrity, concurrency, idempotency, failure handling, and that recovery mechanisms **work when exercised**); *Operational Readiness* covers the operating apparatus around them (monitoring, alerting, metrics, incident response, support, and the administration of backup/restore/rollback/DR). They are cross-referenced, not double-counted.
+
+**Note on Trust vs Security:** *Security* is technical protection (keep attackers out, protect data). *Trust* is governance assurance (who did what, was approval genuine, is it transparent and accountable). A platform can be secure yet untrustworthy, or trustworthy in design yet insecure — both must reach completion.
+
+---
+
+## 5. Governance Model (completion under phase governance)
 
 The **SCS Completion Program** is authorized for planning; it does **not** eliminate phase governance. Each phase keeps its own Assignment Directive, Deliverable, Review Gate, Product Owner disposition, implementation status, verification evidence, and decision queue. **No phase self-approves; no phase auto-authorizes the next.** On acceptance of a phase, #SCS prepares the next recommended phase package (continuation is expected, not optional), but implementation waits for the Product Owner's separate authorization. The Product Owner retains authority over scope, acceptance, deployment, confidential data, operational use, cutover, and launch.
 
 ---
 
-## 4. SCS Platform Completion Roadmap (Phases 6–12)
+## 6. Roadmap — Phases 6–12 (narrow, reviewable; mapped to domains/capabilities)
 
-Narrow, reviewable phases — **no combining remaining work into one uncontrolled phase.**
+| Phase | Name | Domains / capabilities advanced |
+| --- | --- | --- |
+| **6** | Authentication, Roles & Permissions | Identity (Authentication & Identity Lifecycle); Authority (Roles & Permissions); Trust (attribution seam); Quality (authz/negative tests) |
+| **7** | Server-Side Derivation & Authority Completion | Authority (Server-Side Authority & Derivation); Platform Architecture (API governance, versioning) begins |
+| **8** | Audit, Operational History & Administrative Controls | Trust (Platform Trust); Governance (Governed Product Operations completion); Operations (Administration) |
+| **9** | Notifications & Operational Workflows | Operations (Notifications & Work Awareness) |
+| **10** | Hosting, Security & Production Operations | Operations (Hosting & Deployment, Operational Readiness); Security; Reliability (exercised recovery); Platform Architecture (evolution policy) |
+| **11** | Production Readiness & User Acceptance | Quality & Verification (full matrix); Operational Documentation; Security review; UAT |
+| **12** | Production Deployment & Operational Acceptance | Launch (Production Launch & Operational Acceptance → **Production Baseline v2.0**); Platform Evolution Governance recorded |
 
-| Phase | Name | Scope (recommended) | Gates on |
+Confidential production data may not be hosted before the Phase 6 auth boundary is accepted **and** a separate §Security readiness authorization is granted. Deployment only after Phase 10 + explicit launch authorization.
+
+---
+
+## 7. Revised Completion Register (capability-based)
+
+Statuses: **NS** Not Started · **Partial** · **Acc** Accepted (Implemented + Verified + PO-Accepted) · **Def** Deferred by PO. *"Implemented" ≠ "Accepted."* Rolls up Requirements → Capability → Domain.
+
+| Domain | Capability | Status | Verification evidence (executed) |
 | --- | --- | --- | --- |
-| **6** | Authentication, Roles & Permissions | identity, authentication, sessions, actor context, roles, permissions, authorization middleware, authenticated audit attribution | Completion Program approval + Phase 6 authorization |
-| **7** | Server-Side Derivation & Authority Completion | full canonical PHP derivation, governed-command completion, derivation versioning, authority enforcement, client/server parity | Phase 6 accepted |
-| **8** | Audit, Operational History & Administrative Controls | Technical Audit Log, Operational-History workflows, admin workflows, governance visibility, protected change traceability | Phase 7 accepted |
-| **9** | Notifications & Operational Workflows | in-platform attention states, assignment/review awareness, approved channels, workflow completion (external email/push only if authorized) | Phase 8 accepted |
-| **10** | Hosting, Security & Production Operations | host verification/selection, prod environments, monitoring, logging, backups, restore testing, security verification, deploy/rollback | Phase 9 accepted + hosting decision |
-| **11** | Production Readiness & User Acceptance | e2e acceptance, accessibility, browser/device, performance, security review, operational rehearsals, authorized UAT, launch-readiness package | Phase 10 accepted |
-| **12** | Production Deployment & Operational Acceptance | approved deploy, authorized data migration, controlled cutover, operational access, final verification, production acceptance, **Production Baseline v2.0 / launch baseline** | Phase 11 accepted + explicit launch authorization |
-
-Sequence refinements are permitted, but phases must remain narrow and independently reviewable. Confidential production data may not be hosted before the Phase 6 auth boundary is accepted and a separate readiness authorization (§I) is granted.
-
----
-
-## 5. Current-state reconciliation (Baseline v1.0 vs completion definition)
-
-*Forward-looking assessment; the accepted baseline is not altered.*
-
-- **Complete/accepted:** backend foundation & persistence (Slim 4 + MySQL, runtime-verified); StorageAdapter/RemoteAdapter/LocalAdapter seam + parity; governed `upsert` command; optimistic concurrency; idempotency; basic import validation; governance model (records, gates, dispositions, activity/OpHistory); **client** derivation engine; CI runtime verification.
-- **Partial:** server-side derivation (**seam only** — full PHP port deferred); governed commands (**upsert only** — activate/accept/supersede/etc. are Phase 7/8); import (bounded — production authority validation is Phase 8+); audit (**seam only**).
-- **Absent (authorized future work):** authentication; roles/permissions; Technical Audit Log; notifications; administration/ops; production hosting; security-for-confidential-data; exercised reliability/recovery; full test matrix (authorization/negative/perf/accessibility/UAT); operational documentation runbooks; launch.
-- **Blocked / needs decisions or external access:** Nestify capability verification (needs host access); identity-provider choice; hosting selection; confidential-data authorization; Phase 6 authorization.
-- **Can proceed immediately after authorization:** Phase 6 (auth/roles/permissions) — all inputs exist in the accepted architecture.
+| Governance | Governed Product Operations | **Partial** (records/gates/dispositions/OpHistory Accepted; governed commands = upsert only) | governance records; CI |
+| Governance | Phase & Program Governance | **Acc** | every phase gated + Product-Owner-disposed |
+| Identity | Authentication & Identity Lifecycle | **NS** | — |
+| Authority | Roles & Permissions | **NS** | — |
+| Authority | Server-Side Authority & Derivation | **Partial** (seam only) | `/api/derived` seam; version stamp |
+| Trust | Platform Trust | **Partial** (OpHistory + provenance Accepted; attribution/technical-audit NS) | OpHistory records; audit seam |
+| Operations | Administration & Governed Configuration | **NS** | — |
+| Operations | Notifications & Work Awareness | **NS** | — |
+| Operations | Operational Readiness | **NS** | — |
+| Operations | Hosting & Deployment | **NS** (Nestify unverified) | — |
+| Security | Security & Confidential-Data Readiness | **Partial** (parameterized DB access, input validation, refuses production env) | server code; CI |
+| Reliability | Reliability & Recovery | **Partial** (integrity/concurrency/idempotency/health verified; exercised DR/restore NS) | CI PHPUnit + e2e (run 30168236724) |
+| Platform Architecture | Platform Architecture Completion | **NS** | — |
+| Platform Evolution | Platform Evolution Governance | **NS** | — |
+| Launch | Production Launch & Operational Acceptance | **NS** | — |
+| *(cross-cut)* | Quality & Verification | **Partial** (frontend/backend/e2e/migration/runtime green; authz/negative/perf/a11y/UAT NS) | CI green (2ae3a64) |
+| *(cross-cut)* | Operational Documentation | **Partial** (architecture/data-model/setup/baseline exist; runbooks NS) | Phase 4/5 docs; baseline |
 
 ---
 
-## 6. SCS Platform Completion Register
+## 8. Accepted Capability Inventory
 
-Statuses: **NS** Not Started · **A** Authorized · **IP** In Progress · **I** Implemented · **V** Verified · **Acc** Accepted · **Def** Deferred by PO · **NA**. *"Implemented" ≠ "Accepted."*
-
-| # | Requirement | Governing phase | Status | Evidence | Prod-readiness effect |
-| --- | --- | --- | --- | --- | --- |
-| A | Identity & authentication | 6 | **NS** | — | Blocks confidential data & operational use |
-| B | Roles & permissions | 6 | **NS** | — | Blocks multi-actor operation |
-| C | Server-side authority & derivation (full) | 7 | **Partial** (seam) | `/api/derived` seam; version stamp | Authority must be server-canonical before prod |
-| D | Audit & Operational History (technical) | 8 | **Partial** (seam) | audit array seam; OpHistory records | Required for accountable operation |
-| E | Governed product operations | 6–8 | **Partial** (Acc: records/gates/dispositions; commands partial) | governance records; upsert command | Core operating capability |
-| F | Notifications & work awareness | 9 | **NS** | — | Operational awareness |
-| G | Administration & operations | 8–10 | **NS** | — | Admin/ops capability |
-| H | Production hosting | 10 | **NS** (Nestify unverified) | — | Blocks deployment |
-| I | Security & confidential-data readiness | 10–11 | **NS** | — | Gates confidential data |
-| J | Reliability & recovery (exercised) | 10 | **Partial** (concurrency/idempotency/rollback verified; DR/restore not exercised) | CI PHPUnit + e2e | Gates production |
-| K | Quality & verification (full matrix) | 6–11 | **Partial** (frontend/backend/e2e/migration/runtime green; authz/negative/perf/a11y/UAT absent) | CI green (2ae3a64) | Gates acceptance |
-| L | Operational documentation (runbooks) | 10–11 | **Partial** (architecture/data-model/setup exist; runbooks absent) | Phase 4/5 docs; baseline | Gates operation |
-| M | Production launch & operational acceptance | 12 | **NS** | — | Final gate (PO authority) |
+*(As before — now aligned to the capability model.)* Governance capabilities (Assignment Directives, Deliverables, Review Gates, PO Dispositions, Decision Records, Operational History, Product Records) — **Accepted**. Technical foundation (StorageAdapter seam, LocalAdapter, RemoteAdapter + parity, Slim 4 + MySQL persistence, governed `upsert`, optimistic concurrency, idempotency, bounded import, CI runtime verification) — **Accepted (dev/test)**. Software capability (client Constitutional State Derivation) — **Accepted**. Planned capabilities (Authentication, Roles & Permissions, full Server-Side Derivation, Platform Trust/Technical Audit, Notifications, Administration, Hosting/Deployment, Operational Readiness, Security-for-confidential, Platform Architecture, Platform Evolution, Launch) — **Not Started / Partial** per §7.
 
 ---
 
-## 7. Accepted Capability Inventory
+## 9. Completion Measurement Method + current estimate
 
-| Capability | Kind | Origin | Impl | Verified | Accepted | Operational | Records |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| Assignment Directives | Governance | P1–2 | ✅ | ✅ | ✅ | demo | ST-ADR-2026-00x |
-| Deliverables | Governance | P1 | ✅ | ✅ | ✅ | demo | ST-DLV-2026-00x |
-| Review Gates | Governance | P1 | ✅ | ✅ | ✅ | demo | rgate-00x |
-| Product Owner Dispositions | Governance | P1+ | ✅ | ✅ | ✅ | demo | activity/OpHistory |
-| Decision Records | Governance | ST-LOCK | ✅ | ✅ | ✅ | demo | ST-DEC-2026-0xx |
-| Operational History | Governance | P2 | ✅ | ✅ | ✅ | demo | ST-OPH-2026-0xx |
-| Product Records / status dimensions | Governance | P4–5 | ✅ | ✅ | ✅ | demo | prod-scs |
-| Constitutional State Derivation (client) | Software | P2 | ✅ | ✅ | ✅ | demo | derivation.ts |
-| StorageAdapter seam / LocalAdapter | Technical foundation | P0–5 | ✅ | ✅ | ✅ | demo | storage/* |
-| RemoteAdapter + parity | Technical foundation | P5 | ✅ | ✅ (CI) | ✅ | dev/test | remoteAdapter.ts |
-| Backend persistence (Slim 4 + MySQL) | Technical foundation | P5 | ✅ | ✅ (CI) | ✅ | dev/test | server/* |
-| Governed commands (upsert) | Software | P5 | ✅ | ✅ (CI) | ✅ | dev/test | Commands.php |
-| Optimistic concurrency / idempotency | Technical foundation | P5 | ✅ | ✅ (CI) | ✅ | dev/test | Repository/Commands |
-| Import tooling (bounded) | Software | P5 | ✅ | ✅ (CI) | ✅ | dev/test | Importer.php |
-| Runtime verification (CI) | Operational | P5 | ✅ | ✅ | ✅ | CI | phase5-verify.yml |
-| Server-side derivation (full) | Software | P7 | — | — | — | — | planned |
-| Authentication / Roles / Permissions | Software | P6 | — | — | — | — | planned |
-| Technical Audit Log | Operational | P8 | seam | — | — | — | planned |
-| Notifications | Operational | P9 | — | — | — | — | planned |
-| Hosting / deploy / monitoring / backup | Operational | P10 | — | — | — | — | planned |
+**Method (governed):** each **capability** earns credit = fraction of its requirements that are **Implemented AND Verified AND Product-Owner-Accepted** (partial/implemented-only ≠ complete); capabilities are weighted by production-criticality and **roll up by domain**. Not lines of code, screens, commits, or phases-started.
+
+**Domain weights (sum 100, governance-first):** Governance 12 · Identity 10 · Authority 12 · Trust 8 · Operations 12 · Security 8 · Reliability 8 · Platform Architecture 6 · Platform Evolution 6 · Launch 4 · Quality & Verification 8 · Operational Documentation 6.
+
+**Current accepted estimate ≈ 25%** (capability-weighted; consistent with the prior area-weighted ~26%). Credit concentrates in **Governance** (records/gates/dispositions accepted), the **technical foundation inside Reliability/Quality** (concurrency, idempotency, integrity, runtime verification), and **partial Authority/Trust/Security/Documentation**. Everything else is Not Started in the approved (dev/test) scope.
+
+**Limitations (no fabricated precision):** an order-of-magnitude planning figure, sensitive to the Product-Owner-approvable weights, measuring *accepted capability requirements against the completion definition* — not effort or calendar. Recomputed from the Register as capabilities are accepted.
 
 ---
 
-## 8. Completion measurement method + current estimate
+## 10. Current-State Reconciliation (Baseline v1.0 vs completion definition)
 
-**Method (governed, not subjective):** the 13 completion areas A–M are weighted by production-criticality; each area's credit = fraction of its requirements that are **Implemented AND Verified AND Product-Owner-Accepted** (partial/implemented-only does not count as complete). Not lines of code, screens, commits, or phases-started.
-
-**Proposed weights (sum 100):** A 10 · B 9 · C 9 · D 8 · E 10 · F 5 · G 7 · H 9 · I 9 · J 7 · K 8 · L 5 · M 4.
-
-**Current accepted estimate ≈ 26%.** Rationale: **E (governed operations)** and **the technical foundation inside J/K/L** are substantially accepted (persistence, concurrency, idempotency, import, runtime verification, governance model, client derivation); **C/D** are partial (seams only); **A/B/F/G/H/I/M** are Not Started. Credit is given only for accepted items in the approved (dev/test) scope.
-
-**Limitations (no fabricated precision):** the estimate is an order-of-magnitude planning figure, sensitive to the weights (which the Product Owner may revise), and it measures *accepted requirements against the completion definition* — not effort or calendar time. It will be recomputed from the Completion Register as phases are accepted.
+*Forward-looking; the accepted baseline is not altered.* **Accepted:** governance model, persistence foundation, adapter parity, governed upsert, concurrency, idempotency, bounded import, client derivation, CI runtime verification. **Partial:** server-side derivation (seam), Trust (OpHistory/provenance only), Security (parameterized access/validation), Reliability (properties verified; recovery not exercised), Quality (foundation matrix only), Documentation (specs, not runbooks). **Absent:** Identity, Roles/Permissions, Platform Trust/Technical Audit, Notifications, Administration, Operational Readiness, Hosting, confidential-data Security, Platform Architecture governance, Platform Evolution governance, Launch. **Blocked/decision-gated:** Nestify verification, identity-provider, hosting selection, confidential-data authorization, Phase 6 authorization. **Ready after authorization:** Phase 6.
 
 ---
 
-## 9. Dependency & critical-path map
+## 11. Dependency & Critical Path
 
 ```
-Baseline v1.0 (accepted)
-   └─► Phase 6 Auth/Roles/Permissions ──► Phase 8 Audit/Admin ─┐
-                    │                                          ├─► Phase 10 Hosting/Security/Ops ──► Phase 11 Readiness/UAT ──► Phase 12 Deploy/Acceptance
-   └─► Phase 7 Server Derivation/Authority ────────────────────┘
-                                        Phase 9 Notifications (after 8) ─┘
+Baseline v1.0
+   └─► Phase 6 (Identity + Authority: Roles/Permissions) ──► Phase 8 (Trust + Admin) ─┐
+                     │                                                                 ├─► Phase 10 (Hosting + Security + Reliability + Ops Readiness) ─► Phase 11 (Quality + Docs + UAT) ─► Phase 12 (Launch → Baseline v2.0 + Evolution Governance)
+   └─► Phase 7 (Server Authority & Derivation; Platform Architecture begins) ──────────┘
+                                        Phase 9 (Notifications) after Phase 8 ─┘
 ```
-**Critical path:** 6 → 7 → 8 → 10 → 11 → 12 (9 parallels after 8). **Hard gates:** confidential data only after Phase 6 auth + §I readiness accepted; deployment only after Phase 10 + explicit launch authorization; **Nestify verification** blocks Phase 10 host selection.
+**Critical path:** 6 → 7 → 8 → 10 → 11 → 12. **Hard gates:** confidential data only after Phase 6 auth + Security readiness accepted; deployment only after Phase 10 + explicit launch authorization; **Nestify verification** blocks Phase 10 host selection.
 
 ---
 
-## 10. Risk & blocker register
+## 12. Risk & Blocker Register
 
 | Risk / blocker | Class | Mitigation |
 | --- | --- | --- |
-| Hosting (Nestify) capabilities unverified | Blocker (Phase 10) | Read-only capability check on host; Laravel/alt-host fallback |
-| Confidential data before auth boundary | Risk (high) | Hard gate: no confidential data until Phase 6 + §I accepted |
-| Server-side derivation port complexity | Risk | Golden-fixture parity vs the client engine (Phase 7) |
-| Auth security defects | Risk | Phase 6 security review + negative-permission tests before acceptance |
-| Recovery only documented, not exercised | Risk | Phase 10 requires exercised restore/rollback, not just runbooks |
-| Scope creep / phase bundling | Risk | Narrow reviewable phases; no auto-authorization |
-| Identifier/identity-provider decisions pending | Blocker (Phase 6) | Product Owner decisions (see §16) |
+| Nestify capabilities unverified | Blocker (P10) | read-only host capability check; alt-host/Laravel fallback |
+| Confidential data before auth + security readiness | Risk (high) | hard gate (Phase 6 + Security readiness accepted) |
+| Server-side derivation port complexity | Risk | golden-fixture parity vs client engine (P7) |
+| Auth security defects | Risk | Phase 6 security review + negative-permission tests |
+| Recovery documented but not exercised | Risk | Reliability requires **exercised** restore/rollback/DR |
+| API/versioning ungoverned as platform grows | Risk (new) | Platform Architecture capability (API governance, versioning) |
+| Evolution without governance (breaking changes) | Risk (new) | Platform Evolution Governance (deprecation, backward-compat) |
+| Scope creep / phase bundling | Risk | narrow reviewable phases; no auto-authorization |
 
 ---
 
-## 11. Phase 6 Authorization Package (PROPOSED — not authorized)
+## 13. Phase 6 Authorization Package (PROPOSED — not authorized)
 
-*Prepared per the mandate; implementation begins only on a separate Product Owner authorization.*
+*Prepared per the mandate; implementation begins only on a separate Product Owner authorization. No Phase 6 governed records are created here.*
 
-- **Objectives:** establish production identity, authentication, actor context, roles, permissions, authorization middleware, and authenticated audit attribution.
-- **Scope (in):** email+password with Argon2id; **secure server-managed sessions** (HttpOnly/Secure/SameSite=Strict; not JWT-interchangeable); CSRF; session rotation/expiry/logout/revocation; account recovery; **MFA for the Product Owner**; role model (Product Owner, admin, agent/system via scoped keys, read-only user); permission model (record- and action-level); authorization middleware enforcing the approval boundary server-side; authenticated actor attribution into the Technical Audit seam.
-- **Authoritative inputs:** Phase 4 architecture (Deliverables 5, 7, 8), Phase 5 backend, governed-command rule.
-- **Identity model / role model / permission model / actor-context model / session model / security boundaries:** as specified in Phase 4 Corrections Rev 2 (§5/§7/§8) — carried forward.
-- **Test requirements:** unit + integration + **negative-permission** tests (no bypass of the approval boundary), session/CSRF tests, MFA test, authenticated-audit test; all executed in CI.
-- **Deliverables:** Phase 6 implementation package + auth/roles/permissions spec + test evidence.
-- **Review gate:** *SCS Authentication, Roles & Permissions Review* (Product Owner).
-- **Exclusions:** confidential data, production deployment, external IdP unless separately approved, notifications, hosting.
+- **Objectives:** establish production Identity + Authority (Roles/Permissions), actor context, authorization middleware, and authenticated Trust attribution.
+- **Scope (in):** Argon2id + **secure server-managed sessions** (HttpOnly/Secure/SameSite=Strict; not JWT-interchangeable); CSRF; rotation/expiry/logout/revocation; recovery; **MFA for the Product Owner**; role model (Product Owner, admin, agent/system via scoped keys, read-only user); record- and action-level permissions; authorization middleware enforcing the approval boundary server-side; authenticated actor attribution into the Trust/audit seam.
+- **Authoritative inputs:** Phase 4 architecture (Deliverables 5/7/8), Phase 5 backend, governed-command rule.
+- **Test requirements:** unit + integration + **negative-permission** (no approval-boundary bypass), session/CSRF, MFA, authenticated-audit — executed in CI.
+- **Deliverables / gate:** Phase 6 package → *SCS Authentication, Roles & Permissions Review* (Product Owner).
+- **Exclusions:** confidential data, deployment, external IdP unless approved, notifications, hosting.
 - **Stop conditions:** stop and return if confidential data, deployment, public access, or a constitutional change becomes necessary.
 
-**No Phase 6 governed records (assignment/deliverable/gate) are created here** — this is a proposed package pending the separate Phase 6 authorization directive.
+---
+
+## 14. Domain Roadmaps (Hosting · Security · Trust · Operational Readiness · Platform Architecture · Platform Evolution)
+
+- **Hosting & Deployment (P10):** verify (read-only, no secrets) then select a host — Nestify candidate, **unverified** (PHP 8.2+, pdo_mysql, Composer, MySQL 8, cron, env/secret handling, TLS, egress, log/backup access, deploy/rollback, private staging); fallbacks (external scheduler, vendored build, allowlisting, alt host/Laravel). No host confirmed until verified + accepted.
+- **Security (P10–11):** encryption in transit/at rest; secrets in env; secure config; dependency review; input validation; parameterized access (in place); access logging; backup protection + exercised restore; incident handling; retention/deletion/archival; vuln remediation. **No confidential data before separate readiness authorization.**
+- **Trust (P8):** attribution (authenticated actor on every mutation), approval integrity (only genuine PO approvals set authority), transparency (reviewable command outcomes), auditability (Technical Audit Log distinct from Operational History), accountability (retention + review).
+- **Operational Readiness (P10):** monitoring, alerting, operational metrics, backup, restore, rollback, disaster recovery, incident response, operational support — collectively the operating apparatus.
+- **Platform Architecture (P7–10):** extensibility model, **API governance** (contract stability, deprecation windows), **versioning governance** (schema + API versions, `SCHEMA_VERSION`/`derivation_version` policy), SDK strategy if applicable, architectural-evolution policy.
+- **Platform Evolution (P12+):** backward compatibility, deprecation policy, schema evolution + migration strategy, feature lifecycle, version evolution (Baseline v2.0 and beyond).
 
 ---
 
-## 12. Hosting & external-dependency plan
+## 15. Final Production Acceptance Criteria
 
-Verify (read-only, no secrets) then select a host. **Nestify** is the candidate but **unverified**: PHP 8.2+, `pdo_mysql`, Composer, MySQL 8 provisioning, cron, env/secret handling, TLS, outbound egress (email/push), log/backup access, deploy/rollback method, private staging. Fallbacks: external scheduler, vendored build, provider allowlisting, or an alternate host / Laravel. **No host is treated as confirmed until verified and accepted (Phase 10).** External dependencies (email provider D5, push VAPID) are Phase 9/10 and separately gated.
-
----
-
-## 13. Security & confidential-data readiness roadmap
-
-Before **any** confidential data (separate Product Owner authorization required): authentication + authorization accepted (Phase 6); encryption in transit (TLS) + host-managed at rest; secrets in env only; secure config; dependency review; input validation; parameterized DB access (already in place); access logging (Phase 8); backup protection + **exercised** restore (Phase 10); incident handling; retention/deletion/archival rules; vulnerability remediation. **No confidential data before this readiness is separately authorized.**
-
-## 14. Production operations roadmap
-
-Phase 10 delivers: verified host, production environments (separated), monitoring, structured logging, scheduled backups, **exercised** restore + rollback, deployment process (migrations run on host), health/alerting, capacity/reliability assessment, restricted admin access. Operational support ownership is a Product Owner decision.
-
-## 15. Final production acceptance criteria
-
-Launch requires (all accepted, then explicit launch authorization): full test matrix green on the production stack (incl. authorization/negative/perf/accessibility/UAT); security review passed; exercised backup/restore + rollback; monitoring/alerting live; operational runbooks accepted; authorized data-migration plan; authorized user group; **separate Product Owner approvals** for deployment, operational access, confidential-data use, cutover, and final production acceptance. **Technical readiness ≠ launch authority.**
+Launch requires (all accepted, then explicit launch authorization): full Quality matrix green on the production stack (incl. authorization/negative/perf/accessibility/UAT); Security review passed; **exercised** backup/restore + rollback + DR; monitoring/alerting live; operational runbooks accepted; authorized data-migration plan; authorized user group; Platform Evolution governance recorded; and **separate Product Owner approvals** for deployment, operational access, confidential-data use, cutover, and final production acceptance. **Technical readiness ≠ launch authority.**
 
 ---
 
-## 16. Product Owner Decision Queue (not resolved here)
+## 16. Revised Product Owner Decision Queue
 
-Phase 6 authorization · canonical **ST-ADR**/**ST-DEC** identifier standards · **baseline identifier** standard · authentication approach + **identity-provider** choice · role & permission approval · **MFA** requirement · **server-side derivation** sequencing (Phase 7 timing) · **hosting selection** + **Nestify suitability** · **confidential-data** authorization · **notification-channel** scope · **production-user group** · **data-migration** scope · **operational-support ownership** · **production-readiness criteria** · **launch authorization** · disposition of reserved ST-OPH-2026-006…009 / AGENT-001…004 · completion-weighting approval.
+*Prior items retained; new architectural decisions introduced by this revision marked ★.*
+
+Phase 6 authorization · canonical **ST-ADR**/**ST-DEC** identifier standards · **baseline identifier** standard · authentication approach + **identity-provider** choice · role & permission approval · **MFA** requirement · **server-side derivation** sequencing · **hosting selection** + **Nestify suitability** · **confidential-data** authorization · **notification-channel** scope · **production-user group** · **data-migration** scope · **operational-support ownership** · **production-readiness criteria** · **launch authorization** · disposition of reserved ST-OPH-2026-006…009 / AGENT-001…004 · **★ approve the capability-based completion model** (Domain→Capability→Requirements→Evidence) · **★ approve the domain weighting** for completion measurement · **★ approve the Trust/Security split** as distinct domains · **★ API governance & versioning policy** (Platform Architecture) · **★ SDK strategy** (in scope or N/A) · **★ Platform Evolution governance policy** (deprecation, backward-compatibility, schema evolution).
 
 ---
 
-## 17. Traceability matrix
+## 17. Architectural Impact Assessment (Deliverable)
+
+**Why these refinements improve long-term governance without expanding implementation scope:**
+- **Durability:** capabilities are stable units; new requirements attach to existing capabilities instead of forcing a model redefinition — the roadmap survives growth.
+- **Governance-first clarity:** organizing by domain foregrounds *what SCS governs* (authority, trust, accountability) over *how it's built*, matching SCS's nature as a governance platform and keeping Product Owner authority central.
+- **Separation of concerns:** splitting **Trust** from **Security** prevents a common failure — treating "encrypted" as "trustworthy"; each now has its own completion bar.
+- **Operational legibility:** a single **Operational Readiness** capability makes "are we operable?" a yes/no rollup instead of a scattered checklist.
+- **Forward governance:** **Platform Architecture** and **Platform Evolution** capabilities ensure the platform can be *maintained and evolved under governance* after v1 launch — closing the "what happens after completion?" gap.
+- **No scope expansion:** these are **completion-model and documentation** changes. No new implementation work is authorized or added; every requirement still flows through the same narrow, Product-Owner-gated phases. Measurement, register, and decision queue are re-expressed, not enlarged.
+
+---
+
+## 18. Traceability
 
 ```
-Platform Completion Mandate
-   → Completion Definition (§2, A–M)
-   → Completion Roadmap (§4, Phases 6–12)
-   → Completion Register (§6, per-requirement status + evidence)
-   → Accepted Capability Inventory (§7)
-   → Completion Measurement (§8, method + estimate)
-   → Phase 6 Authorization Package (§11, proposed)
-   → Product Owner Decision Queue (§16)
+Platform Completion Mandate + Review Response
+   → Completion Definition (§2) → Completion Architecture (§3, capability hierarchy)
+   → Domains & Capabilities (§4) → Roadmap Phases 6–12 (§6) → Capability Register (§7)
+   → Capability Inventory (§8) → Measurement (§9) → Phase 6 Package (§13) → Decision Queue (§16)
 Each future phase: Directive → Assignment Directive → Deliverable → Review Gate → PO Disposition → Operational History.
 ```
 
 ---
 
-## 18. Confirmation — no unauthorized work
+## 19. Confirmation — no unauthorized work
 
-**No unauthorized Phase 6 implementation, production authentication, confidential-data use, production deployment, external integration, public access, operational launch, OS-CAP-001 implementation, CivicComms operationalization, or Kidlytics modification occurred.** This package is planning and documentation only; the accepted baseline is unaltered; no canonical identifiers were assigned.
+**No unauthorized Phase 6 implementation, authentication, authorization, deployment, hosting, confidential-data use, production access, launch, OS-CAP-001 implementation, CivicComms operationalization, or Kidlytics modification occurred.** No governed Phase 6 records were created; the accepted Production Baseline v1.0 was not modified; no canonical identifiers were assigned. This is a documentation revision only.
 
 ---
 
-## Readiness statement
+## Final Recommendation / Readiness Statement
 
-**The SCS Platform Completion Program is ready for Product Owner approval** as the governing plan to complete SCS through accepted production. Approval of this roadmap does **not** authorize any implementation phase or launch — Phase 6 (and each subsequent phase) requires its own Product Owner authorization directive. Submitted to the **SCS Platform Completion Program Review** gate.
+**The revised SCS Platform Completion Program (Rev 2) is ready for Product Owner approval** as the governing, governance-first, capability-based, implementation-neutral roadmap to complete SCS from its accepted foundation through production and future evolution — without weakening Product Owner authority. Approval of this roadmap does **not** authorize any implementation phase or launch; Phase 6 (and each subsequent phase) requires its own Product Owner authorization directive. Submitted to the **SCS Platform Completion Program Review** gate.

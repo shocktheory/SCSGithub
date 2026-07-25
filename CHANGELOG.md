@@ -3,6 +3,23 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-scs-completion-program-rev2] — 2026-07-25
+
+**Completion Program — Rev 2 (capability-based, governance-first).** Product Owner review returned
+the program for architectural refinement (favorable direction). Documentation revision only — no
+implementation, no Phase 6 records, baseline unaltered, no canonical identifiers.
+
+- **[SCS_PLATFORM_COMPLETION_PROGRAM.md](SCS_PLATFORM_COMPLETION_PROGRAM.md)** rewritten around a
+  **Domain → Capability → Requirements → Verification Evidence** hierarchy, organized by platform
+  **domains** (Governance · Identity · Authority · Trust · Operations · Security · Reliability ·
+  Platform Architecture · Platform Evolution · Launch). Six refinements: capability-based model;
+  **Platform Architecture Completion**; consolidated **Operational Readiness**; **Platform Evolution
+  Governance**; **Trust separated from Security**; governance-first narrative. Capability-based
+  Register; revised PO decision queue (+ 6 architectural decisions); Architectural Impact Assessment;
+  ~25% accepted (capability-weighted). Strong sections + constitutional constraints preserved.
+- Deliverable **ST-DLV-2026-008** → *Rev 2 revisions submitted (in review)*; gate open; assignment active.
+- typecheck clean · 39 pass + 5 e2e skipped · build ok.
+
 ## [0.1.0-scs-completion-program] — 2026-07-25
 
 **SCS Platform Completion Mandate → Completion Program (planning).** The Product Owner made
