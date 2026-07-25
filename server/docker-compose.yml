@@ -34,4 +34,4 @@ services:
       composer update --no-interaction --no-progress;
       php migrations/migrate.php;
       vendor/bin/phpunit --colors=never;
-      php -S 0.0.0.0:8787 -t public"
+      php -S 0.0.0.0:8787 -t public public/index.php"

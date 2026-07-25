@@ -69,8 +69,9 @@ jobs:
       - name: Boot backend
         working-directory: server
         run: |
-          php -S 127.0.0.1:8787 -t public > server.log 2>&1 &
-          for i in $(seq 1 20); do curl -sf http://127.0.0.1:8787/api/health && break || sleep 1; done
+          # Front-controller: pass public/index.php as the router script so /api/* is routed.
+          php -S 127.0.0.1:8787 -t public public/index.php > server.log 2>&1 &
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:8787/api/health && break || sleep 1; done
           echo; curl -sf http://127.0.0.1:8787/api/health
 
       - name: Setup Node

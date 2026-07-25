@@ -16,7 +16,7 @@ echo "== PHP syntax =="; find "$ROOT/server" -name '*.php' -print0 | while IFS= 
 echo "== Composer =="; (cd "$ROOT/server" && (composer install --no-interaction 2>/dev/null || composer update --no-interaction))
 echo "== Migrations =="; (cd "$ROOT/server" && php migrations/migrate.php && php migrations/migrate.php status)
 echo "== PHPUnit =="; (cd "$ROOT/server" && vendor/bin/phpunit --colors=never)
-echo "== Boot backend =="; (cd "$ROOT/server" && php -S 127.0.0.1:8787 -t public >/tmp/scs-server.log 2>&1 &) ; sleep 2
+echo "== Boot backend =="; (cd "$ROOT/server" && php -S 127.0.0.1:8787 -t public public/index.php >/tmp/scs-server.log 2>&1 &) ; sleep 2
 for i in $(seq 1 20); do curl -sf http://127.0.0.1:8787/api/health && break || sleep 1; done
 echo "== Frontend + E2E parity vs real backend =="
 (cd "$ROOT/app" && npm ci && npx tsc -p tsconfig.app.json --noEmit && npx vitest run && SCS_E2E_BASE=http://127.0.0.1:8787 npx vitest run tests/remoteAdapter.e2e.test.ts && npx vite build)
