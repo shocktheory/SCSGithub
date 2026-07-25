@@ -3,6 +3,25 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-scs-completion-program] — 2026-07-25
+
+**SCS Platform Completion Mandate → Completion Program (planning).** The Product Owner made
+*completion* of SCS to a secure, operational, production-ready internal platform a **binding
+requirement** (phase progression stays governed). Planning only — **no Phase 6 implementation,
+authentication, deployment, confidential data, integrations, OS-CAP-001, or launch**; no canonical
+identifiers assigned; the accepted baseline is unaltered.
+
+- **[SCS_PLATFORM_COMPLETION_PROGRAM.md](SCS_PLATFORM_COMPLETION_PROGRAM.md)** — 18 deliverables:
+  completion definition (A–M), roadmap **Phases 6–12** (narrow, reviewable), Completion Register
+  (per-requirement status + evidence), Accepted Capability Inventory, current-state reconciliation,
+  **governed completion-measurement method + honest current estimate ≈ 26% accepted**,
+  dependency/critical-path, risk/blocker register, **proposed Phase 6 authorization package** (not
+  authorized), hosting/security/ops roadmaps, final production acceptance criteria, PO decision queue.
+- Governed records: Completion Program **Assignment Directive** (adr-009, #SCS, ST-ADR pending),
+  **ST-DLV-2026-008** in review, **SCS Platform Completion Program Review** gate, `dec-scs-completion`
+  (approved; ST-DEC pending). Product record → *Completion Program: Authorized for Planning*.
+- typecheck clean · 39 pass + 5 e2e skipped · build ok.
+
 ## [0.1.0-scs-baseline-v1-accepted] — 2026-07-25
 
 **SCS Production Baseline v1.0 — ACCEPTED by the Product Owner.** Recorded as the first authoritative

@@ -93,6 +93,16 @@ export const assignmentDirectives: AssignmentDirective[] = [
     authorityStatus: 'approved', demonstration: false,
     notes: 'Documentation baseline complete and accepted. Did NOT authorize Phase 6, implementation changes, refactoring, authentication, deployment, or new capabilities, and assigned no canonical identifiers.',
   },
+  // SCS Platform Completion Program — planning/roadmap only (Product Owner Platform Completion
+  // Mandate, 2026-07-25). Canonical ST-ADR identifier Product-Owner-pending.
+  {
+    id: 'adr-009', directiveId: 'Pending Product Owner-authorized ST-ADR identifier (recommended: ST-ADR-2026-009)', agent: 'ai-scs',
+    title: 'Establish the SCS Platform Completion Program (roadmap & planning)',
+    status: 'Active',
+    standingDirective: 'sdr-002', deliverable: 'dlv-008', reviewGate: 'rgate-008', productOwnerDecision: 'dec-scs-completion',
+    authorityStatus: 'approved', demonstration: false,
+    notes: 'Planning & documentation only: completion definition, roadmap (Phases 6–12), Completion Register, Accepted Capability Inventory, current-state assessment, completion measurement, and the PROPOSED Phase 6 package. Does NOT authorize Phase 6 implementation, authentication, deployment, confidential data, integrations, OS-CAP-001, or launch — each requires a separate directive. No canonical identifiers assigned.',
+  },
 ];
 
 export const deliverables: Deliverable[] = [
@@ -107,6 +117,8 @@ export const deliverables: Deliverable[] = [
   { id: 'dlv-006', deliverableId: 'ST-DLV-2026-006', title: 'SCS Backend Foundation & Persistence Implementation Package', assignmentDirective: 'adr-007', reviewGate: 'rgate-006', status: 'Accepted (Product Owner) — Phase 5 Backend Foundation & Persistence; runtime-verified (PHP 8.2 + MySQL 8, end-to-end green)', authorityStatus: 'approved', demonstration: false, notes: 'Accepted 2026-07-25 by Product Owner ruling. Runtime verification (GitHub Actions run 30168236724, commit 2ae3a64) passed end-to-end: migrations, PHPUnit (persistence, optimistic-concurrency 409, idempotency, FK rejection, transaction rollback, import), backend boot, and RemoteAdapter ↔ real PHP/MySQL. Nestify hosting verification remains unresolved (noted, not blocking). See PHASE_5_IMPLEMENTATION.md.' },
   // SCS Production Baseline v1.0 — documentation deliverable, submitted for review.
   { id: 'dlv-007', deliverableId: 'ST-DLV-2026-007', title: 'SCS Production Baseline v1.0', assignmentDirective: 'adr-008', reviewGate: 'rgate-007', status: 'Accepted (Product Owner) — authoritative implementation baseline (comparison point for all future reviews)', authorityStatus: 'approved', demonstration: false, notes: 'Accepted 2026-07-25. Baseline v1.0 is IMMUTABLE except through future approved supersession. New governance classification "Baseline" recorded (distinct from ST-ADR/ST-DEC/ST-DLV/ST-OPH); Baseline Identifier is Product-Owner-pending. See SCS_PRODUCTION_BASELINE_v1.0.md.' },
+  // SCS Platform Completion Program package — submitted for review.
+  { id: 'dlv-008', deliverableId: 'ST-DLV-2026-008', title: 'SCS Platform Completion Program', assignmentDirective: 'adr-009', reviewGate: 'rgate-008', status: 'In review — SCS Platform Completion Program Review', authorityStatus: 'reported', demonstration: false, notes: 'Completion definition, roadmap (Phases 6–12), Completion Register, Accepted Capability Inventory, current-state assessment (~26% accepted), measurement method, proposed Phase 6 package, decision queue (SCS_PLATFORM_COMPLETION_PROGRAM.md). Planning only — approval does not authorize any implementation phase or launch.' },
 ];
 
 export const reviewGates: Gate[] = [
@@ -122,6 +134,8 @@ export const reviewGates: Gate[] = [
   { id: 'rgate-006', name: 'SCS Backend Foundation & Persistence Review', requiresOwnerApproval: true, status: 'Approved — Phase 5 accepted by Product Owner (gate closed). Phase 6 not authorized.', authorityStatus: 'approved', demonstration: false },
   // Baseline documentation review gate. Acceptance does not authorize Phase 6.
   { id: 'rgate-007', name: 'SCS Production Baseline v1.0 Review', requiresOwnerApproval: true, status: 'Approved & closed — Baseline v1.0 accepted (authoritative). Phase 6 not authorized.', authorityStatus: 'approved', demonstration: false },
+  // Completion Program review gate. Approval of the roadmap does not authorize any implementation phase or launch.
+  { id: 'rgate-008', name: 'SCS Platform Completion Program Review', requiresOwnerApproval: true, status: 'Open — pending Product Owner review', authorityStatus: 'proposed', demonstration: false },
 ];
 
 // ---- Operational History — activation events preserved independently ----

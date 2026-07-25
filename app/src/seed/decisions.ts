@@ -342,4 +342,28 @@ export const interimDecisions: Decision[] = [
     confidence: 'high',
     notes: 'Canonical ST-DEC identifier Product-Owner-pending; not originated by #SCS.',
   },
+
+  // SCS Platform Completion Mandate — records the binding Product Owner requirement (2026-07-25)
+  // that SCS advance to a complete, secure, operational, production-ready platform via governed
+  // phases. Authorizes PLANNING only. Canonical ST-DEC id Product-Owner-pending.
+  {
+    id: 'dec-scs-completion',
+    decisionId: 'Pending Product Owner-authorized ST-DEC identifier',
+    title: 'SCS Platform Completion Mandate',
+    area: 'SCS', decisionClass: 'Platform', status: 'Approved', date: '2026-07-25',
+    approvingAuthority: 'Sonja (Product Owner)',
+    sourceDirective: 'Product Owner Platform Completion Mandate — "Complete the SCS Platform" (2026-07-25)',
+    question: 'Is SCS required to be completed to a secure, operational, production-ready platform, and is the Completion Program authorized for planning?',
+    ruling: 'Binding requirement: the SCS Platform shall be completed — advancing from the accepted Phase 5 baseline through all remaining governed phases needed to become secure, operational, and production-ready for authorized ShockTheory use. SCS shall not remain indefinitely in a baseline/partial state. The SCS Completion Program is authorized for PLANNING only. Phase governance is preserved (no phase self-approves; nothing begins automatically). This does NOT authorize Phase 6 implementation, authentication, deployment, confidential data, integrations, OS-CAP-001, or launch — each requires its own directive.',
+    rationale: 'Completion is now required; phase progression remains governed. Technical readiness is not launch authority.',
+    affectedArtifacts: ['prod-scs', 'ST-DLV-2026-008', 'SCS Platform Completion Program'],
+    implementationConsequences: 'Completion Program planning package produced (SCS_PLATFORM_COMPLETION_PROGRAM.md) and submitted for review. Product record: Completion Program Status = Authorized for Planning. No implementation.',
+    implementationStatus: 'In progress',
+    authoritativeTextByProductOwner: true,
+    queue: 'owner-action',
+    authorityStatus: 'approved',
+    demonstration: false,
+    confidence: 'high',
+    notes: 'Canonical ST-DEC identifier Product-Owner-pending; not originated by #SCS.',
+  },
 ];
