@@ -64,8 +64,14 @@ export function deriveTeam(input: {
     // Only APPROVED activation events are valid evidence; pending ones are traced, not counted.
     const activationEventIds = activationEvents.filter((h) => h.authorityStatus === 'approved').map((h) => h.entryId);
     const pendingActivationEventIds = activationEvents.filter((h) => h.authorityStatus !== 'approved').map((h) => h.entryId);
-    const membership = teamMemberships.find((tm) => tm.agent === a.id && /active/i.test(tm.status));
+    // Do NOT first-match: gather ALL active memberships and detect contradiction.
+    const activeMemberships = teamMemberships.filter((tm) => tm.agent === a.id && /^active$/i.test(tm.status.trim()));
+    const membershipConflict = activeMemberships.length > 1;
+    const membership = activeMemberships.length === 1 ? activeMemberships[0] : undefined;
     const team = membership ? teams.find((t) => t.id === membership.team) : undefined;
+    const conflictingMemberships = membershipConflict
+      ? activeMemberships.map((tm) => `${tm.membershipId} → ${teams.find((t) => t.id === tm.team)?.teamId ?? tm.team}`)
+      : [];
     // Current governing Assignment Directive: a non-closed directive, preferring an active one.
     const openADRs = assignmentDirectives.filter((d) => d.agent === a.id && !/closed/i.test(d.status));
     const activeADR = openADRs.find((d) => /active/i.test(d.status)) ?? openADRs[0];
@@ -79,6 +85,8 @@ export function deriveTeam(input: {
       activationEventIds,
       pendingActivationEventIds,
       teamMembership: membership && team ? { label: `${team.teamId} — ${membership.status}`, active: /active/i.test(membership.status) } : undefined,
+      membershipConflict,
+      conflictingMemberships,
       activeAssignmentDirective: activeADR ? {
         directiveId: activeADR.directiveId, title: activeADR.title, status: activeADR.status,
         deliverable: adrDeliverable?.title, reviewGate: adrGate?.name,
@@ -134,6 +142,12 @@ export function deriveTeam(input: {
   }
 
   const signals: TeamSignal[] = [];
+  const contradicted = cards.filter((c) => c.contradictions.length);
+  if (contradicted.length) signals.push({
+    what: `${contradicted.length} agent(s) have contradictory governing evidence (${contradicted.map((c) => c.name).join(', ')})`,
+    why: 'Ambiguous governing evidence must not be silently resolved; it blocks a reliable derived state.',
+    next: 'Resolve to a single approved record per governing dimension (Product Owner determination).',
+  });
   if (stale.length) signals.push({
     what: `${stale.length} agent workstream(s) require synchronization (${stale.map((c) => c.name).join(', ')})`,
     why: 'Assigned workstreams must stay synchronized with the current constitutional state.',

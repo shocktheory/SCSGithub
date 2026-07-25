@@ -172,6 +172,11 @@ function AgentCardView({ a, density }: { a: AgentCard; density: Density }) {
                 <strong>Missing approved activation evidence:</strong> {a.missingEvidence.join(', ') || 'none'}.
                 {' '}Requires a Product Owner determination of the authorized activation history.
               </p>
+              {a.contradictions.length > 0 && (
+                <p style={{ marginTop: 8, fontSize: 12.5, color: 'var(--status-risk)', lineHeight: 1.5 }}>
+                  <strong>Contradictory evidence:</strong> {a.contradictions.join('; ')}.
+                </p>
+              )}
             </>
           )}
         </Card>
@@ -239,6 +244,11 @@ function AgentCardView({ a, density }: { a: AgentCard; density: Density }) {
             {a.missingLinks.map((m) => (
               <span key={m} className="scs-badge scs-badge--risk"><ShieldAlert size={11} /> {m}</span>
             ))}
+          </div>
+        )}
+        {a.contradictions.length > 0 && (
+          <div style={{ marginTop: 10, fontSize: 12.5, color: 'var(--status-risk)', lineHeight: 1.5 }}>
+            <strong>Contradictory evidence:</strong> {a.contradictions.join('; ')}.
           </div>
         )}
         {expanded && (

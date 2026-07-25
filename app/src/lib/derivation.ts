@@ -22,7 +22,11 @@ export interface DeriveInput {
   activationEventIds: string[];
   /** Unapproved/pending activation events — traceable, but NOT valid activation evidence. */
   pendingActivationEventIds?: string[];
+  /** Provided ONLY when exactly one active Team Membership record exists. */
   teamMembership?: { label: string; active: boolean };
+  /** True when more than one active Team Membership record exists (ambiguous evidence). */
+  membershipConflict?: boolean;
+  conflictingMemberships?: string[];
   activeAssignmentDirective?: {
     directiveId: string; title: string; status: string; deliverable?: string; reviewGate?: string;
   };
@@ -31,6 +35,8 @@ export interface DeriveInput {
 export interface DerivedAgentState {
   activated: boolean;
   missingEvidence: string[];
+  /** Contradictory governing evidence surfaced honestly (never silently resolved). */
+  contradictions: string[];
   status: string;
   standingDirectiveStatus: string;
   currentAssignment: string;
@@ -48,7 +54,13 @@ export interface DerivedAgentState {
 const NA_AWAITING = 'Not Applicable — Awaiting Assignment';
 
 export function deriveAgentState(input: DeriveInput): DerivedAgentState {
-  const { agentName, standingDirective, productOwnerAuthority, activationEventIds, pendingActivationEventIds = [], teamMembership, activeAssignmentDirective } = input;
+  const { agentName, standingDirective, productOwnerAuthority, activationEventIds, pendingActivationEventIds = [], teamMembership, membershipConflict, conflictingMemberships = [], activeAssignmentDirective } = input;
+
+  // Contradictory governing evidence is surfaced honestly, never silently resolved.
+  const contradictions: string[] = [];
+  if (membershipConflict) {
+    contradictions.push(`Contradictory active Team Membership records${conflictingMemberships.length ? `: ${conflictingMemberships.join(', ')}` : ''} — requires Product Owner resolution`);
+  }
 
   // ---- Constitutional activation evidence set ----
   const evidence = {
@@ -56,15 +68,16 @@ export function deriveAgentState(input: DeriveInput): DerivedAgentState {
     standingCurrent: Boolean(standingDirective && standingDirective.status.toLowerCase() === 'current'),
     poAuthority: Boolean(productOwnerAuthority && productOwnerAuthority.approved),
     activationEvent: activationEventIds.length > 0,
-    teamActive: Boolean(teamMembership && teamMembership.active),
+    // Ambiguous membership does NOT satisfy activation — a single unambiguous record is required.
+    teamActive: Boolean(teamMembership && teamMembership.active) && !membershipConflict,
   };
   const missingEvidence: string[] = [];
   if (!evidence.identity) missingEvidence.push('Agent Identity');
   if (!evidence.standingCurrent) missingEvidence.push('Current Standing Directive');
   if (!evidence.poAuthority) missingEvidence.push('Product Owner activation authority');
   if (!evidence.activationEvent) missingEvidence.push('Operational History activation event');
-  if (!evidence.teamActive) missingEvidence.push('active Team Membership');
-  const activated = missingEvidence.length === 0;
+  if (!evidence.teamActive) missingEvidence.push(membershipConflict ? 'unambiguous Team Membership' : 'active Team Membership');
+  const activated = missingEvidence.length === 0 && contradictions.length === 0;
 
   const hasADR = Boolean(activeAssignmentDirective);
   const sdStatus = standingDirective
@@ -140,7 +153,7 @@ export function deriveAgentState(input: DeriveInput): DerivedAgentState {
   }
 
   return {
-    activated, missingEvidence, status, standingDirectiveStatus: sdStatus, currentAssignment,
+    activated, missingEvidence, contradictions, status, standingDirectiveStatus: sdStatus, currentAssignment,
     assignmentDirectiveStatus, synchronization, currentGate, directiveCoverage: coverage,
     operationalReadiness, teamMembership: teamMembershipDisplay, alignment, missingLinks,
     trace: { sourceRecords, logic },

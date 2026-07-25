@@ -109,3 +109,21 @@ describe('assignment lifecycle derives only from Assignment Directives', () => {
     expect(s.trace.logic.length).toBeGreaterThan(0);
   });
 });
+
+describe('contradictory Team Membership evidence is surfaced, not silently resolved', () => {
+  it('multiple active memberships → not activated + contradiction reported', () => {
+    const s = deriveAgentState({
+      ...full(), teamMembership: undefined,
+      membershipConflict: true, conflictingMemberships: ['TM-001 → TEAM-001', 'TM-007 → TEAM-002'],
+    });
+    expect(s.activated).toBe(false);
+    expect(s.contradictions.length).toBeGreaterThan(0);
+    expect(s.contradictions[0]).toMatch(/Contradictory active Team Membership/);
+    expect(s.missingEvidence).toContain('unambiguous Team Membership');
+  });
+
+  it('exactly one active membership → no contradiction', () => {
+    const s = deriveAgentState(full());
+    expect(s.contradictions).toEqual([]);
+  });
+});
