@@ -166,7 +166,7 @@ export interface Decision extends Base {
  * constitutional object (Phase 2). Not a Decision Record; not an Assignment Directive.
  */
 export interface StandingDirective extends Base {
-  directiveId: string; // ST-SDR-2026-###
+  directiveId: string; // canonical ST-SD-00X (e.g. ST-SD-005)
   agent: ID;
   title: string;
   version: string;

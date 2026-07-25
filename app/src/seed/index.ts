@@ -315,7 +315,7 @@ const aiCollaborators: AICollaborator[] = [
     conflictsDetected: [],
     authorityStatus: 'reported',
     confidence: 'medium',
-    notes: 'AGENT-005 — constitutionally activated (state derived from ST-SDR-2026-005 Current, activation Operational History, and Product Owner decision).',
+    notes: 'AGENT-005 — constitutionally activated (state derived from ST-SD-005 v1 Current, approved Product Owner activation authority, Operational History activation events ST-OPH-2026-004/005, and active TEAM-001 membership).',
   },
 ];
 

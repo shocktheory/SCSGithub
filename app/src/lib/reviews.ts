@@ -41,8 +41,10 @@ export function deriveReviews(input: DeriveInput): ReviewItem[] {
   const drive = artifacts.find((a) => a.storageProvider === 'google-drive');
   const items: ReviewItem[] = [];
 
-  // Approval gates awaiting the Product Owner.
-  for (const g of gates.filter((x) => x.requiresOwnerApproval && x.status !== 'Approved')) {
+  // Publication approval gates awaiting the Product Owner. Only gates that belong to a
+  // publication are publication approvals — deliverable/review gates (Phase 2, reconciliation)
+  // are surfaced through the Team Command Center, not double-counted here.
+  for (const g of gates.filter((x) => x.requiresOwnerApproval && x.status !== 'Approved' && x.publication)) {
     const pub = publications.find((p) => p.id === g.publication);
     items.push({
       id: `review-${g.id}`,
