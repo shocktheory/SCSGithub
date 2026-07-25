@@ -3,6 +3,38 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-phase1-rev03] — 2026-07-24
+
+SCS Home vs Executive Snapshot reconciliation + constitutional trust (Revision 02/03).
+
+### Architecture
+- Split the screen: **SCS Home** (interactive constitutional command center) and a separate
+  **Executive Snapshot** (concise generated briefing with View/Refresh/Export/Print).
+- Navigation regrouped: Overview · Constitution · Portfolio · Operations · System. Added
+  Constitutional Library and Artifact Registry as explicitly **Deferred**; badges now carry
+  tooltips ("Planned for Phase 2", "Deferred").
+- SCS Home hierarchy: Current Constitutional State → If You Do One Thing Today → What Needs You →
+  Risks & Constitutional Awareness → What Changed → Product/Publication summary → Active AI
+  Coordination → Recent Constitutional Activity.
+
+### Constitutional trust
+- **Demonstration isolation:** "Demo data" → **Demonstration Data**; a Simulated Constitutional
+  State banner; demo data never counted as real metrics, cited as provenance, or exported as truth.
+- **Approval/activity consistency:** the header no longer asserts approvals that have no governed
+  Decision record; states trace to Recent Constitutional Activity.
+- **Separate record dimensions:** Authority / Governance (Constitutional Review) / Work state /
+  Maturity / Gate are labeled and visually distinct; product & publication authority shows as "Record · …".
+- **Metric reconciliation:** counts state overlap explicitly and filter the list.
+- **Decision workspace:** every review item opens a workspace (exact decision, why, sources,
+  Claude recommendation, #SOS assessment, consequences, impact, Review Decision action).
+- **Constitutional Awareness** expanded (what happened / why it matters / what next).
+- **AI Coordination:** adds Last Constitutional Sync and Authority Scope; ChatGPT/#SOS wording
+  corrected; SCS Home shows active work only, full roster moved to **AI Work**.
+
+### Visual
+- Main workspace spans the full screen; card grids fill width; two-column rows share equal height.
+- Meaningful product summaries (no "product within the ecosystem").
+
 ## [0.1.0-phase1-rev01] — 2026-07-24
 
 Executive Snapshot — Product Owner Review, Revision 01. Maturity step from dashboard toward

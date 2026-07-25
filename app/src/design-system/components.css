@@ -25,6 +25,9 @@
   color: inherit;
   display: block;
 }
+/* Fill the grid cell so cards in a row are equal height, footer pinned to bottom. */
+.scs-card--fill { display: flex; flex-direction: column; height: 100%; }
+.scs-card--fill .scs-card__foot { margin-top: auto; }
 .scs-card--interactive:hover {
   transform: translateY(-2px);
   border-color: rgba(65, 143, 255, 0.4);
@@ -122,13 +125,32 @@
 .scs-timeline__connector { width: 22px; height: 2px; background: var(--border); }
 .scs-timeline__label { font-size: 12px; color: var(--text-muted); margin-left: 4px; }
 
-/* ---------------- Seed / demo flag ---------------- */
+/* ---------------- Demonstration flag ---------------- */
 .scs-seed-flag {
   display: inline-flex; align-items: center; gap: 6px;
   font-size: 11.5px; font-weight: 600; color: var(--status-review);
   background: rgba(240, 198, 116, 0.10); border: 1px solid rgba(240, 198, 116, 0.28);
   padding: 3px 10px; border-radius: 999px;
 }
+
+/* Governance overlay badge (Constitutional Review) — distinct from authority badges. */
+.scs-gov-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11.5px; font-weight: 600; color: var(--color-periwinkle);
+  background: rgba(143, 169, 255, 0.10); border: 1px dashed rgba(143, 169, 255, 0.5);
+  padding: 3px 10px; border-radius: 999px; white-space: nowrap;
+}
+
+/* Demonstration banner — constitutional isolation notice. */
+.scs-demo-banner {
+  display: flex; align-items: flex-start; gap: 12px;
+  border: 1px solid rgba(240, 198, 116, 0.32);
+  background: linear-gradient(180deg, rgba(240, 198, 116, 0.08) 0%, rgba(240, 198, 116, 0.03) 100%);
+  border-radius: var(--radius-card); padding: 14px 18px; margin-bottom: 22px;
+}
+.scs-demo-banner__icon { color: var(--status-review); flex: none; margin-top: 1px; }
+.scs-demo-banner__title { font-size: 13.5px; font-weight: 600; color: var(--status-review); }
+.scs-demo-banner__body { font-size: 13px; color: var(--text-secondary); margin-top: 3px; line-height: 1.5; }
 
 /* ---------------- Stat tiles (scan quantities before descriptions) ---------------- */
 .scs-stat { display: flex; flex-direction: column; gap: 2px; }
@@ -165,13 +187,33 @@
 .scs-coord:last-child { border-bottom: none; }
 .scs-coord__name { font-size: 15px; font-weight: 600; }
 .scs-coord__role { font-size: 12px; color: var(--text-muted); margin-top: 3px; line-height: 1.4; }
-.scs-coord__fields { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px 20px; }
+.scs-coord__fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px 28px; }
 .scs-coord__field-k { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 3px; }
 .scs-coord__field-v { font-size: 13.5px; color: var(--text-primary); line-height: 1.4; }
 @media (max-width: 640px) {
   .scs-coord { grid-template-columns: 1fr; gap: 10px; }
   .scs-coord__fields { grid-template-columns: 1fr; }
 }
+
+/* ---------------- Record dimensions (distinct, labeled) ---------------- */
+.scs-dim-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.scs-dim {
+  display: inline-flex; align-items: stretch; border-radius: 8px; overflow: hidden;
+  border: 1px solid var(--border); font-size: 12px; line-height: 1.5;
+}
+.scs-dim__label {
+  display: inline-flex; align-items: center; padding: 3px 8px;
+  font-size: 9.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text-muted); background: rgba(255,255,255,0.03);
+}
+.scs-dim__value { display: inline-flex; align-items: center; padding: 3px 10px; font-weight: 600; color: var(--text-secondary); }
+.scs-dim--authority .scs-dim__value { color: var(--text-primary); }
+.scs-dim--governance { border-color: rgba(143,169,255,0.4); border-style: dashed; }
+.scs-dim--governance .scs-dim__value { color: var(--color-periwinkle); }
+.scs-dim--work .scs-dim__value { color: var(--color-soft-sky); }
+.scs-dim--maturity .scs-dim__value { color: var(--status-approved); }
+.scs-dim--gate { border-color: rgba(240,198,116,0.4); }
+.scs-dim--gate .scs-dim__value { color: var(--status-review); }
 
 /* ---------------- Metadata rows ---------------- */
 .scs-meta { display: grid; gap: 10px; }

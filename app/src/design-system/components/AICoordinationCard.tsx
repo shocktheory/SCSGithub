@@ -45,10 +45,15 @@ export function AICoordinationRow({
           <Field k="Status" v={<StatusBadge label={status.label} tone={status.tone} />} />
           <Field k="Dependencies" v={dependencies} />
           <Field k="Risks" v={risks} />
+          <Field k="Last constitutional sync" v={collaborator.lastSynced ? collaborator.lastSynced : 'Never synchronized'} />
+          <Field k="Authority scope" v={collaborator.authorityScope ?? 'Advisory — cannot approve'} />
         </div>
       ) : (
-        <div style={{ display: 'flex', alignItems: 'center', color: 'var(--text-muted)', fontSize: 13.5 }}>
-          No active assignment — available.
+        <div className="scs-coord__fields">
+          <Field k="Current assignment" v={<span style={{ color: 'var(--text-muted)' }}>No active assignment — available.</span>} />
+          <Field k="Status" v={<StatusBadge label="Available" tone="neutral" />} />
+          <Field k="Last constitutional sync" v={collaborator.lastSynced ? collaborator.lastSynced : 'Never synchronized'} />
+          <Field k="Authority scope" v={collaborator.authorityScope ?? 'Advisory — cannot approve'} />
         </div>
       )}
     </div>

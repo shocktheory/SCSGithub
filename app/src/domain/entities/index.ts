@@ -18,7 +18,13 @@ export interface SourceIntegrity {
   sourceVersion?: string;
   dateObserved?: ISODate;
   dateRecorded?: ISODate;
+  /** The authority-lifecycle state. Every object is in exactly one. */
   authorityStatus: AuthorityState;
+  /**
+   * Governance overlay — an object may additionally be under active Product Owner
+   * constitutional review. This does NOT replace authorityStatus (Revision 02).
+   */
+  constitutionalReview?: boolean;
   confidence?: 'low' | 'medium' | 'high';
   notes?: string;
 }
@@ -152,6 +158,8 @@ export interface AICollaborator extends Base {
   openQuestions: string[];
   expectedNextAction?: string;
   conflictsDetected: string[];
+  /** Constitutional authority scope. AI recommends; it never approves (Rule #10). */
+  authorityScope?: string;
 }
 
 export interface Assignment extends Base {

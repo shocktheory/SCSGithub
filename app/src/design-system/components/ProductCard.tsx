@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import type { Product, Publication, PublicationPhase } from '../../domain/entities';
-import { productMaturity } from '../../lib/derive';
-import { AuthorityBadge, StatusBadge } from './Badges';
+import { productMaturity, productExecutiveSummary } from '../../lib/derive';
+import { StatusBadge } from './Badges';
 import { MaturityMeter } from './Stat';
+import { DimensionTag } from './Dimensions';
 
 /**
  * Product as a governed entity — communicates constitutional status, maturity,
@@ -24,17 +25,17 @@ export function ProductCard({
   const healthy = own.length > 0;
 
   return (
-    <Link to={`/products/${product.id}`} className="scs-card scs-card--interactive">
+    <Link to={`/products/${product.id}`} className="scs-card scs-card--interactive scs-card--fill">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
         <div>
           <div style={{ fontSize: 17, fontWeight: 600 }}>{product.name}</div>
           <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>{product.ecosystem}</div>
         </div>
-        <AuthorityBadge state={product.authorityStatus} />
+        <DimensionTag label="Record" tone="authority">{product.authorityStatus}</DimensionTag>
       </div>
 
       <p style={{ margin: '12px 0 16px', color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.5 }}>
-        {product.purpose}
+        {productExecutiveSummary(product, publications, phases)}
       </p>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6 }}>
@@ -45,7 +46,7 @@ export function ProductCard({
       </div>
       <MaturityMeter value={maturity.value} />
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 16 }}>
+      <div className="scs-card__foot" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 16 }}>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
           <StatusBadge label={product.lifecycleStage} tone="neutral" />
           <span className="scs-product__health">

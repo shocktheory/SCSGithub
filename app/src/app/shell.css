@@ -37,19 +37,28 @@
 .scs-nav-item:hover { background: rgba(255, 255, 255, 0.04); color: var(--text-primary); }
 .scs-nav-item--active { background: rgba(65, 143, 255, 0.12); color: var(--text-primary); border-color: rgba(65, 143, 255, 0.28); }
 .scs-nav-item--soon { color: var(--text-muted); }
-.scs-nav-item__soon { margin-left: auto; font-size: 10px; letter-spacing: 0.04em; color: var(--text-muted); border: 1px solid var(--border); border-radius: 999px; padding: 1px 6px; }
+.scs-nav-item__soon { margin-left: auto; font-size: 9.5px; letter-spacing: 0.03em; color: var(--text-muted); border: 1px solid var(--border); border-radius: 999px; padding: 1px 7px; white-space: nowrap; cursor: help; }
+.scs-nav-group {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--text-muted); padding: 0 11px 6px; opacity: 0.72;
+}
 
 /* ---------------- Main ---------------- */
 .scs-main { min-width: 0; height: 100dvh; overflow-y: auto; }
-.scs-main__inner { max-width: 1080px; margin: 0 auto; padding: 40px 40px 80px; }
+/* Spans the full workspace. Text-heavy blocks keep their own readable ch caps;
+   card grids fill the extra width with more columns (see .scs-grid--fill). */
+.scs-main__inner { max-width: none; margin: 0 auto; padding: 40px clamp(28px, 3.5vw, 76px) 96px; }
 
 /* ---------------- Topbar (mobile) ---------------- */
 .scs-topbar { display: none; }
 
 /* ---------------- Grids ---------------- */
 .scs-grid { display: grid; gap: 16px; }
-.scs-grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.scs-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+/* Fills wide screens with more columns instead of over-stretching two cards. */
+.scs-grid--2 { grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); }
+.scs-grid--3 { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+/* Cap the readable width of text-heavy prose within the now-full-width canvas. */
+.scs-readable { max-width: 78ch; }
 
 /* ---------------- Responsive ---------------- */
 @media (max-width: 900px) {

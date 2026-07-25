@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Menu } from 'lucide-react';
-import { NAV } from './nav';
+import { NAV, NAV_GROUPS } from './nav';
 import './shell.css';
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -49,25 +49,34 @@ function Sidebar({ open, onNavigate }: { open: boolean; onNavigate: () => void }
         </div>
       </div>
 
-      <nav style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-        {NAV.map((item) => {
-          const Icon = item.icon;
-          return (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              end={item.path === '/'}
-              onClick={onNavigate}
-              className={({ isActive }) =>
-                `scs-nav-item${isActive ? ' scs-nav-item--active' : ''}${item.live ? '' : ' scs-nav-item--soon'}`
-              }
-            >
-              <Icon size={17} strokeWidth={1.9} aria-hidden />
-              <span>{item.label}</span>
-              {!item.live && <span className="scs-nav-item__soon">P{item.phase}</span>}
-            </NavLink>
-          );
-        })}
+      <nav style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        {NAV_GROUPS.map((group) => (
+          <div key={group.title}>
+            <div className="scs-nav-group">{group.title}</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {group.items.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    end={item.path === '/'}
+                    onClick={onNavigate}
+                    className={({ isActive }) =>
+                      `scs-nav-item${isActive ? ' scs-nav-item--active' : ''}${item.status !== 'live' ? ' scs-nav-item--soon' : ''}`
+                    }
+                  >
+                    <Icon size={16} strokeWidth={1.9} aria-hidden />
+                    <span>{item.label}</span>
+                    {item.badge && (
+                      <span className="scs-nav-item__soon" title={item.badgeTip}>{item.badge}</span>
+                    )}
+                  </NavLink>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
       <div style={{ marginTop: 'auto', padding: '14px 10px 4px', color: 'var(--text-muted)', fontSize: 11, lineHeight: 1.5 }}>

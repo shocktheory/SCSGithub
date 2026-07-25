@@ -51,6 +51,25 @@ export function productMaturity(
   return { value, label };
 }
 
+/**
+ * State-derived executive summary for a product — real state (maturity, coverage,
+ * next gate), not an invented marketing description.
+ */
+export function productExecutiveSummary(
+  product: Product,
+  pubs: Publication[],
+  phases: PublicationPhase[],
+): string {
+  const own = pubs.filter((p) => p.product === product.id);
+  const maturity = productMaturity(product, pubs, phases).label;
+  if (own.length === 0) return `${maturity} · no publications yet · awaiting first playbook`;
+  const active = own.filter((p) => p.currentPhase && p.authorityStatus !== 'approved').length;
+  const next = own
+    .filter((p) => p.currentPhase && p.authorityStatus !== 'approved')
+    .map((p) => `${p.title} · ${currentGateLabel(p, phases)}`)[0];
+  return `${maturity} · ${own.length} publications${active ? `, ${active} active` : ''}${next ? ` · next gate: ${next}` : ''}`;
+}
+
 /** Build a phase-gate timeline for a publication from its phases. */
 export function publicationTimeline(pub: Publication, phases: PublicationPhase[]): TimelineStep[] {
   const own = phases

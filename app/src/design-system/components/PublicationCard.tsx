@@ -1,8 +1,7 @@
-import { GitBranch } from 'lucide-react';
 import type { Publication, PublicationPhase } from '../../domain/entities';
-import { FAMILY_LABEL, publicationTimeline, currentGateLabel, authorityTone } from '../../lib/derive';
-import { AuthorityBadge, StatusBadge } from './Badges';
+import { FAMILY_LABEL, publicationTimeline, currentGateLabel } from '../../lib/derive';
 import { GateTimeline } from './GateTimeline';
+import { DimensionTag, DimensionRow } from './Dimensions';
 
 /**
  * A publication as a living constitutional artifact — its type, volume, maturity,
@@ -30,17 +29,15 @@ export function PublicationCard({
           </div>
           <div style={{ fontSize: 17, fontWeight: 600, marginTop: 3 }}>{pub.title}</div>
         </div>
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          <StatusBadge label={pub.status} tone={authorityTone(pub.authorityStatus)} />
-          <AuthorityBadge state={pub.authorityStatus} />
-        </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '16px 0 12px', flexWrap: 'wrap' }}>
-        <span className="scs-artifact__gate">
-          <GitBranch size={13} /> Gate · {gate}
-        </span>
-        {ownerName && <span style={{ fontSize: 12.5, color: 'var(--text-muted)' }}>Owner · {ownerName}</span>}
+      <div style={{ margin: '16px 0 14px' }}>
+        <DimensionRow>
+          <DimensionTag label="Authority" tone="authority">Record · {pub.authorityStatus}</DimensionTag>
+          <DimensionTag label="Work state" tone="work">{pub.status}</DimensionTag>
+          <DimensionTag label="Gate" tone="gate">{gate}</DimensionTag>
+          {ownerName && <DimensionTag label="Owner" tone="neutral">{ownerName}</DimensionTag>}
+        </DimensionRow>
       </div>
 
       <GateTimeline steps={publicationTimeline(pub, phases)} />

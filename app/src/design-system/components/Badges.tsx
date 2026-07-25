@@ -32,10 +32,24 @@ export function StatusBadge({ label, tone = 'neutral' }: { label: string; tone?:
   );
 }
 
-export function SeedFlag() {
+/** Demonstration data is constitutionally isolated — never real approved truth. */
+export function DemonstrationBadge() {
   return (
-    <span className="scs-seed-flag" title="This is labeled demo/seed data — review and correct.">
-      Demo data
+    <span className="scs-seed-flag" title="Demonstration data — constitutionally isolated. Never exported as truth, cited as provenance, or counted in real metrics.">
+      Demonstration Data
+    </span>
+  );
+}
+
+/**
+ * Governance overlay badge. "Constitutional Review" is a governance state that sits
+ * alongside — not instead of — the authority lifecycle (Revision 02).
+ */
+export function GovernanceBadge({ label = 'Constitutional Review' }: { label?: string }) {
+  return (
+    <span className="scs-gov-badge" title="Under active Product Owner constitutional review.">
+      <span className="scs-badge__dot" aria-hidden />
+      {label}
     </span>
   );
 }

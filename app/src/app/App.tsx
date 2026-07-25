@@ -5,18 +5,21 @@ import { queryClient } from '../lib/data';
 import { ensureSeeded } from '../storage/bootstrap';
 import { AppShell } from './AppShell';
 import { NAV } from './nav';
-import { ExecutiveSnapshotPage } from '../features/snapshot/ExecutiveSnapshotPage';
+import { SCSHomePage } from '../features/home/SCSHomePage';
+import { ExecutiveSnapshotBriefing } from '../features/snapshot/ExecutiveSnapshotBriefing';
+import { ReviewWorkspacePage } from '../features/reviews/ReviewWorkspacePage';
 import { OSRegistryPage } from '../features/os/OSRegistryPage';
 import { ProductsPage } from '../features/products/ProductsPage';
 import { ProductCommandPage } from '../features/products/ProductCommandPage';
 import { PublicationsPage } from '../features/publications/PublicationsPage';
+import { AIWorkPage } from '../features/ai/AIWorkPage';
 import { SettingsPage } from '../features/settings/SettingsPage';
 import { PlaceholderPage } from '../features/PlaceholderPage';
 
 /**
  * SCS application root.
- * HashRouter is used so the static build deep-links correctly on the PHP host
- * without server rewrite rules (deploy-safe for shocktheoryos.com).
+ * HashRouter → the static build deep-links correctly on the PHP host without
+ * server rewrite rules (deploy-safe for shocktheoryos.com).
  */
 export function App() {
   const [ready, setReady] = useState(false);
@@ -36,13 +39,16 @@ export function App() {
       <HashRouter>
         <AppShell>
           <Routes>
-            <Route path="/" element={<ExecutiveSnapshotPage />} />
+            <Route path="/" element={<SCSHomePage />} />
+            <Route path="/snapshot" element={<ExecutiveSnapshotBriefing />} />
+            <Route path="/review/:id" element={<ReviewWorkspacePage />} />
             <Route path="/os" element={<OSRegistryPage />} />
             <Route path="/products" element={<ProductsPage />} />
             <Route path="/products/:id" element={<ProductCommandPage />} />
             <Route path="/publications" element={<PublicationsPage />} />
+            <Route path="/ai-work" element={<AIWorkPage />} />
             <Route path="/settings" element={<SettingsPage />} />
-            {NAV.filter((n) => !n.live).map((n) => (
+            {NAV.filter((n) => n.status !== 'live').map((n) => (
               <Route key={n.path} path={n.path} element={<PlaceholderPage item={n} />} />
             ))}
             <Route path="*" element={<Navigate to="/" replace />} />

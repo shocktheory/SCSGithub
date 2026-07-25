@@ -1,65 +1,82 @@
 import {
-  LayoutDashboard,
-  Network,
-  Package,
-  BookOpen,
-  Scale,
-  Quote,
-  Bot,
-  Target,
-  AlertTriangle,
-  History,
-  Settings,
+  Home, ClipboardList, Network, Library, FolderTree, Quote, Scale,
+  Package, BookOpen, Bot, Target, AlertTriangle, History, Settings,
   type LucideIcon,
 } from 'lucide-react';
+
+export type NavStatus = 'live' | 'planned' | 'deferred';
 
 export interface NavItem {
   path: string;
   label: string;
   icon: LucideIcon;
-  /** false → renders a teaching placeholder ("arrives in Phase N"). */
-  live: boolean;
+  status: NavStatus;
   phase?: number;
-  /** Used by placeholder pages to explain what the section will do. */
+  /** Short badge text (e.g. "Phase 2", "Deferred"); tooltip explains its meaning. */
+  badge?: string;
+  badgeTip?: string;
   blurb?: string;
 }
 
-/**
- * Primary navigation (§7). Plain, durable language — no internal dev jargon.
- * Phase 1 ships Overview, ShockTheory OS, Products, Publications, Settings.
- * The remaining sections show honest "coming in Phase N" pages so the full
- * shape of SCS is visible without pretending features exist.
- */
-export const NAV: NavItem[] = [
-  { path: '/', label: 'Executive Snapshot', icon: LayoutDashboard, live: true, phase: 1 },
-  { path: '/os', label: 'ShockTheory OS', icon: Network, live: true, phase: 1 },
-  { path: '/products', label: 'Products', icon: Package, live: true, phase: 1 },
-  { path: '/publications', label: 'Publications', icon: BookOpen, live: true, phase: 1 },
+export interface NavGroup {
+  title: string;
+  items: NavItem[];
+}
+
+const planned = (phase: number, blurb: string): Partial<NavItem> => ({
+  status: 'planned',
+  phase,
+  badge: `Phase ${phase}`,
+  badgeTip: `Planned for Phase ${phase} — defined in the data model, not built yet.`,
+  blurb,
+});
+
+const deferred = (blurb: string): Partial<NavItem> => ({
+  status: 'deferred',
+  badge: 'Deferred',
+  badgeTip: 'Deferred from Phase 1 — represented explicitly in the phase plan.',
+  blurb,
+});
+
+export const NAV_GROUPS: NavGroup[] = [
   {
-    path: '/decisions', label: 'Decisions', icon: Scale, live: false, phase: 2,
-    blurb: 'The governed decision register — rulings, rationale, approving authority, and downstream impact.',
+    title: 'Overview',
+    items: [
+      { path: '/', label: 'SCS Home', icon: Home, status: 'live' },
+      { path: '/snapshot', label: 'Executive Snapshot', icon: ClipboardList, status: 'live' },
+    ],
   },
   {
-    path: '/canonical', label: 'Canonical Language', icon: Quote, live: false, phase: 2,
-    blurb: 'The three-tier language model (Canonical, Enduring, Narrative) and canonical concepts.',
+    title: 'Constitution',
+    items: [
+      { path: '/os', label: 'ShockTheory OS', icon: Network, status: 'live' },
+      { path: '/library', label: 'Constitutional Library', icon: Library, ...deferred('Product architecture, playbooks, canonical language, decisions, specifications, and benchmarks in one governed library.') } as NavItem,
+      { path: '/artifacts', label: 'Artifact Registry', icon: FolderTree, ...deferred('Where every governing artifact lives, with direct open links and link-health.') } as NavItem,
+      { path: '/canonical', label: 'Canonical Language', icon: Quote, ...planned(2, 'The three-tier language model (Canonical, Enduring, Narrative) and canonical concepts.') } as NavItem,
+      { path: '/decisions', label: 'Decisions', icon: Scale, ...planned(2, 'The governed decision register — rulings, rationale, approving authority, downstream impact.') } as NavItem,
+    ],
   },
   {
-    path: '/ai-work', label: 'AI Work', icon: Bot, live: false, phase: 3,
-    blurb: 'What each collaborator is assigned, what they are waiting on, and their expected next output.',
+    title: 'Portfolio',
+    items: [
+      { path: '/products', label: 'Products', icon: Package, status: 'live' },
+      { path: '/publications', label: 'Publications', icon: BookOpen, status: 'live' },
+    ],
   },
   {
-    path: '/benchmarks', label: 'Benchmarks', icon: Target, live: false, phase: 2,
-    blurb: 'The registry of governing quality standards — what each benchmark governs and what it does not.',
+    title: 'Operations',
+    items: [
+      { path: '/ai-work', label: 'AI Work', icon: Bot, status: 'live' },
+      { path: '/benchmarks', label: 'Benchmarks', icon: Target, ...planned(2, 'The registry of governing quality standards — what each benchmark governs and does not.') } as NavItem,
+      { path: '/risks', label: 'Risks & Divergence', icon: AlertTriangle, ...planned(2, 'Governed risks — drift, conflicting authority, missing decisions — with evidence and correction.') } as NavItem,
+      { path: '/updates', label: 'Update Log', icon: History, ...planned(2, 'A chronological, filterable operating log driven by the adopted sync codes.') } as NavItem,
+    ],
   },
   {
-    path: '/risks', label: 'Risks & Divergence', icon: AlertTriangle, live: false, phase: 2,
-    blurb: 'Governed risks — drift, conflicting authority, missing decisions — with evidence and correction.',
+    title: 'System',
+    items: [{ path: '/settings', label: 'Settings', icon: Settings, status: 'live' }],
   },
-  {
-    path: '/updates', label: 'Update Log', icon: History, live: false, phase: 2,
-    blurb: 'A chronological, filterable operating log driven by the adopted sync codes.',
-  },
-  { path: '/settings', label: 'Settings', icon: Settings, live: true, phase: 1 },
 ];
 
+export const NAV: NavItem[] = NAV_GROUPS.flatMap((g) => g.items);
 export const navByPath = (path: string) => NAV.find((n) => n.path === path);

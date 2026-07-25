@@ -1,7 +1,58 @@
-/* Executive Snapshot — the definitive executive operating surface.
+/* SCS Home — interactive constitutional command center.
    Layers progress from strategic awareness → operational detail. */
 
 .scs-snapshot__layer { margin-bottom: 30px; }
+
+/* Two-column executive layout for wide screens (compact summaries side by side).
+   Columns in the same row share equal height: the grid stretches each cell, and
+   the card inside fills its cell so paired cards line up. */
+.scs-home-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(440px, 1fr)); gap: 20px; align-items: stretch; }
+.scs-home-cols > * { display: flex; flex-direction: column; min-width: 0; }
+.scs-home-cols > * > .scs-card { flex: 1 1 auto; }
+
+/* Section header with a "view full section" link. */
+.scs-section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+.scs-section-link { font-size: 12.5px; font-weight: 600; color: var(--color-soft-sky); text-decoration: none; white-space: nowrap; }
+.scs-section-link:hover { text-decoration: underline; }
+
+/* Compact summary rows (products, publications, activity, coordination). */
+.scs-row { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--divider); }
+.scs-row:last-child { border-bottom: none; }
+.scs-row__main { min-width: 0; }
+.scs-row__title { font-size: 14.5px; font-weight: 600; }
+.scs-row__sub { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; }
+.scs-row-link { text-decoration: none; color: inherit; display: block; }
+.scs-row-link:hover .scs-row__title { color: var(--color-soft-sky); }
+
+/* Metric reconciliation — counts state overlap; clicking filters the list. */
+.scs-metric-note { font-size: 12.5px; color: var(--text-muted); margin: 0 0 14px; }
+.scs-metric-tile { text-align: left; background: none; border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; cursor: pointer; transition: border-color var(--duration-scs) var(--ease-scs), background var(--duration-scs) var(--ease-scs); font-family: inherit; }
+.scs-metric-tile:hover { border-color: rgba(65,143,255,0.5); }
+.scs-metric-tile--active { border-color: rgba(65,143,255,0.6); background: rgba(65,143,255,0.08); }
+
+/* Review row → decision workspace (never a dead-end alert). */
+.scs-review-row { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 14px 16px; border: 1px solid var(--border); border-radius: 12px; text-decoration: none; color: inherit; transition: border-color var(--duration-scs) var(--ease-scs), background var(--duration-scs) var(--ease-scs); }
+.scs-review-row:hover { border-color: rgba(65,143,255,0.5); background: var(--surface-raised); }
+.scs-review-row__cta { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--color-soft-sky); white-space: nowrap; }
+
+/* Compact awareness (what / why / next). */
+.scs-aw3 { padding: 14px 0; border-bottom: 1px solid var(--divider); }
+.scs-aw3:last-child { border-bottom: none; }
+.scs-aw3__what { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; font-weight: 600; }
+.scs-aw3__grid { margin: 8px 0 0 26px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 4px 20px; }
+.scs-aw3__k { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); }
+.scs-aw3__v { font-size: 12.5px; color: var(--text-secondary); line-height: 1.45; margin-bottom: 6px; }
+
+/* Executive Snapshot briefing (concise, print-oriented). */
+.scs-briefing { max-width: 900px; }
+.scs-briefing__q { border-left: 3px solid var(--color-electric-blue); padding: 4px 0 4px 16px; margin-bottom: 18px; }
+.scs-briefing__q-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-soft-sky); font-weight: 700; }
+.scs-briefing__q-body { font-size: 15px; color: var(--text-primary); margin-top: 4px; line-height: 1.5; }
+@media print {
+  .scs-sidebar, .scs-topbar, .scs-briefing__actions { display: none !important; }
+  .scs-main, .scs-shell { height: auto !important; overflow: visible !important; display: block !important; }
+  body { background: #fff; color: #000; }
+}
 
 /* ---------------- Hero: Current Operating State (Mission Control) ---------------- */
 .scs-hero {

@@ -1,5 +1,6 @@
 import { QueryClient, useQuery } from '@tanstack/react-query';
 import { localAdapter } from '../storage/localAdapter';
+import { db } from '../storage/db';
 import type { CollectionName } from '../storage/StorageAdapter';
 
 /**
@@ -17,6 +18,18 @@ export function useCollection<T>(name: CollectionName) {
     queryKey: ['collection', name],
     queryFn: () => localAdapter.list<T>(name),
   });
+}
+
+/**
+ * Whether the current workspace is demonstration data. Drives constitutional
+ * isolation across the UI (Revision 02) — demo data is never presented as truth.
+ */
+export function useIsSeed(): boolean {
+  const { data } = useQuery({
+    queryKey: ['meta', 'isSeed'],
+    queryFn: async () => Boolean((await db.meta.get('isSeed'))?.value ?? false),
+  });
+  return data ?? true;
 }
 
 /** Convenience: index a collection by id for cheap lookups/joins in the UI. */
