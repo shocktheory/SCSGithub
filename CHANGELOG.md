@@ -3,6 +3,36 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-phase3-onboarding] — 2026-07-25
+
+**Phase 3 — Operational Governance and Agent Onboarding.** Advances the Constitutional
+Command Center from constitutional-state presentation into a controlled, traceable governed-agent
+onboarding workflow, and prepares the **proposed** #CKL-R (Kidlytics Competitive Research Agent)
+onboarding package for Product Owner review. Nothing here is authoritative; no agent is activated.
+
+### Added
+- **Governed Agent Onboarding Workspace** (`/onboarding`, nav → Operations): identity, intended
+  role/team, proposed record set, authority & limitations, 8-stage lifecycle tracker, Constitutional
+  Readiness Checklist (7 distinct statuses), **Preview-before-approval** (Now → if onboarding approved
+  → if research assignment approved), required Product Owner decisions, auditability, and an explicit
+  "research is blocked" boundary. Entry point added to the Team Command Center.
+- **`deriveOnboarding`** (`src/lib/onboarding.ts`) — additive; **reuses** the Derivation Engine
+  unchanged to show current state (nothing approved → Pending Onboarding) and the effect of approval.
+- **Proposed #CKL-R package** (`src/seed/onboarding.ts`) — all records `proposed`, each with a
+  nonauthoritative working reference and a SEPARATE recommended canonical id; deliberately NOT merged
+  into the authoritative collections that feed the engine, so existing derivation cannot change.
+- **13 onboarding tests** — proposed records don't activate; missing approval prevents activation;
+  proposed activation event traced as pending; preview activation/assignment separation; no canonical
+  id originated; existing five agent states provably unchanged.
+
+### Guarantees (verified)
+- **No canonical identifier originated** — AGENT-006 / ST-SD-006 / TM-009 / ST-OPH-2026-012 / the
+  research ST-ADR are all *recommendations*, gated behind named Product Owner decisions.
+- **#CKL-R not activated**; **no research begun**; the research Assignment Directive stays proposed/not-active.
+- **Existing states unchanged:** #CIA Available; #SOS/#SCS/#CKL/#CKP Pending activation; Active
+  Governed Agents = 1; no contradictions. Reserved matters untouched.
+- typecheck clean · 33 tests pass (20 existing + 13 new) · production build succeeds · screens visually inspected.
+
 ## [0.1.0-transition] — 2026-07-25
 
 **Milestone — Transition from Constitutional Foundation to Product Execution (Approved).**

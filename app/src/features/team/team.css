@@ -31,3 +31,18 @@
 @media (max-width: 560px) { .scs-trace__row { grid-template-columns: 1fr; gap: 1px; } }
 
 .scs-po-card { border: 1px solid rgba(95,208,160,0.32); background: linear-gradient(180deg, rgba(95,208,160,0.06) 0%, rgba(22,27,37,0.4) 100%); }
+
+.scs-onb-pointer {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  border: 1px solid var(--status-proposed);
+  background: color-mix(in srgb, var(--status-proposed) 8%, transparent);
+  border-radius: var(--radius-card); padding: 12px 16px; margin-bottom: 18px;
+  font-size: 13px; color: var(--text-secondary); line-height: 1.5;
+}
+.scs-onb-pointer strong { color: var(--text-primary); }
+.scs-onb-pointer__link {
+  display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+  font-size: 13px; font-weight: 600; color: var(--status-proposed); text-decoration: none;
+  border: 1px solid var(--status-proposed); border-radius: var(--radius-control); padding: 6px 12px;
+}
+.scs-onb-pointer__link:hover { background: color-mix(in srgb, var(--status-proposed) 14%, transparent); }

@@ -81,6 +81,16 @@ export function TeamCommandCenter() {
         {model.overlaps.length ? model.overlaps.join(' ') : 'Categories are distinct.'} Last full-team constitutional synchronization: {model.lastFullSync}.
       </p>
 
+      <div className="scs-onb-pointer">
+        <span>
+          <strong>Phase 3 · Agent onboarding.</strong> A proposed onboarding package for the Kidlytics Competitive
+          Research Agent (#CKL-R) is prepared for Product Owner review — nonauthoritative; not activated.
+        </span>
+        <Link to="/onboarding" className="scs-onb-pointer__link">
+          Open Onboarding Workspace <ExternalLink size={13} />
+        </Link>
+      </div>
+
       {/* Views */}
       <div className="scs-tabs">
         {(['team', 'assignment', 'governance'] as View[]).map((v) => (

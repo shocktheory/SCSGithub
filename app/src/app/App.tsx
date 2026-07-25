@@ -13,6 +13,7 @@ import { ProductsPage } from '../features/products/ProductsPage';
 import { ProductCommandPage } from '../features/products/ProductCommandPage';
 import { PublicationsPage } from '../features/publications/PublicationsPage';
 import { TeamCommandCenter } from '../features/team/TeamCommandCenter';
+import { OnboardingWorkspace } from '../features/onboarding/OnboardingWorkspace';
 import { DecisionsPage } from '../features/decisions/DecisionsPage';
 import { StandingDirectivesPage } from '../features/directives/StandingDirectivesPage';
 import { AssignmentDirectivesPage } from '../features/directives/AssignmentDirectivesPage';
@@ -54,6 +55,7 @@ export function App() {
             <Route path="/products/:id" element={<ProductCommandPage />} />
             <Route path="/publications" element={<PublicationsPage />} />
             <Route path="/ai-work" element={<TeamCommandCenter />} />
+            <Route path="/onboarding" element={<OnboardingWorkspace />} />
             <Route path="/decisions" element={<DecisionsPage />} />
             <Route path="/standing-directives" element={<StandingDirectivesPage />} />
             <Route path="/assignment-directives" element={<AssignmentDirectivesPage />} />

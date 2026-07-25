@@ -1,0 +1,90 @@
+/* Governed Agent Onboarding Workspace (Phase 3). */
+
+.scs-onb-boundary {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  border: 1px solid var(--status-proposed);
+  background: color-mix(in srgb, var(--status-proposed) 10%, transparent);
+  border-radius: var(--radius-card);
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+.scs-onb-boundary__icon { color: var(--status-proposed); flex-shrink: 0; margin-top: 2px; }
+.scs-onb-boundary__title { font-weight: 650; font-size: 14px; margin: 0 0 3px; color: var(--text-primary); }
+.scs-onb-boundary__body { font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5; }
+
+.scs-onb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+  align-items: stretch;
+}
+
+/* Stage tracker */
+.scs-onb-stages { display: flex; flex-wrap: wrap; gap: 8px; }
+.scs-onb-stage {
+  display: flex; align-items: center; gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  padding: 8px 12px; font-size: 12.5px; flex: 1 1 200px;
+}
+.scs-onb-stage__num {
+  width: 22px; height: 22px; border-radius: 999px; flex-shrink: 0;
+  display: grid; place-items: center; font-size: 11px; font-weight: 700;
+  background: var(--surface-raised); color: var(--text-muted); border: 1px solid var(--border);
+}
+.scs-onb-stage--complete { border-color: var(--status-approved); }
+.scs-onb-stage--complete .scs-onb-stage__num { background: var(--status-approved); color: var(--text-on-accent); border-color: var(--status-approved); }
+.scs-onb-stage--current { border-color: var(--status-proposed); box-shadow: 0 0 0 1px var(--status-proposed) inset; }
+.scs-onb-stage--current .scs-onb-stage__num { background: var(--status-proposed); color: var(--text-on-accent); border-color: var(--status-proposed); }
+.scs-onb-stage--pending { opacity: 0.72; }
+.scs-onb-stage__name { line-height: 1.25; }
+
+/* Checklist */
+.scs-onb-check { display: flex; flex-direction: column; gap: 2px; }
+.scs-onb-check__item {
+  display: grid; grid-template-columns: 1fr auto; gap: 6px 12px;
+  padding: 12px 0; border-top: 1px solid var(--divider);
+}
+.scs-onb-check__item:first-child { border-top: none; }
+.scs-onb-check__label { font-weight: 600; font-size: 13.5px; color: var(--text-primary); }
+.scs-onb-check__detail { grid-column: 1 / -1; font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; margin: 0; }
+.scs-onb-check__after { grid-column: 1 / -1; font-size: 12px; color: var(--text-muted); margin: 2px 0 0; }
+.scs-onb-check__after b { color: var(--text-secondary); font-weight: 600; }
+
+/* Preview columns */
+.scs-onb-preview { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.scs-onb-prev {
+  border: 1px solid var(--border); border-radius: var(--radius-card);
+  padding: 14px; display: flex; flex-direction: column; gap: 8px;
+}
+.scs-onb-prev--after { border-color: color-mix(in srgb, var(--status-approved) 45%, var(--border)); }
+.scs-onb-prev__cap { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); font-weight: 700; }
+.scs-onb-prev__status { font-size: 18px; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
+.scs-onb-prev__note { font-size: 12px; color: var(--text-secondary); margin: 0; line-height: 1.45; }
+.scs-onb-prev__miss { font-size: 12px; color: var(--text-muted); margin: 0; }
+
+.scs-onb-lists { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 640px) { .scs-onb-lists { grid-template-columns: 1fr; } }
+.scs-onb-lists ul { margin: 0; padding-left: 18px; }
+.scs-onb-lists li { font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; line-height: 1.45; }
+
+.scs-onb-decisions { counter-reset: dec; list-style: none; margin: 0; padding: 0; }
+.scs-onb-decisions li {
+  counter-increment: dec; position: relative; padding: 10px 0 10px 34px;
+  border-top: 1px solid var(--divider); font-size: 13.5px; color: var(--text-secondary); line-height: 1.5;
+}
+.scs-onb-decisions li:first-child { border-top: none; }
+.scs-onb-decisions li::before {
+  content: counter(dec); position: absolute; left: 0; top: 10px;
+  width: 22px; height: 22px; border-radius: 999px; background: var(--surface-raised);
+  border: 1px solid var(--border); display: grid; place-items: center;
+  font-size: 11px; font-weight: 700; color: var(--text-secondary);
+}
+
+.scs-onb-rec {
+  display: inline-block; font-size: 11.5px; font-family: ui-monospace, monospace;
+  background: var(--surface-raised); border: 1px solid var(--border);
+  border-radius: 6px; padding: 1px 6px; color: var(--text-secondary);
+}

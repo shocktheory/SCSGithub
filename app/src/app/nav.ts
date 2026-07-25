@@ -1,6 +1,6 @@
 import {
   Home, ClipboardList, Network, Scale, Landmark, ClipboardCheck, FolderTree, Quote,
-  Package, BookOpen, Users, PackageCheck, DoorOpen, Activity, Target, AlertTriangle, Settings,
+  Package, BookOpen, Users, UserPlus, PackageCheck, DoorOpen, Activity, Target, AlertTriangle, Settings,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -57,6 +57,7 @@ export const NAV_GROUPS: NavGroup[] = [
     title: 'Operations',
     items: [
       { path: '/ai-work', label: 'Team Command Center', icon: Users, status: 'live' },
+      { path: '/onboarding', label: 'Agent Onboarding', icon: UserPlus, status: 'live', phase: 3, badge: 'Phase 3', badgeTip: 'Phase 3 — governed agent onboarding workspace.' },
       { path: '/deliverables', label: 'Deliverables', icon: PackageCheck, status: 'live' },
       { path: '/review-gates', label: 'Review Gates', icon: DoorOpen, status: 'live' },
       { path: '/operational-history', label: 'Operational History', icon: Activity, status: 'live' },
