@@ -114,6 +114,16 @@ export const assignmentDirectives: AssignmentDirective[] = [
     authorityStatus: 'approved', demonstration: false,
     notes: 'Phase 6 Authorization Package accepted (commit 51a9557) as the authoritative Phase 6 planning document. Product Owner resolved the Phase 6 decisions (native identity, sessions+MFA, DB session store, no new human users, agents propose-only, PO sole non-delegable authority, Trust≠Security, server-sole authorization boundary, bounded scope). Did NOT authorize Phase 6 implementation and created NO implementation-governed records. No canonical identifiers assigned.',
   },
+  // Phase 6 IMPLEMENTATION — Identity, Authority & Trust (Product Owner Implementation Authorization
+  // Directive, 2026-07-25). Now permitted to create implementation records. Canonical ST-ADR id pending.
+  {
+    id: 'adr-011', directiveId: 'Pending Product Owner-authorized ST-ADR identifier (recommended: ST-ADR-2026-011)', agent: 'ai-scs',
+    title: 'SCS Phase 6 Implementation — Identity, Authority & Trust',
+    status: 'Active',
+    standingDirective: 'sdr-002', deliverable: 'dlv-010', reviewGate: 'rgate-010', productOwnerDecision: 'dec-scs-phase6-impl',
+    authorityStatus: 'approved', demonstration: false,
+    notes: 'Implements the approved Phase 6 scope only: Identity (auth/sessions/MFA), Authority (roles/permissions/server-side approval boundary/PO-only approve), Trust (authenticated attribution seam). Runtime-verified in CI (PHP 8.2 + MySQL 8, commit 30d4216). Excluded (not implemented): notifications, hosting, deployment, confidential data, external identity, full Technical Audit Log (Phase 8), launch. #SCS does not self-accept.',
+  },
 ];
 
 export const deliverables: Deliverable[] = [
@@ -132,6 +142,8 @@ export const deliverables: Deliverable[] = [
   { id: 'dlv-008', deliverableId: 'ST-DLV-2026-008', title: 'SCS Platform Completion Program (Rev 2 — capability-based, governance-first)', assignmentDirective: 'adr-009', reviewGate: 'rgate-008', status: 'Accepted (Product Owner) — governing SCS Platform Completion Program (Rev 2, commit b6c9305)', authorityStatus: 'approved', demonstration: false, notes: 'Accepted 2026-07-25. Rev 2 is the governing roadmap: capability hierarchy (Domain→Capability→Requirements→Evidence), governance-first domains, distinct Trust/Security, consolidated Operational Readiness, Platform Architecture + Platform Evolution capabilities. Completion estimate ~25% approved as an order-of-magnitude planning measure (not a release forecast). Approval authorizes the roadmap only — no implementation phase or launch. See SCS_PLATFORM_COMPLETION_PROGRAM.md.' },
   // Phase 6 Authorization Package — planning deliverable, submitted for review.
   { id: 'dlv-009', deliverableId: 'ST-DLV-2026-009', title: 'SCS Phase 6 Authorization Package (planning)', assignmentDirective: 'adr-010', reviewGate: 'rgate-009', status: 'Accepted (Product Owner) — authoritative Phase 6 planning document (commit 51a9557). Phase 6 implementation NOT authorized.', authorityStatus: 'approved', demonstration: false, notes: 'Accepted 2026-07-25 with Product Owner decisions resolved. Required addition produced: AUTHENTICATION_AND_AUTHORITY_PRINCIPLES.md (constitutional architecture). Architecture only — authorizes no implementation; no Phase 6 implementation records. See SCS_PHASE_6_AUTHORIZATION_PACKAGE.md.' },
+  // Phase 6 implementation deliverable — submitted for review (runtime-verified in CI).
+  { id: 'dlv-010', deliverableId: 'ST-DLV-2026-010', title: 'SCS Phase 6 Implementation — Identity, Authority & Trust', assignmentDirective: 'adr-011', reviewGate: 'rgate-010', status: 'In review — Phase 6 Implementation Review (runtime-verified in CI, PHP 8.2 + MySQL 8, end-to-end green)', authorityStatus: 'reported', demonstration: false, notes: 'Identity (Argon2id, server sessions, TOTP MFA mandatory for PO, lifecycle/rotation/revocation/expiry/recovery/lockout), Authority (roles/permissions, server-side approval boundary, PO-only approve, agents propose-only, admins cannot set authority), Trust (authenticated attribution seam; NOT full Technical Audit Log = Phase 8). CI run on commit 30d4216 green: migration 0002, PHPUnit (21), auth e2e (3), persistence e2e (5), frontend (39). All mandatory rejection scenarios enforced + tested. #SCS does not self-accept. See SCS_PHASE_6_IMPLEMENTATION.md.' },
 ];
 
 export const reviewGates: Gate[] = [
@@ -151,6 +163,8 @@ export const reviewGates: Gate[] = [
   { id: 'rgate-008', name: 'SCS Platform Completion Program Review', requiresOwnerApproval: true, status: 'Approved & closed — Completion Program Rev 2 accepted (governing roadmap). Phase 6 not authorized.', authorityStatus: 'approved', demonstration: false },
   // Phase 6 Authorization Package review gate (PLANNING). Acceptance does not authorize Phase 6 implementation.
   { id: 'rgate-009', name: 'Phase 6 Authorization Package Review', requiresOwnerApproval: true, status: 'Approved & closed — Phase 6 Authorization Package accepted (authoritative planning document). Phase 6 implementation NOT authorized.', authorityStatus: 'approved', demonstration: false },
+  // Phase 6 implementation review gate. #SCS does not self-accept; awaits Product Owner disposition.
+  { id: 'rgate-010', name: 'Phase 6 Implementation Review', requiresOwnerApproval: true, status: 'Open — pending Product Owner review (implementation runtime-verified in CI)', authorityStatus: 'proposed', demonstration: false },
 ];
 
 // ---- Operational History — activation events preserved independently ----

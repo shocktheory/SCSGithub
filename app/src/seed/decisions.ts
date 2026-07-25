@@ -389,4 +389,27 @@ export const interimDecisions: Decision[] = [
     confidence: 'high',
     notes: 'Canonical ST-DEC identifier Product-Owner-pending; not originated by #SCS. Package accepted; Phase 6 implementation requires a separate Product Owner authorization directive.',
   },
+
+  // Phase 6 implementation authorization — records the Product Owner Implementation Authorization
+  // Directive (2026-07-25). Canonical ST-DEC id Product-Owner-pending.
+  {
+    id: 'dec-scs-phase6-impl',
+    decisionId: 'Pending Product Owner-authorized ST-DEC identifier',
+    title: 'SCS Phase 6 implementation authorization — Identity, Authority & Trust',
+    area: 'SCS', decisionClass: 'Platform', status: 'Approved', date: '2026-07-25',
+    approvingAuthority: 'Sonja (Product Owner)',
+    sourceDirective: 'Product Owner Implementation Authorization Directive — "Authorize Phase 6 Implementation — Identity, Authority & Trust Foundation" (2026-07-25)',
+    question: 'Is Phase 6 (Identity, Authority, Trust) implementation authorized, within the approved scope?',
+    ruling: 'Authorizes implementation of the approved Phase 6 scope only: Identity (email/password + Argon2id + server-managed sessions + PO MFA + lifecycle/rotation/revocation/expiry/recovery + actor identity), Authority (roles, permissions, authorization middleware, server-side approval boundary, least privilege, admin role management), and Trust (authenticated attribution, request ids, approval integrity, audit-attribution seam). Complies with the Authentication & Authority Principles. Excludes notifications, hosting, deployment, confidential data, external identity, full Technical Audit Log (Phase 8), and launch. #SCS does not self-accept.',
+    rationale: 'Establish the identity/authority/attribution boundary on which every remaining phase depends.',
+    affectedArtifacts: ['prod-scs', 'ST-DLV-2026-010', 'SCS Phase 6 Implementation'],
+    implementationConsequences: 'Phase 6 implemented on the Slim 4 + MySQL backend and runtime-verified in CI (commit 30d4216). Submitted for Product Owner review; not self-accepted.',
+    implementationStatus: 'In progress',
+    authoritativeTextByProductOwner: true,
+    queue: 'owner-action',
+    authorityStatus: 'approved',
+    demonstration: false,
+    confidence: 'high',
+    notes: 'Canonical ST-DEC identifier Product-Owner-pending; not originated by #SCS.',
+  },
 ];

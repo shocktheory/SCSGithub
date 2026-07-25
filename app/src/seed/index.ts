@@ -119,7 +119,7 @@ const products: Product[] = [
     ecosystem: 'ShockTheory · Internal software platform',
     purpose: 'The active software platform that implements approved ShockTheory OS concepts, stores and links authoritative records, derives governed organizational and product state, and presents dashboards, action queues, history, traceability, contradictions, and portfolio status — tracking its own development through the same governed structures.',
     lifecycleStage: 'Awaiting Phase 6 Authorization',
-    status: 'Active — internal platform. Phase 5 Accepted · Baseline v1.0 Established · Completion Program Rev 2 Governing (~25%) · Phase 6 Authorization Package Accepted (implementation NOT authorized).',
+    status: 'Active — internal platform. Phase 5 Accepted · Baseline v1.0 Established · Completion Program Rev 2 Governing (~25%) · Phase 6 Implementation runtime-verified, in review (not yet accepted).',
     owner: 'Sonja Ross (Product Owner) · #SCS (steward/implementer)',
     authorityStatus: 'approved',
     demonstration: false,
@@ -275,9 +275,9 @@ const aiCollaborators: AICollaborator[] = [
     role: 'SCS architecture, design, implementation, testing, repository delivery, and technical documentation.',
     modelProvider: 'Claude (Anthropic)',
     authorityScope: 'Designs and builds SCS but is not SCS and holds no constitutional authority. May not approve.',
-    currentTask: 'Phase 6 Authorization Package ACCEPTED with Product Owner decisions resolved; constitutional Authentication & Authority Principles produced. Phase 6 implementation NOT authorized (no implementation records).',
-    waitingState: 'Awaiting a separate Product Owner Phase 6 implementation-authorization directive',
-    expectedNextAction: 'Await a separate Phase 6 implementation authorization; begin no implementation until then.',
+    currentTask: 'Phase 6 IMPLEMENTED — Identity (auth/sessions/MFA), Authority (roles/permissions/server-side approval boundary/PO-only approve), Trust (attribution seam). Runtime-verified in CI (PHP 8.2 + MySQL 8). Submitted ST-DLV-2026-010 for review; not self-accepted.',
+    waitingState: 'Product Owner review (Phase 6 Implementation Review)',
+    expectedNextAction: 'Await Product Owner disposition of Phase 6; begin no Phase 7 work until separately authorized.',
     syncState: 'Synchronized',
     lastSynced: '2026-07-25',
     governingRecord: 'dec-0007',
@@ -462,6 +462,21 @@ const canonicalStatements: CanonicalStatement[] = [
 // Constitutional activity — only real, honest events. Cue's Phase-4 approval is
 // spec-stated but undated here, so its date is left empty rather than invented.
 const updates: Update[] = [
+  {
+    id: 'upd-scs-phase6-impl',
+    code: 'ST-REVIEW',
+    date: '2026-07-25',
+    summary: 'Product Owner authorized Phase 6 implementation. #SCS implemented Identity (Argon2id, server-managed sessions, TOTP MFA mandatory for PO, lifecycle/rotation/revocation/expiry/recovery/lockout), Authority (roles/permissions, server-side approval boundary, PO-only approve command, agents propose-only, admins cannot set authority), and Trust (authenticated attribution seam). Runtime-verified end-to-end in CI (PHP 8.2 + MySQL 8, commit 30d4216): migration 0002, PHPUnit (21), auth e2e (3), persistence e2e (5), frontend (39); all mandatory rejection scenarios enforced. Submitted ST-DLV-2026-010 to the Phase 6 Implementation Review. #SCS did NOT self-accept. Excluded: notifications, hosting, deployment, confidential data, external identity, full Technical Audit Log (Phase 8), launch.',
+    source: 'Sonja (Product Owner) · #SCS',
+    scope: 'SCS',
+    affectedSystems: ['os-scs', 'prod-scs'],
+    decisionsCreated: ['dec-scs-phase6-impl'],
+    documentsUpdated: [],
+    syncStatus: 'Working — Phase 6 implementation runtime-verified; submitted for review',
+    authorityStatus: 'reported',
+    demonstration: false,
+    confidence: 'high',
+  },
   {
     id: 'upd-scs-phase6-authpkg-accepted',
     code: 'ST-REVIEW',

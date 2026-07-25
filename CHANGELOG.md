@@ -3,6 +3,30 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-scs-phase6-implementation] — 2026-07-25
+
+**Phase 6 IMPLEMENTED — Identity, Authority & Trust (runtime-verified in CI).** The Product Owner
+authorized Phase 6 implementation; #SCS built it within the approved scope and **does not self-accept**
+— submitted to the Phase 6 Implementation Review gate. Executed and green on real PHP 8.2 + MySQL 8
+(commit `30d4216`). Excluded (not implemented): notifications, hosting, deployment, confidential data,
+external identity, full Technical Audit Log (Phase 8), launch.
+
+- **Identity** — `users` + DB-backed `sessions` (migration `0002_auth.sql`); Argon2id; email/password
+  login with **TOTP MFA mandatory for the Product Owner**; session lifecycle/rotation/revocation/idle+
+  absolute expiry/logout; single-use recovery; failed-login lockout. **Native identity only; no JWT.**
+- **Authority** — role/permission matrix (`Authz`); **server-side approval boundary**; **PO-only
+  `approve` command** (fresh MFA); `upsert` may never set elevated authority; agents propose-only;
+  admins cannot set authority.
+- **Trust** — authenticated attribution seam (`mutation_attributions`, request ids, `auth_events`) —
+  **not** the full Technical Audit Log (Phase 8).
+- Wired `/api/auth/*` + CSRF for authenticated writes; fixed route order (static before variable).
+- **Verification (CI, real MySQL):** migration 0002, PHPUnit **21**, auth e2e **3**, persistence e2e 5,
+  frontend 39 — all green. **All mandatory rejection scenarios enforced & tested** (agent approval,
+  admin authority mutation, unauthenticated approval, forged CSRF, replay, stale session, stale version,
+  direct authority mutation, client authority manipulation).
+- Records: adr-011 (#SCS, ST-ADR pending, Active), **ST-DLV-2026-010** in review, **Phase 6
+  Implementation Review** gate, `dec-scs-phase6-impl` (approved; ST-DEC pending). **[SCS_PHASE_6_IMPLEMENTATION.md](SCS_PHASE_6_IMPLEMENTATION.md)**.
+
 ## [0.1.0-scs-phase6-authpkg-accepted] — 2026-07-25
 
 **Phase 6 Authorization Package — ACCEPTED with Product Owner decisions.** The package (commit
