@@ -119,7 +119,7 @@ const products: Product[] = [
     ecosystem: 'ShockTheory · Internal software platform',
     purpose: 'The active software platform that implements approved ShockTheory OS concepts, stores and links authoritative records, derives governed organizational and product state, and presents dashboards, action queues, history, traceability, contradictions, and portfolio status — tracking its own development through the same governed structures.',
     lifecycleStage: 'Phase 6 Accepted · Awaiting Phase 7 Authorization',
-    status: 'Active — internal platform. Phase 6 (Identity, Authority & Trust) Implemented, Verified & Accepted · Baseline v1.0 Established · Completion Program Rev 2 Governing (~40% accepted, recomputed post-Phase-6). Phase 7 not authorized; Not Operational, Not Production, not launched.',
+    status: 'Active — internal platform. Phase 6 (Identity, Authority & Trust) Implemented, Verified & Accepted · Baseline v1.0 Established · Completion Program Rev 2 Governing (~40% accepted). Phase 7 Authorization Package (server-side derivation) in Product Owner review — planning only; Phase 7 implementation NOT authorized. Not Operational, Not Production, not launched.',
     owner: 'Sonja Ross (Product Owner) · #SCS (steward/implementer)',
     authorityStatus: 'approved',
     demonstration: false,
@@ -275,9 +275,9 @@ const aiCollaborators: AICollaborator[] = [
     role: 'SCS architecture, design, implementation, testing, repository delivery, and technical documentation.',
     modelProvider: 'Claude (Anthropic)',
     authorityScope: 'Designs and builds SCS but is not SCS and holds no constitutional authority. May not approve.',
-    currentTask: 'Phase 6 ACCEPTED by Product Owner (2026-07-25) — Identity, Authority & Trust attribution Implemented, Verified & Accepted. Recorded acceptance: ST-DLV-2026-010 accepted, rgate-010 closed, adr-011 closed; Completion Register updated and estimate recomputed (~40%). No further phase work initiated.',
-    waitingState: 'Awaiting separate Product Owner authorization for Phase 7',
-    expectedNextAction: 'Begin no Phase 7 / server-side derivation / hosting / deployment / confidential-data / launch work until separately authorized.',
+    currentTask: 'Phase 7 AUTHORIZATION PACKAGE prepared (planning only) — server-side constitutional derivation & canonical state authority fully specified (derivation architecture, complete governed command model, client/server responsibility matrix, state transitions, version governance, parity, failure handling, security, verification strategy not executed, 11-item PO decision queue). Submitted ST-DLV-2026-011 to the Phase 7 Authorization Package Review (rgate-011). Only planning records created; NO decision record, NO implementation, NO server-side derivation, NO deployment/hosting/confidential data/launch. #SCS did not self-authorize.',
+    waitingState: 'Product Owner review (Phase 7 Authorization Package Review)',
+    expectedNextAction: 'Await Product Owner disposition of the Phase 7 Authorization Package. Begin no Phase 7 implementation / server-side derivation / hosting / deployment / confidential-data / launch work until separately authorized.',
     syncState: 'Synchronized',
     lastSynced: '2026-07-25',
     governingRecord: 'dec-0007',
@@ -462,6 +462,21 @@ const canonicalStatements: CanonicalStatement[] = [
 // Constitutional activity — only real, honest events. Cue's Phase-4 approval is
 // spec-stated but undated here, so its date is left empty rather than invented.
 const updates: Update[] = [
+  {
+    id: 'upd-scs-phase7-authpkg',
+    code: 'ST-REVIEW',
+    date: '2026-07-25',
+    summary: 'Product Owner authorized preparation of the SCS Phase 7 Authorization Package (planning only). #SCS submitted SCS_PHASE_7_AUTHORIZATION_PACKAGE.md (ST-DLV-2026-011) to the Phase 7 Authorization Package Review (rgate-011). Phase 7 mission: the server becomes the single constitutional authority for all derived platform state (server derives, client presents, Product Owner approves). The package defines — planning only — server-side constitutional derivation, canonical state authority, the complete governed command architecture (propose/approve/accept/activate/reject/supersede/archive/restore/retire, defined not implemented), the client/server responsibility matrix, derivation version governance, the constitutional state transition model, parity strategy, performance architecture, failure handling, a security review, a verification strategy (defined, NOT executed), traceability, an updated 11-item Product Owner decision queue, and Phase 7 readiness findings (no self-recommendation). Per the directive\'s closed list, ONLY planning records were created (adr-012, dlv-011, rgate-011, oh-016) — NO decision record, NO implementation records. NO server-side derivation implemented; NO deployment/hosting/confidential data/launch. Baseline v1.0 unaltered; canonical identifiers remain Product-Owner-pending. #SCS did not self-authorize implementation.',
+    source: 'Sonja (Product Owner) · #SCS',
+    scope: 'SCS',
+    affectedSystems: ['os-scs', 'prod-scs'],
+    decisionsCreated: [],
+    documentsUpdated: ['adr-012', 'dlv-011', 'rgate-011', 'oh-016', 'prod-scs', 'SCS_PHASE_7_AUTHORIZATION_PACKAGE.md'],
+    syncStatus: 'Planning — Phase 7 Authorization Package submitted for review (implementation not authorized)',
+    authorityStatus: 'reported',
+    demonstration: false,
+    confidence: 'high',
+  },
   {
     id: 'upd-scs-phase6-accepted',
     code: 'ST-REVIEW',
