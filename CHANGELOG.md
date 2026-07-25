@@ -3,6 +3,23 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-scs-baseline-v1] — 2026-07-25
+
+**SCS Production Baseline v1.0 (documentation).** Authoritative snapshot of the accepted state
+immediately following Phase 5 — the reference point for every future Product Owner review.
+Documentation, traceability, and governance only; **no implementation, architecture, code, or
+accepted-record changes; no canonical identifiers assigned; Phase 6 not authorized.**
+
+- **[SCS_PRODUCTION_BASELINE_v1.0.md](SCS_PRODUCTION_BASELINE_v1.0.md)** — 18 sections: executive
+  summary, product identity, accepted timeline (Phases 0–5), architecture baseline, implementation
+  baseline (implemented vs planned), database baseline (23 tables), testing baseline (real counts:
+  39 frontend + 5 e2e + 8 PHPUnit), boundaries, governance model, records inventory, traceability
+  matrix, limitations, technical-debt register, PO decision queue, lessons learned, roadmap,
+  principles, and the Baseline Integrity Statement.
+- Governed records: baseline **Assignment Directive** (#SCS, ST-ADR pending), **ST-DLV-2026-007**
+  in review, **SCS Production Baseline v1.0 Review** gate, **`dec-scs-baseline`** (approved; ST-DEC pending).
+- No accepted record altered; closed records not reopened. typecheck clean, 39 pass + 5 e2e skipped, build ok.
+
 ## [0.1.0-scs-phase5-accepted] — 2026-07-25
 
 **Phase 5 — ACCEPTED by the Product Owner.** Final disposition recorded: Approved · Assignment

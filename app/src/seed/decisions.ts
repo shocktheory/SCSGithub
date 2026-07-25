@@ -319,4 +319,27 @@ export const interimDecisions: Decision[] = [
     confidence: 'high',
     notes: 'Canonical ST-DEC identifier Product-Owner-pending; not originated by #SCS.',
   },
+
+  // SCS Production Baseline v1.0 authorization — records the Product Owner Baseline Establishment
+  // Directive (2026-07-25). Documentation/traceability only. Canonical ST-DEC id Product-Owner-pending.
+  {
+    id: 'dec-scs-baseline',
+    decisionId: 'Pending Product Owner-authorized ST-DEC identifier',
+    title: 'SCS Production Baseline v1.0 establishment',
+    area: 'SCS', decisionClass: 'Governance', status: 'Approved', date: '2026-07-25',
+    approvingAuthority: 'Sonja (Product Owner)',
+    sourceDirective: 'Product Owner Baseline Establishment Directive — "SCS Production Baseline v1.0" (2026-07-25)',
+    question: 'Is #SCS authorized to establish the authoritative SCS Production Baseline v1.0 snapshot?',
+    ruling: 'Authorizes #SCS to produce the authoritative SCS Production Baseline v1.0 — the official snapshot of the accepted state immediately following Phase 5 — for documentation, traceability, and governance. Does NOT authorize Phase 6, implementation changes, refactoring, authentication, authorization, deployment, production hosting, confidential data, new capabilities, or assignment of canonical identifiers.',
+    rationale: 'Preserve the accepted architecture, implementation, governance, and product state as the reference point for every future Product Owner review.',
+    affectedArtifacts: ['prod-scs', 'ST-DLV-2026-007', 'SCS Production Baseline v1.0'],
+    implementationConsequences: 'A documentation baseline (SCS_PRODUCTION_BASELINE_v1.0.md) is produced and submitted for review. No implementation or accepted-record change.',
+    implementationStatus: 'In progress',
+    authoritativeTextByProductOwner: true,
+    queue: 'owner-action',
+    authorityStatus: 'approved',
+    demonstration: false,
+    confidence: 'high',
+    notes: 'Canonical ST-DEC identifier Product-Owner-pending; not originated by #SCS.',
+  },
 ];

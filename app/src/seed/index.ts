@@ -275,9 +275,9 @@ const aiCollaborators: AICollaborator[] = [
     role: 'SCS architecture, design, implementation, testing, repository delivery, and technical documentation.',
     modelProvider: 'Claude (Anthropic)',
     authorityScope: 'Designs and builds SCS but is not SCS and holds no constitutional authority. May not approve.',
-    currentTask: 'Phase 5 (Backend Foundation & Persistence) ACCEPTED by the Product Owner — runtime-verified. SCS is eligible for Phase 6 authorization; Phase 6 not yet authorized.',
-    waitingState: 'Awaiting a separate Product Owner directive to authorize Phase 6',
-    expectedNextAction: 'Await Product Owner Phase 6 authorization; begin no Phase 6 work until then.',
+    currentTask: 'SCS Production Baseline v1.0 — authoritative snapshot of the accepted state following Phase 5 (documentation & traceability). Submitted ST-DLV-2026-007 for review. Phase 5 accepted; Phase 6 not authorized.',
+    waitingState: 'Product Owner review (SCS Production Baseline v1.0 Review)',
+    expectedNextAction: 'Await Product Owner disposition of the baseline; begin no Phase 6 work until separately authorized.',
     syncState: 'Synchronized',
     lastSynced: '2026-07-25',
     governingRecord: 'dec-0007',
@@ -462,6 +462,21 @@ const canonicalStatements: CanonicalStatement[] = [
 // Constitutional activity — only real, honest events. Cue's Phase-4 approval is
 // spec-stated but undated here, so its date is left empty rather than invented.
 const updates: Update[] = [
+  {
+    id: 'upd-scs-baseline-v1',
+    code: 'ST-OS',
+    date: '2026-07-25',
+    summary: 'Product Owner authorized the SCS Production Baseline v1.0 — an authoritative snapshot of the accepted state following Phase 5 (documentation, traceability, governance). #SCS produced SCS_PRODUCTION_BASELINE_v1.0.md and submitted ST-DLV-2026-007 to the SCS Production Baseline v1.0 Review. Documentation only — no implementation, architecture, or accepted-record changes; no canonical identifiers assigned; Phase 6 not authorized.',
+    source: 'Sonja (Product Owner) · #SCS',
+    scope: 'SCS',
+    affectedSystems: ['os-scs', 'prod-scs'],
+    decisionsCreated: ['dec-scs-baseline'],
+    documentsUpdated: [],
+    syncStatus: 'Working — baseline documentation (submitted for review)',
+    authorityStatus: 'reported',
+    demonstration: false,
+    confidence: 'high',
+  },
   {
     id: 'upd-scs-phase5-accepted',
     code: 'ST-REVIEW',

@@ -83,6 +83,16 @@ export const assignmentDirectives: AssignmentDirective[] = [
     authorityStatus: 'approved', demonstration: false,
     notes: 'Phase 5 (backend foundation & persistence) complete and accepted. Did NOT authorize authentication rollout, confidential-data hosting, integrations, deployment, or go-live. Phase 6 is NOT authorized.',
   },
+  // SCS Production Baseline v1.0 — documentation/traceability only (Product Owner Baseline
+  // Establishment Directive, 2026-07-25). Canonical ST-ADR identifier Product-Owner-pending.
+  {
+    id: 'adr-008', directiveId: 'Pending Product Owner-authorized ST-ADR identifier (recommended: ST-ADR-2026-008)', agent: 'ai-scs',
+    title: 'Establish SCS Production Baseline v1.0 (documentation & traceability)',
+    status: 'Active',
+    standingDirective: 'sdr-002', deliverable: 'dlv-007', reviewGate: 'rgate-007', productOwnerDecision: 'dec-scs-baseline',
+    authorityStatus: 'approved', demonstration: false,
+    notes: 'Documentation only — authoritative snapshot of the accepted state following Phase 5. Does NOT authorize Phase 6, implementation changes, refactoring, authentication, deployment, or new capabilities, and assigns no canonical identifiers.',
+  },
 ];
 
 export const deliverables: Deliverable[] = [
@@ -95,6 +105,8 @@ export const deliverables: Deliverable[] = [
   { id: 'dlv-005', deliverableId: 'ST-DLV-2026-005', title: 'SCS Production Architecture & Authorization Package (Rev 2 — corrected)', assignmentDirective: 'adr-006', reviewGate: 'rgate-005', status: 'Accepted (Product Owner) — authoritative production-architecture planning baseline', authorityStatus: 'approved', demonstration: false, notes: 'Accepted 2026-07-25 as the authoritative production-architecture planning baseline (PHASE_4_PRODUCTION_ARCHITECTURE.md + PHASE_4_CORRECTIONS_REV2.md). Acceptance of the architecture does NOT authorize production implementation; Phase 5 requires a separate Product Owner directive.' },
   // Phase 5 deliverable — submitted for the SCS Backend Foundation & Persistence Review gate.
   { id: 'dlv-006', deliverableId: 'ST-DLV-2026-006', title: 'SCS Backend Foundation & Persistence Implementation Package', assignmentDirective: 'adr-007', reviewGate: 'rgate-006', status: 'Accepted (Product Owner) — Phase 5 Backend Foundation & Persistence; runtime-verified (PHP 8.2 + MySQL 8, end-to-end green)', authorityStatus: 'approved', demonstration: false, notes: 'Accepted 2026-07-25 by Product Owner ruling. Runtime verification (GitHub Actions run 30168236724, commit 2ae3a64) passed end-to-end: migrations, PHPUnit (persistence, optimistic-concurrency 409, idempotency, FK rejection, transaction rollback, import), backend boot, and RemoteAdapter ↔ real PHP/MySQL. Nestify hosting verification remains unresolved (noted, not blocking). See PHASE_5_IMPLEMENTATION.md.' },
+  // SCS Production Baseline v1.0 — documentation deliverable, submitted for review.
+  { id: 'dlv-007', deliverableId: 'ST-DLV-2026-007', title: 'SCS Production Baseline v1.0', assignmentDirective: 'adr-008', reviewGate: 'rgate-007', status: 'In review — SCS Production Baseline v1.0 Review', authorityStatus: 'reported', demonstration: false, notes: 'Authoritative snapshot of the accepted state following Phase 5 (SCS_PRODUCTION_BASELINE_v1.0.md). Documentation & traceability only; no implementation, architecture, or accepted-record changes. Acceptance does not authorize Phase 6.' },
 ];
 
 export const reviewGates: Gate[] = [
@@ -108,6 +120,8 @@ export const reviewGates: Gate[] = [
   { id: 'rgate-005', name: 'SCS Production Architecture Review', requiresOwnerApproval: true, status: 'Approved — Phase 4 Production Architecture accepted (gate closed). Architecturally ready for Phase 5; Phase 5 implementation NOT authorized by this approval.', authorityStatus: 'approved', demonstration: false },
   // Phase 5 review gate. Product Owner authority. Acceptance of Phase 5 does not auto-authorize Phase 6.
   { id: 'rgate-006', name: 'SCS Backend Foundation & Persistence Review', requiresOwnerApproval: true, status: 'Approved — Phase 5 accepted by Product Owner (gate closed). Phase 6 not authorized.', authorityStatus: 'approved', demonstration: false },
+  // Baseline documentation review gate. Acceptance does not authorize Phase 6.
+  { id: 'rgate-007', name: 'SCS Production Baseline v1.0 Review', requiresOwnerApproval: true, status: 'Open — pending Product Owner review', authorityStatus: 'proposed', demonstration: false },
 ];
 
 // ---- Operational History — activation events preserved independently ----
