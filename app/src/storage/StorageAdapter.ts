@@ -33,7 +33,9 @@ export type CollectionName =
   | 'standingDirectives'
   | 'assignmentDirectives'
   | 'deliverables'
-  | 'operationalHistory';
+  | 'operationalHistory'
+  | 'teams'
+  | 'teamMemberships';
 
 export interface WorkspaceBackup {
   schemaVersion: typeof SCHEMA_VERSION;

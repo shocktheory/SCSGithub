@@ -47,9 +47,16 @@ export function DecisionsPage() {
                       {d.demonstration === false && <GovernanceBadge label="Governed record" />}
                     </div>
                   </div>
-                  <p style={{ margin: '4px 0 16px', fontSize: 14.5, color: 'var(--text-primary)', lineHeight: 1.55 }}>{d.ruling}</p>
+                  <p style={{ margin: '4px 0 4px', fontSize: 14.5, color: 'var(--text-primary)', lineHeight: 1.55 }}>{d.ruling}</p>
+                  {d.authoritativeTextByProductOwner && (
+                    <p style={{ margin: '0 0 16px', fontSize: 12, color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                      Summary derived from the governing directive; the authoritative constitutional text is held by the Product Owner.
+                    </p>
+                  )}
                   <MetaGrid
                     rows={[
+                      ['Decision status', d.status],
+                      ['Implementation status', d.implementationStatus ?? '—'],
                       ['Product Owner', d.approvingAuthority ?? '—'],
                       ['Date', d.date ?? '—'],
                       ['Rationale', d.rationale ?? '—'],

@@ -3,6 +3,7 @@ import { SCHEMA_VERSION } from '../domain/schemaVersion';
 import { interimDecisions } from './decisions';
 import {
   standingDirectives, assignmentDirectives, deliverables, operationalHistory, reviewGates,
+  teams, teamMemberships,
 } from './directives';
 import type {
   OSSystem,
@@ -246,7 +247,6 @@ const aiCollaborators: AICollaborator[] = [
     role: 'Constitutional guardian, reconciliation, divergence detection, dependency analysis, and governance advice.',
     standingResponsibility: 'Protects and advises Product Owner authority; does not exercise it.',
     authorityScope: 'Advises and governs; may not approve. No agent may approve its own proposals.',
-    teamMembership: 'TEAM-001 — Active',
     syncState: 'Synchronized',
     lastSynced: '2026-07-24',
     governingRecord: 'dec-0007',
@@ -261,7 +261,6 @@ const aiCollaborators: AICollaborator[] = [
     role: 'SCS architecture, design, implementation, testing, repository delivery, and technical documentation.',
     modelProvider: 'Claude (Anthropic)',
     authorityScope: 'Designs and builds SCS but is not SCS and holds no constitutional authority. May not approve.',
-    teamMembership: 'TEAM-001 — Active',
     currentTask: 'SCS build — Phase 2 Constitutional Governance Implementation.',
     waitingState: 'Product Owner review',
     expectedNextAction: 'Begin Phase 2 (Governance) on approval.',
@@ -280,7 +279,6 @@ const aiCollaborators: AICollaborator[] = [
     modelProvider: 'ChatGPT (OpenAI)',
     assignedProduct: 'prod-kidlytics',
     authorityScope: 'Advises and reconciles Kidlytics product work; does not replace Product Owner approval.',
-    teamMembership: 'TEAM-001 — Active',
     syncState: 'Aligned',
     lastSynced: '2026-07-20',
     governingRecord: 'dec-0008',
@@ -296,7 +294,6 @@ const aiCollaborators: AICollaborator[] = [
     modelProvider: 'Claude (Anthropic)',
     assignedProduct: 'prod-kidlytics',
     authorityScope: 'Prototypes and delivers Kidlytics prototype work; does not replace Product Owner approval.',
-    teamMembership: 'TEAM-001 — Active',
     syncState: 'Aligned',
     lastSynced: '2026-07-22',
     governingRecord: 'dec-0009',
@@ -312,7 +309,6 @@ const aiCollaborators: AICollaborator[] = [
     modelProvider: 'Claude (Anthropic)',
     assignedProduct: 'prod-kidlytics',
     authorityScope: 'Evaluates and synthesizes the Kidlytics invitation experience; may not change architecture, canonical language, or product decisions.',
-    teamMembership: 'TEAM-001 — Active',
     syncState: 'Not Required',
     governingRecord: 'dec-0008',
     openQuestions: [],
@@ -545,6 +541,8 @@ export const seedWorkspace: WorkspaceBackup = {
     assignmentDirectives,
     deliverables,
     operationalHistory,
+    teams,
+    teamMemberships,
     canonicalStatements,
     canonicalConcepts: [],
     aiCollaborators,

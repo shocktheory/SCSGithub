@@ -28,6 +28,8 @@ export class SCSDatabase extends Dexie {
   assignmentDirectives!: Table<Record<string, unknown>, string>;
   deliverables!: Table<Record<string, unknown>, string>;
   operationalHistory!: Table<Record<string, unknown>, string>;
+  teams!: Table<Record<string, unknown>, string>;
+  teamMemberships!: Table<Record<string, unknown>, string>;
   meta!: Table<{ key: string; value: unknown }, string>;
 
   constructor() {
@@ -59,6 +61,11 @@ export class SCSDatabase extends Dexie {
       deliverables: 'id',
       operationalHistory: 'id',
     });
+    // v3 (Reconciliation): Team + Team Membership as first-class objects.
+    this.version(3).stores({
+      teams: 'id',
+      teamMemberships: 'id, agent, team',
+    });
   }
 }
 
@@ -84,6 +91,8 @@ export const COLLECTIONS: CollectionName[] = [
   'assignmentDirectives',
   'deliverables',
   'operationalHistory',
+  'teams',
+  'teamMemberships',
 ];
 
 export const db = new SCSDatabase();

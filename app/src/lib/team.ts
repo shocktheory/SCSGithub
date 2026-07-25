@@ -1,13 +1,13 @@
 import type {
-  AICollaborator, Assignment, Decision, Product, StandingDirective, AssignmentDirective,
-  OperationalHistoryEntry,
+  AICollaborator, Decision, Product, StandingDirective, AssignmentDirective,
+  OperationalHistoryEntry, Team, TeamMembership, Deliverable, Gate,
 } from '../domain/entities';
 import { deriveAgentState, type DerivedAgentState } from './derivation';
 
 /**
  * Team Command Center model. Operational state is DERIVED from governing records
- * via the Constitutional State Derivation Engine — not manually maintained.
- * Not a personnel directory and not competitive scoring.
+ * via the Constitutional State Derivation Engine. Assignment derives only from
+ * Assignment Directives; team membership from Team Membership records.
  */
 
 export interface AgentCard extends DerivedAgentState {
@@ -17,13 +17,13 @@ export interface AgentCard extends DerivedAgentState {
   modelProvider?: string;
   standingResponsibility?: string;
   assigned: boolean;
+  onboarding: boolean;
   deliverable?: string;
   waitingOn?: string;
   blocker?: string;
   affected?: string;
-  roleDirectiveId?: string; // standing directive id (link)
-  assignmentDirectiveId?: string; // assignment directive id (link)
-  onboarding: boolean; // = !activated
+  roleDirectiveId?: string;
+  assignmentDirectiveId?: string;
   isDemonstration: boolean;
 }
 
@@ -40,79 +40,95 @@ export interface TeamModel {
 
 export function deriveTeam(input: {
   agents: AICollaborator[];
-  assignments: Assignment[];
   decisions: Decision[];
   products: Product[];
   standingDirectives?: StandingDirective[];
   assignmentDirectives?: AssignmentDirective[];
   operationalHistory?: OperationalHistoryEntry[];
+  teams?: Team[];
+  teamMemberships?: TeamMembership[];
+  deliverables?: Deliverable[];
+  gates?: Gate[];
   isSeed: boolean;
 }): TeamModel {
   const {
-    agents, assignments, decisions, products,
-    standingDirectives = [], assignmentDirectives = [], operationalHistory = [], isSeed,
+    agents, decisions, products, standingDirectives = [], assignmentDirectives = [],
+    operationalHistory = [], teams = [], teamMemberships = [], deliverables = [], gates = [], isSeed,
   } = input;
   const productName = (id?: string) => (id ? products.find((p) => p.id === id)?.name ?? id : undefined);
 
   const cards: AgentCard[] = agents.map((a) => {
-    const assignment = assignments.find((x) => x.collaborator === a.id);
     const standing = standingDirectives.find((s) => s.agent === a.id);
-    const assignmentDirective = assignment?.directive
-      ? assignmentDirectives.find((d) => d.id === assignment.directive)
-      : assignmentDirectives.find((d) => d.agent === a.id && /active/i.test(d.status));
-    const opHistory = operationalHistory.filter((h) => h.agent === a.id);
-    // A Product Owner decision that constitutionally activates this agent.
-    const activationDecision = decisions.find(
-      (d) => /activation|onboard/i.test(d.title) && d.affectedArtifacts.some((x) => x === a.name),
-    );
+    const governing = standing?.governingDecision ? decisions.find((d) => d.id === standing.governingDecision) : undefined;
+    const activationEventIds = operationalHistory
+      .filter((h) => h.agent === a.id && /activation/i.test(h.evidenceType))
+      .map((h) => h.entryId);
+    const membership = teamMemberships.find((tm) => tm.agent === a.id && /active/i.test(tm.status));
+    const team = membership ? teams.find((t) => t.id === membership.team) : undefined;
+    // Current governing Assignment Directive: a non-closed directive, preferring an active one.
+    const openADRs = assignmentDirectives.filter((d) => d.agent === a.id && !/closed/i.test(d.status));
+    const activeADR = openADRs.find((d) => /active/i.test(d.status)) ?? openADRs[0];
+    const adrDeliverable = activeADR?.deliverable ? deliverables.find((x) => x.id === activeADR.deliverable) : undefined;
+    const adrGate = activeADR?.reviewGate ? gates.find((g) => g.id === activeADR.reviewGate) : undefined;
 
-    const derived = deriveAgentState({ agent: a, standing, assignment, assignmentDirective, opHistory, activationDecision });
+    const derived = deriveAgentState({
+      agentName: a.name,
+      standingDirective: standing ? { id: standing.directiveId, version: standing.version, status: standing.status } : undefined,
+      productOwnerAuthority: governing ? { id: governing.decisionId, approved: governing.authorityStatus === 'approved' } : undefined,
+      activationEventIds,
+      teamMembership: membership && team ? { label: `${team.teamId} — ${membership.status}`, active: /active/i.test(membership.status) } : undefined,
+      activeAssignmentDirective: activeADR ? {
+        directiveId: activeADR.directiveId, title: activeADR.title, status: activeADR.status,
+        deliverable: adrDeliverable?.title, reviewGate: adrGate?.name,
+      } : undefined,
+    });
 
+    const agentDeliverableInReview = deliverables.find((d) => d.assignmentDirective === activeADR?.id && /review/i.test(d.status));
     return {
       ...derived,
       id: a.id, name: a.name, role: a.role, modelProvider: a.modelProvider,
       standingResponsibility: a.standingResponsibility,
-      assigned: Boolean(assignment),
-      deliverable: assignment?.expectedOutput ?? a.expectedNextAction,
-      waitingOn: derived.status === 'Working' ? (assignment?.waitingState ?? a.waitingState) : undefined,
+      assigned: Boolean(activeADR),
+      onboarding: !derived.activated,
+      deliverable: adrDeliverable?.title,
+      waitingOn: agentDeliverableInReview ? 'Product Owner review' : undefined,
       blocker: a.conflictsDetected.length ? a.conflictsDetected.join('; ') : undefined,
       affected: productName(a.assignedProduct),
       roleDirectiveId: standing?.id,
-      assignmentDirectiveId: assignmentDirective?.id,
-      onboarding: !derived.activated,
+      assignmentDirectiveId: activeADR?.id,
       isDemonstration: a.demonstration ?? isSeed,
     };
   });
 
   const activated = cards.filter((c) => c.activated);
   const assigned = cards.filter((c) => c.assigned);
-  const waitingPO = assigned.filter((c) => /product owner|review/i.test(c.waitingOn ?? ''));
-  const deliverablesAwaiting = assigned.filter((c) => c.deliverable && /product owner|review/i.test(c.waitingOn ?? ''));
-  const blocked = cards.filter((c) => c.blocker);
+  const waitingPO = cards.filter((c) => c.waitingOn);
+  const deliverablesInReview = deliverables.filter((d) => /review/i.test(d.status));
+  const blocked = cards.filter((c) => c.blocker || c.status === 'Blocked');
   const warnings = activated.filter((c) => c.alignment === 'Warning');
   const stale = activated.filter((c) => c.synchronization === 'Synchronization required');
   const directivesNoWork = activated.filter((c) => !c.assigned);
-  const workNoDirective = assigned.filter((c) => !c.assignmentDirectiveId);
+  const pendingOnboarding = cards.filter((c) => c.onboarding);
 
-  const m = (key: string, label: string, list: AgentCard[]): TeamMetric => ({
-    key, label, value: list.length, ids: list.map((c) => c.id),
+  const m = (key: string, label: string, ids: string[], value?: number): TeamMetric => ({
+    key, label, value: value ?? ids.length, ids,
   });
 
   const metrics: Record<string, TeamMetric> = {
-    activeAgents: m('activeAgents', 'Active Governed Agents', activated),
-    activeAssignments: m('activeAssignments', 'Active Assignments', assigned),
-    waitingPO: m('waitingPO', 'Waiting on Product Owner', waitingPO),
-    blocked: m('blocked', 'Blocked Work', blocked),
-    warnings: m('warnings', 'Alignment Warnings', warnings),
-    deliverables: m('deliverables', 'Deliverables Awaiting Review', deliverablesAwaiting),
-    directivesNoWork: m('directivesNoWork', 'Directives Without Linked Work', directivesNoWork),
-    workNoDirective: m('workNoDirective', 'Work Without an Approved Directive', workNoDirective),
-    stale: m('stale', 'Stale Synchronizations', stale),
+    activeAgents: m('activeAgents', 'Active Governed Agents', activated.map((c) => c.id)),
+    activeAssignments: m('activeAssignments', 'Active Assignments', assigned.map((c) => c.id)),
+    waitingPO: m('waitingPO', 'Waiting on Product Owner', waitingPO.map((c) => c.id)),
+    deliverables: m('deliverables', 'Deliverables Awaiting Review', waitingPO.map((c) => c.id), deliverablesInReview.length),
+    blocked: m('blocked', 'Blocked Work', blocked.map((c) => c.id)),
+    warnings: m('warnings', 'Alignment Warnings', warnings.map((c) => c.id)),
+    directivesNoWork: m('directivesNoWork', 'Available — Awaiting Assignment', directivesNoWork.map((c) => c.id)),
+    pendingOnboarding: m('pendingOnboarding', 'Pending Onboarding', pendingOnboarding.map((c) => c.id)),
+    stale: m('stale', 'Stale Synchronizations', stale.map((c) => c.id)),
   };
 
   const overlaps: string[] = [];
-  if (waitingPO.length && deliverablesAwaiting.length) {
-    overlaps.push('“Waiting on Product Owner” and “Deliverables Awaiting Review” overlap — the same #SCS deliverable is counted in both.');
+  if (waitingPO.length && deliverablesInReview.length) {
+    overlaps.push(`The ${deliverablesInReview.length} deliverables awaiting review belong to the ${waitingPO.length} agent(s) counted under “Waiting on Product Owner.”`);
   }
 
   const signals: TeamSignal[] = [];
@@ -120,11 +136,6 @@ export function deriveTeam(input: {
     what: `${stale.length} agent workstream(s) require synchronization (${stale.map((c) => c.name).join(', ')})`,
     why: 'Assigned workstreams must stay synchronized with the current constitutional state.',
     next: 'Record a synchronization event and its governing reconciliation.',
-  });
-  if (workNoDirective.length) signals.push({
-    what: `${workNoDirective.length} active assignments have no governing Assignment Directive`,
-    why: 'Work without a governing directive is untraceable to Product Owner authority.',
-    next: 'Link each assignment to an approved Assignment Directive.',
   });
 
   return { agents: cards, metrics, overlaps, signals, lastFullSync: '2026-07-24' };

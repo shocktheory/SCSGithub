@@ -149,6 +149,16 @@ export interface Decision extends Base {
   historicalId?: string;
   /** Whether this decision is awaiting Product Owner action vs. documentation only. */
   queue?: 'owner-action' | 'documentation';
+  /**
+   * Implementation Status — modeled INDEPENDENTLY of decision `status` (the
+   * constitutional decision status). A decision may be Approved yet not-yet-Implemented.
+   */
+  implementationStatus?: 'Not implemented' | 'In progress' | 'Implemented' | 'Reference only';
+  /**
+   * True when the authoritative constitutional text is held by the Product Owner and
+   * the record here is a summary/reference (not the originating constitutional text).
+   */
+  authoritativeTextByProductOwner?: boolean;
 }
 
 /**
@@ -190,6 +200,25 @@ export interface Deliverable extends Base {
   assignmentDirective?: ID;
   reviewGate?: ID;
   status: string;
+}
+
+/**
+ * Team — a first-class constitutional object from the approved baseline (TEAM-001,
+ * TEAM-002). Not a new concept; the approved model already establishes it.
+ */
+export interface Team extends Base {
+  teamId: string; // TEAM-001, TEAM-002
+  name: string;
+  status: string;
+}
+
+/** Team Membership — an agent's membership in a Team (first-class, not an attribute). */
+export interface TeamMembership extends Base {
+  membershipId: string;
+  agent: ID;
+  team: ID;
+  status: string; // Active
+  effectiveDate?: ISODate;
 }
 
 /** Operational History entry — evidence, not performance scoring. */
@@ -250,12 +279,6 @@ export interface AICollaborator extends Base {
   governingRecord?: ID;
   /** Standing constitutional responsibility (distinct from any current assignment). */
   standingResponsibility?: string;
-  /**
-   * Team membership, using the existing approved "Team" concept (e.g. "TEAM-001 — Active").
-   * An attribute on the existing Agent — NOT a new constitutional object/registry.
-   * Operational activation is DERIVED from governing records, not from a manual flag.
-   */
-  teamMembership?: string;
 }
 
 export interface Assignment extends Base {

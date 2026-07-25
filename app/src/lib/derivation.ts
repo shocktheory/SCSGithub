@@ -1,109 +1,130 @@
-import type {
-  AICollaborator, StandingDirective, Assignment, AssignmentDirective,
-  OperationalHistoryEntry, Decision,
-} from '../domain/entities';
-
 /**
- * Constitutional State Derivation Engine.
+ * Constitutional State Derivation Engine (reconciled to the approved baseline).
  *
- * Operational status is the RESULT of approved constitutional records — never a
- * manually maintained value. Where a governing record is absent, the derived state
- * reflects that absence honestly (it never manufactures an activated state).
+ * Constitutional activation derives from the EXACT approved evidence set:
+ *   Agent Identity · Current Standing Directive · Product Owner activation authority ·
+ *   Operational History activation event · active Team Membership.
+ * Absent evidence is reported honestly; activation is never manufactured.
  *
- * Governing sources: Standing Directive · Assignment Directive · Operational History ·
- * Product Owner Decision · Team Membership. See DERIVATION.md for the full rule set.
+ * Governed assignment derives ONLY from approved Assignment Directives — never from
+ * currentTask, implementation task fields, repository activity, or UI state.
+ * See DERIVATION.md.
  */
 
 export type Alignment = 'Aligned' | 'Warning' | 'Not applicable';
+export type Coverage = 'Full' | 'Partial' | 'Not Active';
+
+export interface DeriveInput {
+  agentName: string;
+  standingDirective?: { id: string; version: string; status: string };
+  productOwnerAuthority?: { id: string; approved: boolean };
+  activationEventIds: string[];
+  teamMembership?: { label: string; active: boolean };
+  activeAssignmentDirective?: {
+    directiveId: string; title: string; status: string; deliverable?: string; reviewGate?: string;
+  };
+}
 
 export interface DerivedAgentState {
   activated: boolean;
+  missingEvidence: string[];
   status: string;
   standingDirectiveStatus: string;
   currentAssignment: string;
+  assignmentDirectiveStatus: string;
   synchronization: string;
   currentGate: string;
-  directiveCoverage: 'Full' | 'Partial' | 'Not Active';
+  directiveCoverage: Coverage;
   operationalReadiness: string;
   teamMembership: string;
   alignment: Alignment;
   missingLinks: string[];
-  /** Source records → derivation logic → displayed state, for traceability. */
   trace: { sourceRecords: string[]; logic: string };
 }
 
-export interface DeriveInput {
-  agent: AICollaborator;
-  standing?: StandingDirective;
-  assignment?: Assignment;
-  assignmentDirective?: AssignmentDirective;
-  opHistory: OperationalHistoryEntry[];
-  activationDecision?: Decision;
-}
+const NA_AWAITING = 'Not Applicable — Awaiting Assignment';
 
 export function deriveAgentState(input: DeriveInput): DerivedAgentState {
-  const { agent, standing, assignment, assignmentDirective, opHistory, activationDecision } = input;
+  const { agentName, standingDirective, productOwnerAuthority, activationEventIds, teamMembership, activeAssignmentDirective } = input;
 
-  // Activation is DERIVED: a Standing Directive is "Current" only after Product Owner
-  // activation. This replaces the former hard-coded onboarding flag.
-  const sdCurrent = (standing?.status ?? '').toLowerCase() === 'current';
-  const activated = sdCurrent;
+  // ---- Constitutional activation evidence set ----
+  const evidence = {
+    identity: Boolean(agentName),
+    standingCurrent: Boolean(standingDirective && standingDirective.status.toLowerCase() === 'current'),
+    poAuthority: Boolean(productOwnerAuthority && productOwnerAuthority.approved),
+    activationEvent: activationEventIds.length > 0,
+    teamActive: Boolean(teamMembership && teamMembership.active),
+  };
+  const missingEvidence: string[] = [];
+  if (!evidence.identity) missingEvidence.push('Agent Identity');
+  if (!evidence.standingCurrent) missingEvidence.push('Current Standing Directive');
+  if (!evidence.poAuthority) missingEvidence.push('Product Owner activation authority');
+  if (!evidence.activationEvent) missingEvidence.push('Operational History activation event');
+  if (!evidence.teamActive) missingEvidence.push('active Team Membership');
+  const activated = missingEvidence.length === 0;
 
-  const advising = /govern|advis|guardian/i.test(`${assignment?.waitingState ?? ''} ${agent.role}`);
-  const hasAssignment = Boolean(assignment?.task ?? agent.currentTask);
-  const activationEvents = opHistory.filter((h) => /activat|onboard/i.test(`${h.summary} ${h.evidenceType}`));
+  const hasADR = Boolean(activeAssignmentDirective);
+  const sdStatus = standingDirective
+    ? `${standingDirective.id} ${standingDirective.version} — ${standingDirective.status}`
+    : 'None on record';
+  const teamMembershipDisplay = teamMembership?.label ?? 'Not recorded';
 
   const sourceRecords = [
-    standing ? `${standing.directiveId} ${standing.version} — ${standing.status}` : 'No Standing Directive on record',
-    ...activationEvents.map((h) => `${h.entryId} (${h.evidenceType})`),
-    activationDecision ? `${activationDecision.decisionId} — ${activationDecision.title}` : undefined,
-    agent.teamMembership ? `Team membership: ${agent.teamMembership}` : undefined,
-    assignmentDirective ? `${assignmentDirective.directiveId} — ${assignmentDirective.status}` : undefined,
+    standingDirective ? `${standingDirective.id} ${standingDirective.version} — ${standingDirective.status}` : 'No Standing Directive',
+    productOwnerAuthority ? `Product Owner authority: ${productOwnerAuthority.id}` : 'No Product Owner authority',
+    ...activationEventIds.map((e) => `${e} (Operational History)`),
+    teamMembership ? `Team membership: ${teamMembership.label}` : 'No Team Membership',
+    activeAssignmentDirective ? `${activeAssignmentDirective.directiveId} — ${activeAssignmentDirective.status}` : undefined,
   ].filter(Boolean) as string[];
 
-  const sdStatus = standing ? `${standing.directiveId} ${standing.version} — ${standing.status}` : 'None on record';
-  const currentAssignment = assignment?.task ?? agent.currentTask ?? 'None';
-  const teamMembership = agent.teamMembership ?? 'Not recorded';
   const missingLinks: string[] = [];
-
-  let status: string, synchronization: string, currentGate: string;
-  let directiveCoverage: DerivedAgentState['directiveCoverage'];
-  let operationalReadiness: string, alignment: Alignment, logic: string;
+  let status: string, synchronization: string, currentGate: string, coverage: Coverage;
+  let operationalReadiness: string, alignment: Alignment, assignmentDirectiveStatus: string, currentAssignment: string, logic: string;
 
   if (!activated) {
-    // No active governed obligation → no divergence/stale/warning may be derived.
     status = 'Pending Onboarding';
     synchronization = 'Not Yet Applicable';
     currentGate = 'Constitutional Onboarding';
-    directiveCoverage = 'Not Active';
+    coverage = 'Not Active';
     operationalReadiness = 'Onboarding — awaiting activation';
     alignment = 'Not applicable';
-    logic = 'Standing Directive is not Current (or absent) ⇒ not yet constitutionally activated ⇒ Pending Onboarding. Synchronization Not Yet Applicable; no warning is derived.';
-  } else if (!hasAssignment) {
-    // An activated agent with no assignment is Available, regardless of role wording.
+    assignmentDirectiveStatus = 'Not Applicable — Pending Onboarding';
+    currentAssignment = 'None';
+    logic = `Activation evidence incomplete (missing: ${missingEvidence.join(', ')}) ⇒ not constitutionally activated ⇒ Pending Onboarding. No warning is derived.`;
+  } else if (!hasADR) {
+    // Activated, no Assignment Directive: a valid constitutional chain through activation
+    // and availability. Downstream links are Not Applicable — not a deficiency.
     status = 'Available';
     synchronization = 'Not Required';
     currentGate = 'Awaiting Assignment';
-    directiveCoverage = 'Full';
+    coverage = 'Full';
     operationalReadiness = 'Operational — Awaiting First Assignment';
     alignment = 'Aligned';
-    logic = 'Standing Directive Current + activation recorded ⇒ Operational. No Assignment Directive ⇒ Available, Awaiting Assignment, synchronization Not Required.';
+    assignmentDirectiveStatus = NA_AWAITING;
+    currentAssignment = 'None';
+    logic = 'Full activation evidence set present ⇒ Operational. No Assignment Directive ⇒ Available; Assignment Directive and downstream records are Not Applicable — Awaiting Assignment (an expected absence, not a deficiency).';
   } else {
-    status = advising ? 'Advising' : 'Working';
-    const synced = /synchroniz|aligned/i.test(agent.syncState ?? '');
-    synchronization = synced ? 'Synchronized' : 'Synchronization required';
-    currentGate = assignment?.reviewGate ?? 'In progress';
-    directiveCoverage = assignmentDirective ? 'Full' : 'Partial';
-    operationalReadiness = 'Operational — Assigned';
-    alignment = synced ? 'Aligned' : 'Warning';
-    if (!assignmentDirective) missingLinks.push('Assignment has no governing Assignment Directive');
-    if (!synced) missingLinks.push('Workstream is not synchronized');
-    logic = 'Standing Directive Current + active Assignment ⇒ Working. Synchronization evaluated against the assignment; gate = review gate; coverage Full when an Assignment Directive governs the work.';
+    const adr = activeAssignmentDirective!;
+    const st = adr.status.toLowerCase();
+    const isBlocked = /block/.test(st);
+    const isWaiting = /wait/.test(st);
+    status = isBlocked ? 'Blocked' : isWaiting ? 'Waiting on dependency' : 'Working';
+    synchronization = 'Synchronized';
+    currentGate = adr.reviewGate ?? 'In review';
+    operationalReadiness = isBlocked ? 'Operational — Blocked' : 'Operational — Assigned';
+    alignment = isBlocked ? 'Warning' : 'Aligned';
+    assignmentDirectiveStatus = `${adr.directiveId} — ${adr.status}`;
+    currentAssignment = adr.title;
+    if (!adr.deliverable) missingLinks.push('Assignment Directive has no linked Deliverable');
+    if (!adr.reviewGate) missingLinks.push('Assignment Directive has no Review Gate');
+    coverage = missingLinks.length ? 'Partial' : 'Full';
+    logic = `Full activation evidence set + an Assignment Directive (${adr.status}) ⇒ ${status}. Assignment status derives only from the Assignment Directive; gate from its Review Gate.`;
   }
 
   return {
-    activated, status, standingDirectiveStatus: sdStatus, currentAssignment, synchronization,
-    currentGate, directiveCoverage, operationalReadiness, teamMembership, alignment, missingLinks,
+    activated, missingEvidence, status, standingDirectiveStatus: sdStatus, currentAssignment,
+    assignmentDirectiveStatus, synchronization, currentGate, directiveCoverage: coverage,
+    operationalReadiness, teamMembership: teamMembershipDisplay, alignment, missingLinks,
     trace: { sourceRecords, logic },
   };
 }

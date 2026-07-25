@@ -12,9 +12,9 @@ import {
   DimensionTag, DimensionRow,
 } from '../../design-system/components';
 import type {
-  OSSystem, Product, Publication, PublicationPhase, AICollaborator, Assignment,
+  OSSystem, Product, Publication, PublicationPhase, AICollaborator,
   NextAction, Gate, CanonicalStatement, Update, Artifact, Decision,
-  StandingDirective, AssignmentDirective, OperationalHistoryEntry,
+  StandingDirective, AssignmentDirective, OperationalHistoryEntry, Team, TeamMembership, Deliverable,
 } from '../../domain/entities';
 import '../snapshot/snapshot.css';
 
@@ -27,7 +27,6 @@ export function SCSHomePage() {
   const pubs = useCollection<Publication>('publications');
   const phases = useCollection<PublicationPhase>('publicationPhases');
   const ai = useCollection<AICollaborator>('aiCollaborators');
-  const assignments = useCollection<Assignment>('assignments');
   const nextActions = useCollection<NextAction>('nextActions');
   const gates = useCollection<Gate>('gates');
   const canon = useCollection<CanonicalStatement>('canonicalStatements');
@@ -38,6 +37,9 @@ export function SCSHomePage() {
   const standingDirectives = useCollection<StandingDirective>('standingDirectives');
   const assignmentDirectives = useCollection<AssignmentDirective>('assignmentDirectives');
   const operationalHistory = useCollection<OperationalHistoryEntry>('operationalHistory');
+  const teams = useCollection<Team>('teams');
+  const teamMemberships = useCollection<TeamMembership>('teamMemberships');
+  const deliverables = useCollection<Deliverable>('deliverables');
 
   const [filter, setFilter] = useState<'all' | 'Approval' | 'Unresolved decision'>('all');
 
@@ -94,10 +96,10 @@ export function SCSHomePage() {
   const activity = [...(updates.data ?? [])].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
   const latestChange = activity[0];
   const team = deriveTeam({
-    agents: ai.data ?? [], assignments: assignments.data ?? [],
-    decisions: decisions.data ?? [], products: products.data ?? [],
+    agents: ai.data ?? [], decisions: decisions.data ?? [], products: products.data ?? [],
     standingDirectives: standingDirectives.data ?? [], assignmentDirectives: assignmentDirectives.data ?? [],
-    operationalHistory: operationalHistory.data ?? [], isSeed,
+    operationalHistory: operationalHistory.data ?? [], teams: teams.data ?? [], teamMemberships: teamMemberships.data ?? [],
+    deliverables: deliverables.data ?? [], gates: gates.data ?? [], isSeed,
   });
 
   return (
@@ -332,8 +334,8 @@ export function SCSHomePage() {
             <StatTile value={team.metrics.waitingPO.value} label="Waiting on you" tone={team.metrics.waitingPO.value ? 'review' : 'muted'} />
             <StatTile value={team.metrics.blocked.value} label="Work blocked" tone={team.metrics.blocked.value ? 'review' : 'muted'} />
             <StatTile value={team.metrics.warnings.value} label="Alignment warnings" tone={team.metrics.warnings.value ? 'review' : 'muted'} />
-            <StatTile value={team.metrics.directivesNoWork.value} label="Directives without linked work" tone="muted" />
-            <StatTile value={team.metrics.workNoDirective.value} label="Work without a directive" tone={team.metrics.workNoDirective.value ? 'review' : 'muted'} />
+            <StatTile value={team.metrics.directivesNoWork.value} label="Available — awaiting assignment" tone="muted" />
+            <StatTile value={team.metrics.pendingOnboarding.value} label="Pending onboarding" tone={team.metrics.pendingOnboarding.value ? 'review' : 'muted'} />
           </div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
             <Link className="scs-btn scs-btn--primary" to="/ai-work">Open Team Command Center <ArrowRight size={15} /></Link>

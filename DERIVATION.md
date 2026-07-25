@@ -15,15 +15,27 @@ maintained value (ST-DEC-2026-014/016). Engine: `app/src/lib/derivation.ts`
 Standing Directive · Assignment Directive · Operational History · Product Owner Decision ·
 Team Membership (an attribute on the existing Agent, using the approved "Team" concept).
 
+## Constitutional activation — the exact approved evidence set
+
+An agent is **constitutionally activated** only when ALL of the following are present. If any is
+absent, activation is **not** derived; the missing evidence is reported honestly.
+
+1. **Agent Identity**
+2. **Current Standing Directive** linked to that Agent (status = `Current`)
+3. **Product Owner activation authority** (an approved governing decision / directive)
+4. **Operational History activation event**
+5. **Active Team Membership** (a Team Membership record, not an agent attribute)
+
 ## Derivation rules (agent operational state)
 
-Let **SD** = the agent's Standing Directive, **ASG** = its Assignment, **ADR** = its Assignment
-Directive, **OPH** = its Operational History, **POD** = a Product Owner activation decision.
+Let **SD** = Standing Directive, **ADR** = the current Assignment Directive, **OPH** = Operational
+History, **TM** = Team Membership, **POA** = Product Owner activation authority.
 
 | Derived value | Rule |
 |---|---|
-| **Activated** | `SD.status == "Current"`. (A Standing Directive is Current only after Product Owner activation.) |
-| **Status** | not activated → `Pending Onboarding`; activated + advising role → `Advising`; activated + active assignment → `Working`; activated + no assignment → `Available`. |
+| **Activated** | full evidence set present (SD Current + POA approved + OPH activation event + active TM). |
+| **Status** | not activated → `Pending Onboarding`; activated + ADR `Active` → `Working`; ADR `Waiting…` → `Waiting on dependency`; ADR `Blocked` → `Blocked`; activated + no ADR → `Available`. |
+| **Assignment** | derives ONLY from Assignment Directives — never from currentTask, implementation fields, repository activity, or UI state. No ADR ⇒ `Not Applicable — Awaiting Assignment` (an expected absence, not a deficiency). |
 | **Standing Directive status** | `SD ? "{id} {version} — {status}" : "None on record"`. |
 | **Current Assignment** | `ASG.task` or `None`. |
 | **Synchronization** | not activated → `Not Yet Applicable`; activated + no assignment → `Not Required`; activated + assignment → `Synchronized` / `Synchronization required`. |
