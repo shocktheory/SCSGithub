@@ -1,10 +1,11 @@
 # SCS Phase 6 Implementation — Identity, Authority & Trust
 
-**Status:** Proposed — submitted to the **Phase 6 Implementation Review** gate.
+**Status:** **Accepted** — Product Owner disposition of the Phase 6 Implementation Review: *Implemented, Verified & Accepted* (2026-07-25). ST-DLV-2026-010 accepted; rgate-010 closed Approved; adr-011 closed.
 **Authority:** Product Owner Implementation Authorization Directive — *Authorize Phase 6 Implementation* (2026-07-25), within the accepted Phase 6 Authorization Package and Authentication & Authority Principles.
 **Runtime verification:** GitHub Actions "Phase 5 Runtime Verification" (extended for Phase 6), commit `30d4216` — **conclusion: success** on real PHP 8.2 + MySQL 8.
+**Acceptance decisions (Product Owner):** Administrator MFA remains optional in Phase 6 (mandatory deferred); infrastructure rate-limiting deferred to Phase 10 (application-layer lockout sufficient for Phase 6); client login UI is outside Phase 6 scope; the full Technical Audit Log remains Phase 8. This acceptance does **not** authorize Phase 7, confidential data, hosting, deployment, or launch.
 
-> **#SCS does not self-accept Phase 6.** This package is submitted for Product Owner disposition. Implementation stayed strictly within the approved scope; no notifications, hosting, deployment, confidential data, external identity, Technical Audit Log, or launch.
+> **#SCS did not self-accept Phase 6.** It was submitted for, and received, Product Owner disposition. Implementation stayed strictly within the approved scope; no notifications, hosting, deployment, confidential data, external identity, Technical Audit Log, or launch. Commits `30d4216` and `9c0e33c` are preserved as accepted revisions.
 
 ---
 
