@@ -3,6 +3,25 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-scs-phase6-authpkg-accepted] — 2026-07-25
+
+**Phase 6 Authorization Package — ACCEPTED with Product Owner decisions.** The package (commit
+`51a9557`) is accepted as the authoritative Phase 6 planning document. **Phase 6 implementation is
+NOT authorized; no implementation-governed records created; Baseline v1.0 unaltered; no canonical
+identifiers.**
+
+- Assignment **adr-010** → Closed — completed & accepted; **ST-DLV-2026-009** → Accepted; **Phase 6
+  Authorization Package Review** gate → Approved & closed; `dec-scs-phase6-authpkg` → Verified and Accepted.
+- **Ten Phase 6 decisions resolved** (recorded; canonical ST-DEC ids deferred): native SCS identity ·
+  email/password + Argon2id + server-managed sessions (no JWT) · MFA mandatory for PO · DB session store ·
+  no new human users · agents propose-only · PO sole non-delegable authority · Trust≠Security (permanent
+  doctrine) · server-sole authorization boundary (rejected scenarios → mandatory regression tests) ·
+  bounded scope.
+- **Required addition produced:** **[AUTHENTICATION_AND_AUTHORITY_PRINCIPLES.md](AUTHENTICATION_AND_AUTHORITY_PRINCIPLES.md)**
+  — permanent constitutional architecture doctrine.
+- Disposition recorded in Activity + Operational History (OpHistory entry, Product-Owner-pending ST-OPH id).
+  typecheck clean · 39 pass + 5 e2e skipped · build ok.
+
 ## [0.1.0-scs-phase6-auth-package] — 2026-07-25
 
 **SCS Phase 6 Authorization Package (planning only).** The Product Owner authorized *preparation* of

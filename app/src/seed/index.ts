@@ -119,7 +119,7 @@ const products: Product[] = [
     ecosystem: 'ShockTheory · Internal software platform',
     purpose: 'The active software platform that implements approved ShockTheory OS concepts, stores and links authoritative records, derives governed organizational and product state, and presents dashboards, action queues, history, traceability, contradictions, and portfolio status — tracking its own development through the same governed structures.',
     lifecycleStage: 'Awaiting Phase 6 Authorization',
-    status: 'Active — internal platform. Phase 5 Accepted · Production Baseline v1.0 Established · Completion Program: Governing & Active (Rev 2 accepted, ~25%).',
+    status: 'Active — internal platform. Phase 5 Accepted · Baseline v1.0 Established · Completion Program Rev 2 Governing (~25%) · Phase 6 Authorization Package Accepted (implementation NOT authorized).',
     owner: 'Sonja Ross (Product Owner) · #SCS (steward/implementer)',
     authorityStatus: 'approved',
     demonstration: false,
@@ -275,9 +275,9 @@ const aiCollaborators: AICollaborator[] = [
     role: 'SCS architecture, design, implementation, testing, repository delivery, and technical documentation.',
     modelProvider: 'Claude (Anthropic)',
     authorityScope: 'Designs and builds SCS but is not SCS and holds no constitutional authority. May not approve.',
-    currentTask: 'SCS Phase 6 Authorization Package (planning only) — Identity/Authority/Trust architecture, identity & role/permission models, authorization boundary, threat assessment, verification strategy, and readiness. Submitted ST-DLV-2026-009 for review. No implementation; no Phase 6 implementation records.',
-    waitingState: 'Product Owner review (Phase 6 Authorization Package Review); then a separate Phase 6 implementation-authorization directive',
-    expectedNextAction: 'Await Product Owner disposition of the authorization package and a separate Phase 6 implementation authorization; begin no implementation until then.',
+    currentTask: 'Phase 6 Authorization Package ACCEPTED with Product Owner decisions resolved; constitutional Authentication & Authority Principles produced. Phase 6 implementation NOT authorized (no implementation records).',
+    waitingState: 'Awaiting a separate Product Owner Phase 6 implementation-authorization directive',
+    expectedNextAction: 'Await a separate Phase 6 implementation authorization; begin no implementation until then.',
     syncState: 'Synchronized',
     lastSynced: '2026-07-25',
     governingRecord: 'dec-0007',
@@ -462,6 +462,21 @@ const canonicalStatements: CanonicalStatement[] = [
 // Constitutional activity — only real, honest events. Cue's Phase-4 approval is
 // spec-stated but undated here, so its date is left empty rather than invented.
 const updates: Update[] = [
+  {
+    id: 'upd-scs-phase6-authpkg-accepted',
+    code: 'ST-REVIEW',
+    date: '2026-07-25',
+    summary: 'Phase 6 Authorization Package Review — APPROVED with Product Owner decisions. The package (commit 51a9557) is accepted as the authoritative Phase 6 planning document; assignment closed, ST-DLV-2026-009 accepted, gate closed. Ten Phase 6 decisions resolved (native identity; email/password + Argon2id + server sessions, no JWT; MFA mandatory for PO; DB session store; no new human users; agents propose-only; PO sole non-delegable authority; Trust≠Security permanent doctrine; server-sole authorization boundary with mandatory regression tests; bounded scope). Required addition produced: AUTHENTICATION_AND_AUTHORITY_PRINCIPLES.md (constitutional architecture). Phase 6 IMPLEMENTATION NOT AUTHORIZED; no implementation records created; Baseline v1.0 unaltered; canonical identifiers deferred.',
+    source: 'Sonja (Product Owner)',
+    scope: 'SCS',
+    affectedSystems: ['os-scs', 'prod-scs'],
+    decisionsCreated: [],
+    documentsUpdated: ['dlv-009', 'rgate-009', 'adr-010', 'dec-scs-phase6-authpkg'],
+    syncStatus: 'Approved — Phase 6 Authorization Package accepted (implementation not authorized)',
+    authorityStatus: 'approved',
+    demonstration: false,
+    confidence: 'high',
+  },
   {
     id: 'upd-scs-phase6-authpkg',
     code: 'ST-OS',
