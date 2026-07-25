@@ -275,9 +275,9 @@ const aiCollaborators: AICollaborator[] = [
     role: 'SCS architecture, design, implementation, testing, repository delivery, and technical documentation.',
     modelProvider: 'Claude (Anthropic)',
     authorityScope: 'Designs and builds SCS but is not SCS and holds no constitutional authority. May not approve.',
-    currentTask: 'SCS Platform Completion Program Rev 2 ACCEPTED as the governing completion roadmap. Next governed action: prepare a separate Phase 6 Authorization Directive (preparation does not authorize implementation).',
-    waitingState: 'Awaiting a separate Product Owner Phase 6 Authorization Directive',
-    expectedNextAction: 'Prepare the Phase 6 Authorization Directive on Product Owner request; begin no Phase 6 implementation until separately authorized.',
+    currentTask: 'SCS Phase 6 Authorization Package (planning only) — Identity/Authority/Trust architecture, identity & role/permission models, authorization boundary, threat assessment, verification strategy, and readiness. Submitted ST-DLV-2026-009 for review. No implementation; no Phase 6 implementation records.',
+    waitingState: 'Product Owner review (Phase 6 Authorization Package Review); then a separate Phase 6 implementation-authorization directive',
+    expectedNextAction: 'Await Product Owner disposition of the authorization package and a separate Phase 6 implementation authorization; begin no implementation until then.',
     syncState: 'Synchronized',
     lastSynced: '2026-07-25',
     governingRecord: 'dec-0007',
@@ -462,6 +462,21 @@ const canonicalStatements: CanonicalStatement[] = [
 // Constitutional activity — only real, honest events. Cue's Phase-4 approval is
 // spec-stated but undated here, so its date is left empty rather than invented.
 const updates: Update[] = [
+  {
+    id: 'upd-scs-phase6-authpkg',
+    code: 'ST-OS',
+    date: '2026-07-25',
+    summary: 'Product Owner authorized preparation of the SCS Phase 6 Authorization Package (planning only). #SCS submitted SCS_PHASE_6_AUTHORIZATION_PACKAGE.md (ST-DLV-2026-009): executive overview, capability breakdown (Identity/Authority/Trust), security & trust architecture, identity model, role/permission matrix, authorization boundary, threat assessment, verification strategy (not executed), traceability, decision queue, and readiness (Phase 6 is architecturally defined and ready for a Product Owner decision). Planning only — NO implementation, NO Phase 6 implementation records, no authentication/authorization code, no deployment, no confidential data, no launch.',
+    source: 'Sonja (Product Owner) · #SCS',
+    scope: 'SCS',
+    affectedSystems: ['os-scs', 'prod-scs'],
+    decisionsCreated: ['dec-scs-phase6-authpkg'],
+    documentsUpdated: [],
+    syncStatus: 'Planning — Phase 6 Authorization Package submitted for review',
+    authorityStatus: 'reported',
+    demonstration: false,
+    confidence: 'high',
+  },
   {
     id: 'upd-scs-completion-rev2-accepted',
     code: 'ST-REVIEW',

@@ -3,6 +3,24 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-scs-phase6-auth-package] — 2026-07-25
+
+**SCS Phase 6 Authorization Package (planning only).** The Product Owner authorized *preparation* of
+the Phase 6 authorization package (not Phase 6 itself). **No implementation, no code, no Phase 6
+implementation-governed records, no auth/authorization, no database changes, no deployment, no
+confidential data, no launch.** Baseline v1.0 unaltered; no canonical identifiers.
+
+- **[SCS_PHASE_6_AUTHORIZATION_PACKAGE.md](SCS_PHASE_6_AUTHORIZATION_PACKAGE.md)** — 13 deliverables:
+  executive overview, capability breakdown (Identity/Authority/Trust via Domain→Capability→
+  Requirements→Evidence), functional scope matrix, security architecture, trust architecture (distinct
+  from security), identity model (PO/admin/user/agent/service/future/demo), role & permission matrix,
+  authorization boundary review, threat & risk assessment, verification strategy (defined, not
+  executed), traceability, decision queue, and a readiness assessment (Phase 6 is architecturally
+  defined and ready for a Product Owner *decision* — implementation not recommended on its own authority).
+- **Planning** governed records only: adr-010 (#SCS, ST-ADR pending), ST-DLV-2026-009 in review,
+  Phase 6 Authorization Package Review gate, `dec-scs-phase6-authpkg` (approved; ST-DEC pending).
+  **No Phase 6 implementation records created.** typecheck clean · 39 pass + 5 e2e skipped · build ok.
+
 ## [0.1.0-scs-completion-rev2-accepted] — 2026-07-25
 
 **Completion Program Rev 2 — ACCEPTED as the governing roadmap.** Recording only — no implementation,

@@ -103,6 +103,17 @@ export const assignmentDirectives: AssignmentDirective[] = [
     authorityStatus: 'approved', demonstration: false,
     notes: 'Completion Program Rev 2 (commit b6c9305) approved as the governing SCS Platform Completion Program. Planning/documentation only. Did NOT authorize Phase 6, authentication/authorization, Phase 6 records, confidential data, hosting selection, deployment, integrations, or launch — each requires a separate directive. No canonical identifiers assigned.',
   },
+  // Phase 6 Authorization Package — PLANNING record for authorization preparation only (Product
+  // Owner Authorization Directive, 2026-07-25). NOT a Phase 6 implementation record. Canonical
+  // ST-ADR identifier Product-Owner-pending.
+  {
+    id: 'adr-010', directiveId: 'Pending Product Owner-authorized ST-ADR identifier (recommended: ST-ADR-2026-010)', agent: 'ai-scs',
+    title: 'Prepare the SCS Phase 6 Authorization Package (planning only)',
+    status: 'Active',
+    standingDirective: 'sdr-002', deliverable: 'dlv-009', reviewGate: 'rgate-009', productOwnerDecision: 'dec-scs-phase6-authpkg',
+    authorityStatus: 'approved', demonstration: false,
+    notes: 'Planning & authorization preparation only (SCS_PHASE_6_AUTHORIZATION_PACKAGE.md). Does NOT authorize Phase 6 implementation, authentication/authorization code, database changes, deployment, confidential data, hosting, integrations, or launch, and creates NO Phase 6 implementation-governed records. Those exist only after a separate Product Owner authorization. No canonical identifiers assigned.',
+  },
 ];
 
 export const deliverables: Deliverable[] = [
@@ -119,6 +130,8 @@ export const deliverables: Deliverable[] = [
   { id: 'dlv-007', deliverableId: 'ST-DLV-2026-007', title: 'SCS Production Baseline v1.0', assignmentDirective: 'adr-008', reviewGate: 'rgate-007', status: 'Accepted (Product Owner) — authoritative implementation baseline (comparison point for all future reviews)', authorityStatus: 'approved', demonstration: false, notes: 'Accepted 2026-07-25. Baseline v1.0 is IMMUTABLE except through future approved supersession. New governance classification "Baseline" recorded (distinct from ST-ADR/ST-DEC/ST-DLV/ST-OPH); Baseline Identifier is Product-Owner-pending. See SCS_PRODUCTION_BASELINE_v1.0.md.' },
   // SCS Platform Completion Program package — submitted for review.
   { id: 'dlv-008', deliverableId: 'ST-DLV-2026-008', title: 'SCS Platform Completion Program (Rev 2 — capability-based, governance-first)', assignmentDirective: 'adr-009', reviewGate: 'rgate-008', status: 'Accepted (Product Owner) — governing SCS Platform Completion Program (Rev 2, commit b6c9305)', authorityStatus: 'approved', demonstration: false, notes: 'Accepted 2026-07-25. Rev 2 is the governing roadmap: capability hierarchy (Domain→Capability→Requirements→Evidence), governance-first domains, distinct Trust/Security, consolidated Operational Readiness, Platform Architecture + Platform Evolution capabilities. Completion estimate ~25% approved as an order-of-magnitude planning measure (not a release forecast). Approval authorizes the roadmap only — no implementation phase or launch. See SCS_PLATFORM_COMPLETION_PROGRAM.md.' },
+  // Phase 6 Authorization Package — planning deliverable, submitted for review.
+  { id: 'dlv-009', deliverableId: 'ST-DLV-2026-009', title: 'SCS Phase 6 Authorization Package (planning)', assignmentDirective: 'adr-010', reviewGate: 'rgate-009', status: 'In review — Phase 6 Authorization Package Review', authorityStatus: 'reported', demonstration: false, notes: 'Planning package (SCS_PHASE_6_AUTHORIZATION_PACKAGE.md): exec overview, capability breakdown (Identity/Authority/Trust), functional scope matrix, security & trust architecture, identity model, role/permission matrix, authorization boundary, threat assessment, verification strategy (not executed), traceability, decision queue, readiness. Architecture only — authorizes no implementation; creates no Phase 6 implementation records.' },
 ];
 
 export const reviewGates: Gate[] = [
@@ -136,6 +149,8 @@ export const reviewGates: Gate[] = [
   { id: 'rgate-007', name: 'SCS Production Baseline v1.0 Review', requiresOwnerApproval: true, status: 'Approved & closed — Baseline v1.0 accepted (authoritative). Phase 6 not authorized.', authorityStatus: 'approved', demonstration: false },
   // Completion Program review gate. Approval of the roadmap does not authorize any implementation phase or launch.
   { id: 'rgate-008', name: 'SCS Platform Completion Program Review', requiresOwnerApproval: true, status: 'Approved & closed — Completion Program Rev 2 accepted (governing roadmap). Phase 6 not authorized.', authorityStatus: 'approved', demonstration: false },
+  // Phase 6 Authorization Package review gate (PLANNING). Acceptance does not authorize Phase 6 implementation.
+  { id: 'rgate-009', name: 'Phase 6 Authorization Package Review', requiresOwnerApproval: true, status: 'Open — pending Product Owner review', authorityStatus: 'proposed', demonstration: false },
 ];
 
 // ---- Operational History — activation events preserved independently ----

@@ -8,7 +8,7 @@ import { seedWorkspace } from '../seed';
  * to lose in a demo workspace). Real Product Owner workspaces (isSeed=false) are
  * never auto-overwritten.
  */
-export const SEED_VERSION = '2026-07-25-scs-completion-rev2-accepted';
+export const SEED_VERSION = '2026-07-25-scs-phase6-auth-package';
 
 /**
  * Load labeled seed data on first run. Also refresh a demonstration workspace when

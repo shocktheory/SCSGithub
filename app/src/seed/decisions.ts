@@ -366,4 +366,27 @@ export const interimDecisions: Decision[] = [
     confidence: 'high',
     notes: 'Canonical ST-DEC identifier Product-Owner-pending; not originated by #SCS.',
   },
+
+  // Phase 6 Authorization Package preparation — records the Product Owner Authorization Directive
+  // (2026-07-25). Authorizes PLANNING/authorization-preparation only. Canonical ST-DEC id pending.
+  {
+    id: 'dec-scs-phase6-authpkg',
+    decisionId: 'Pending Product Owner-authorized ST-DEC identifier',
+    title: 'Authorize preparation of the SCS Phase 6 Authorization Package (planning only)',
+    area: 'SCS', decisionClass: 'Platform', status: 'Approved', date: '2026-07-25',
+    approvingAuthority: 'Sonja (Product Owner)',
+    sourceDirective: 'Product Owner Authorization Directive — "Authorize Preparation of the SCS Phase 6 Authorization Package (Planning Only)" (2026-07-25)',
+    question: 'Is #SCS authorized to prepare the Phase 6 Authorization Package (planning only)?',
+    ruling: 'Authorizes #SCS to prepare the Phase 6 Authorization Package (Identity, Authority, Trust attribution) for a future Product Owner decision on whether Phase 6 should begin. Planning and authorization preparation ONLY: no code, no authentication/authorization implementation, no database changes, no Phase 6 implementation-governed records, no deployment, no confidential data, no production/operational/public access, no launch. Phase 6 implementation and its records exist only after a separate Product Owner authorization.',
+    rationale: 'Eliminate uncertainty before implementation authorization is considered; produce the authoritative Phase 6 planning document.',
+    affectedArtifacts: ['prod-scs', 'ST-DLV-2026-009', 'SCS Phase 6 Authorization Package'],
+    implementationConsequences: 'Phase 6 Authorization Package produced (SCS_PHASE_6_AUTHORIZATION_PACKAGE.md) and submitted for review. No implementation; no Phase 6 implementation records.',
+    implementationStatus: 'In progress',
+    authoritativeTextByProductOwner: true,
+    queue: 'owner-action',
+    authorityStatus: 'approved',
+    demonstration: false,
+    confidence: 'high',
+    notes: 'Canonical ST-DEC identifier Product-Owner-pending; not originated by #SCS. Planning only — does not authorize Phase 6 implementation.',
+  },
 ];
