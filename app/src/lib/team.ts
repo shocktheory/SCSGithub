@@ -60,9 +60,10 @@ export function deriveTeam(input: {
   const cards: AgentCard[] = agents.map((a) => {
     const standing = standingDirectives.find((s) => s.agent === a.id);
     const governing = standing?.governingDecision ? decisions.find((d) => d.id === standing.governingDecision) : undefined;
-    const activationEventIds = operationalHistory
-      .filter((h) => h.agent === a.id && /activation/i.test(h.evidenceType))
-      .map((h) => h.entryId);
+    const activationEvents = operationalHistory.filter((h) => h.agent === a.id && /activation/i.test(h.evidenceType));
+    // Only APPROVED activation events are valid evidence; pending ones are traced, not counted.
+    const activationEventIds = activationEvents.filter((h) => h.authorityStatus === 'approved').map((h) => h.entryId);
+    const pendingActivationEventIds = activationEvents.filter((h) => h.authorityStatus !== 'approved').map((h) => h.entryId);
     const membership = teamMemberships.find((tm) => tm.agent === a.id && /active/i.test(tm.status));
     const team = membership ? teams.find((t) => t.id === membership.team) : undefined;
     // Current governing Assignment Directive: a non-closed directive, preferring an active one.
@@ -76,6 +77,7 @@ export function deriveTeam(input: {
       standingDirective: standing ? { id: standing.directiveId, version: standing.version, status: standing.status } : undefined,
       productOwnerAuthority: governing ? { id: governing.decisionId, approved: governing.authorityStatus === 'approved' } : undefined,
       activationEventIds,
+      pendingActivationEventIds,
       teamMembership: membership && team ? { label: `${team.teamId} — ${membership.status}`, active: /active/i.test(membership.status) } : undefined,
       activeAssignmentDirective: activeADR ? {
         directiveId: activeADR.directiveId, title: activeADR.title, status: activeADR.status,
@@ -122,7 +124,7 @@ export function deriveTeam(input: {
     blocked: m('blocked', 'Blocked Work', blocked.map((c) => c.id)),
     warnings: m('warnings', 'Alignment Warnings', warnings.map((c) => c.id)),
     directivesNoWork: m('directivesNoWork', 'Available — Awaiting Assignment', directivesNoWork.map((c) => c.id)),
-    pendingOnboarding: m('pendingOnboarding', 'Pending Onboarding', pendingOnboarding.map((c) => c.id)),
+    pendingOnboarding: m('pendingOnboarding', 'Pending Activation', pendingOnboarding.map((c) => c.id)),
     stale: m('stale', 'Stale Synchronizations', stale.map((c) => c.id)),
   };
 

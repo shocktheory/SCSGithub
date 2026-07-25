@@ -153,23 +153,24 @@ function AgentCardView({ a, density }: { a: AgentCard; density: Density }) {
               {a.modelProvider && <div className="scs-agent__provider">{a.modelProvider}</div>}
             </div>
             <DimensionRow>
-              <DimensionTag label="Status" tone="gate">Pending Onboarding</DimensionTag>
-              <DimensionTag label="Gate" tone="gate">Constitutional Onboarding</DimensionTag>
+              <DimensionTag label="Status" tone="gate">{a.status}</DimensionTag>
+              <DimensionTag label="Gate" tone="gate">{a.currentGate}</DimensionTag>
             </DimensionRow>
           </div>
           {density !== 'collapsed' && (
             <>
               <p className="scs-agent__role">{a.role}</p>
               <div className="scs-trace">
-                <Row k="Current assignment" v={a.currentAssignment} />
-                <Row k="Synchronization" v={a.synchronization} />
                 <Row k="Standing directive" v={a.standingDirectiveStatus} />
+                <Row k="Current assignment" v={a.currentAssignment} />
+                <Row k="Assignment directive" v={a.assignmentDirectiveStatus} />
+                <Row k="Synchronization" v={a.synchronization} />
                 <Row k="Directive coverage" v={a.directiveCoverage} />
-                <Row k="Current gate" v={a.currentGate} />
+                <Row k="Team membership" v={a.teamMembership} />
               </div>
-              <p style={{ marginTop: 12, fontSize: 12.5, color: 'var(--text-muted)', lineHeight: 1.5 }}>
-                This agent has not yet entered the governed operating environment.
-                Missing activation evidence: {a.missingEvidence.join(', ') || 'none'}.
+              <p style={{ marginTop: 12, fontSize: 12.5, color: 'var(--status-review)', lineHeight: 1.5 }}>
+                <strong>Missing approved activation evidence:</strong> {a.missingEvidence.join(', ') || 'none'}.
+                {' '}Requires a Product Owner determination of the authorized activation history.
               </p>
             </>
           )}

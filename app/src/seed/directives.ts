@@ -69,18 +69,18 @@ export const operationalHistory: OperationalHistoryEntry[] = [
   { id: 'oh-003', entryId: 'ST-OPH-2026-003', date: '2026-07-24', agent: 'ai-sos', summary: 'Constitutional review of Phase 2 implementation in progress.', evidenceType: 'Governance review', relatedObject: 'adr-003', authorityStatus: 'reported', demonstration: false },
   // AGENT-005 — two distinct activation events, preserved independently.
   { id: 'oh-004', entryId: 'ST-OPH-2026-004', date: '2026-07-24', agent: 'ai-cia', summary: 'AGENT-005 (#CIA) Standing Directive ST-SD-005 v1 recorded Current.', evidenceType: 'Constitutional activation', relatedObject: 'sdr-005', authorityStatus: 'approved', demonstration: false },
-  { id: 'oh-005', entryId: 'ST-OPH-2026-005', date: '2026-07-24', agent: 'ai-cia', summary: 'AGENT-005 (#CIA) TEAM-001 membership Active; Operational — Awaiting First Assignment.', evidenceType: 'Operational availability', relatedObject: 'tm-005', authorityStatus: 'approved', demonstration: false },
+  { id: 'oh-005', entryId: 'ST-OPH-2026-005', date: '2026-07-24', agent: 'ai-cia', summary: 'AGENT-005 (#CIA) Product Owner acceptance, verification, closure, and organizational readiness (TEAM-001 membership Active).', evidenceType: 'Product Owner acceptance & organizational readiness', relatedObject: 'tm-005', authorityStatus: 'approved', demonstration: false },
   // Activation events for the previously-governed agents.
-  { id: 'oh-006', entryId: 'ST-OPH-2026-006', date: '2026-07-24', agent: 'ai-sos', summary: 'AGENT-001 (#SOS) Standing Directive ST-SD-001 v1 Current; TEAM-001 membership Active.', evidenceType: 'Constitutional activation', relatedObject: 'sdr-001', authorityStatus: 'approved', demonstration: false },
-  { id: 'oh-007', entryId: 'ST-OPH-2026-007', date: '2026-07-24', agent: 'ai-scs', summary: 'AGENT-002 (#SCS) Standing Directive ST-SD-002 v1 Current; TEAM-001 membership Active.', evidenceType: 'Constitutional activation', relatedObject: 'sdr-002', authorityStatus: 'approved', demonstration: false },
-  { id: 'oh-008', entryId: 'ST-OPH-2026-008', date: '2026-07-24', agent: 'ai-ckl', summary: 'AGENT-003 (#CKL) Standing Directive ST-SD-003 v1 Current; TEAM-001 membership Active.', evidenceType: 'Constitutional activation', relatedObject: 'sdr-003', authorityStatus: 'approved', demonstration: false },
-  { id: 'oh-009', entryId: 'ST-OPH-2026-009', date: '2026-07-24', agent: 'ai-ckp', summary: 'AGENT-004 (#CKP) Standing Directive ST-SD-004 v1 Current; TEAM-001 membership Active.', evidenceType: 'Constitutional activation', relatedObject: 'sdr-004', authorityStatus: 'approved', demonstration: false },
+  { id: 'oh-006', entryId: 'ST-OPH-2026-006', date: '2026-07-24', agent: 'ai-sos', summary: 'AGENT-001 (#SOS) Standing Directive ST-SD-001 v1 Current; TEAM-001 membership Active.', evidenceType: 'Constitutional activation', relatedObject: 'sdr-001', authorityStatus: 'proposed', demonstration: false, notes: 'Pending Product Owner approval — NOT authoritative activation evidence; retained for Product Owner review.' },
+  { id: 'oh-007', entryId: 'ST-OPH-2026-007', date: '2026-07-24', agent: 'ai-scs', summary: 'AGENT-002 (#SCS) Standing Directive ST-SD-002 v1 Current; TEAM-001 membership Active.', evidenceType: 'Constitutional activation', relatedObject: 'sdr-002', authorityStatus: 'proposed', demonstration: false, notes: 'Pending Product Owner approval — NOT authoritative activation evidence; retained for Product Owner review.' },
+  { id: 'oh-008', entryId: 'ST-OPH-2026-008', date: '2026-07-24', agent: 'ai-ckl', summary: 'AGENT-003 (#CKL) Standing Directive ST-SD-003 v1 Current; TEAM-001 membership Active.', evidenceType: 'Constitutional activation', relatedObject: 'sdr-003', authorityStatus: 'proposed', demonstration: false, notes: 'Pending Product Owner approval — NOT authoritative activation evidence; retained for Product Owner review.' },
+  { id: 'oh-009', entryId: 'ST-OPH-2026-009', date: '2026-07-24', agent: 'ai-ckp', summary: 'AGENT-004 (#CKP) Standing Directive ST-SD-004 v1 Current; TEAM-001 membership Active.', evidenceType: 'Constitutional activation', relatedObject: 'sdr-004', authorityStatus: 'proposed', demonstration: false, notes: 'Pending Product Owner approval — NOT authoritative activation evidence; retained for Product Owner review.' },
 ];
 
 // ---- Team and Team Membership (first-class objects) ----
 export const teams: Team[] = [
   { id: 'team-001', teamId: 'TEAM-001', name: 'ShockTheory Agent Team', status: 'Active', authorityStatus: 'approved', demonstration: false },
-  { id: 'team-002', teamId: 'TEAM-002', name: 'TEAM-002', status: 'Active', authorityStatus: 'approved', demonstration: false, notes: 'Approved team; composition governed separately and not modified in this reconciliation.' },
+  { id: 'team-002', teamId: 'TEAM-002', name: 'SCS Team', status: 'Active', authorityStatus: 'approved', demonstration: false },
 ];
 
 export const teamMemberships: TeamMembership[] = [
@@ -89,4 +89,9 @@ export const teamMemberships: TeamMembership[] = [
   { id: 'tm-003', membershipId: 'TM-003', agent: 'ai-ckl', team: 'team-001', status: 'Active', effectiveDate: '2026-07-24', authorityStatus: 'approved', demonstration: false },
   { id: 'tm-004', membershipId: 'TM-004', agent: 'ai-ckp', team: 'team-001', status: 'Active', effectiveDate: '2026-07-24', authorityStatus: 'approved', demonstration: false },
   { id: 'tm-005', membershipId: 'TM-005', agent: 'ai-cia', team: 'team-001', status: 'Active', effectiveDate: '2026-07-24', authorityStatus: 'approved', demonstration: false },
+  // TEAM-002 (SCS Team) — approved memberships. Membership records only: they do not
+  // merge identities, transfer authority, alter Standing Directives, or create powers.
+  { id: 'tm-006', membershipId: 'TM-006', agent: 'po-sonja', team: 'team-002', status: 'Active', effectiveDate: '2026-07-24', authorityStatus: 'approved', demonstration: false, notes: 'Product Owner — Sonja Ross (not an agent).' },
+  { id: 'tm-007', membershipId: 'TM-007', agent: 'ai-sos', team: 'team-002', status: 'Active', effectiveDate: '2026-07-24', authorityStatus: 'approved', demonstration: false },
+  { id: 'tm-008', membershipId: 'TM-008', agent: 'ai-scs', team: 'team-002', status: 'Active', effectiveDate: '2026-07-24', authorityStatus: 'approved', demonstration: false },
 ];

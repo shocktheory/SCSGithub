@@ -18,7 +18,10 @@ export interface DeriveInput {
   agentName: string;
   standingDirective?: { id: string; version: string; status: string };
   productOwnerAuthority?: { id: string; approved: boolean };
+  /** APPROVED Operational History activation events only. */
   activationEventIds: string[];
+  /** Unapproved/pending activation events — traceable, but NOT valid activation evidence. */
+  pendingActivationEventIds?: string[];
   teamMembership?: { label: string; active: boolean };
   activeAssignmentDirective?: {
     directiveId: string; title: string; status: string; deliverable?: string; reviewGate?: string;
@@ -45,7 +48,7 @@ export interface DerivedAgentState {
 const NA_AWAITING = 'Not Applicable — Awaiting Assignment';
 
 export function deriveAgentState(input: DeriveInput): DerivedAgentState {
-  const { agentName, standingDirective, productOwnerAuthority, activationEventIds, teamMembership, activeAssignmentDirective } = input;
+  const { agentName, standingDirective, productOwnerAuthority, activationEventIds, pendingActivationEventIds = [], teamMembership, activeAssignmentDirective } = input;
 
   // ---- Constitutional activation evidence set ----
   const evidence = {
@@ -71,8 +74,9 @@ export function deriveAgentState(input: DeriveInput): DerivedAgentState {
 
   const sourceRecords = [
     standingDirective ? `${standingDirective.id} ${standingDirective.version} — ${standingDirective.status}` : 'No Standing Directive',
-    productOwnerAuthority ? `Product Owner authority: ${productOwnerAuthority.id}` : 'No Product Owner authority',
-    ...activationEventIds.map((e) => `${e} (Operational History)`),
+    productOwnerAuthority ? `Product Owner authority: ${productOwnerAuthority.id}${productOwnerAuthority.approved ? '' : ' (not approved)'}` : 'No Product Owner authority',
+    ...activationEventIds.map((e) => `${e} (approved Operational History)`),
+    ...pendingActivationEventIds.map((e) => `${e} (Operational History — PENDING approval, not valid evidence)`),
     teamMembership ? `Team membership: ${teamMembership.label}` : 'No Team Membership',
     activeAssignmentDirective ? `${activeAssignmentDirective.directiveId} — ${activeAssignmentDirective.status}` : undefined,
   ].filter(Boolean) as string[];
@@ -82,15 +86,29 @@ export function deriveAgentState(input: DeriveInput): DerivedAgentState {
   let operationalReadiness: string, alignment: Alignment, assignmentDirectiveStatus: string, currentAssignment: string, logic: string;
 
   if (!activated) {
-    status = 'Pending Onboarding';
+    // Standing Directive Current but evidence incomplete = Pending activation (the agent
+    // was governed but its approved activation evidence is missing). Truly unentered = Onboarding.
+    const pendingActivation = evidence.standingCurrent;
+    status = pendingActivation ? 'Pending activation' : 'Pending Onboarding';
     synchronization = 'Not Yet Applicable';
-    currentGate = 'Constitutional Onboarding';
+    currentGate = pendingActivation ? 'Constitutional Activation' : 'Constitutional Onboarding';
     coverage = 'Not Active';
-    operationalReadiness = 'Onboarding — awaiting activation';
+    operationalReadiness = pendingActivation ? 'Pending activation — awaiting approved evidence' : 'Onboarding — awaiting activation';
     alignment = 'Not applicable';
-    assignmentDirectiveStatus = 'Not Applicable — Pending Onboarding';
-    currentAssignment = 'None';
-    logic = `Activation evidence incomplete (missing: ${missingEvidence.join(', ')}) ⇒ not constitutionally activated ⇒ Pending Onboarding. No warning is derived.`;
+    // An Assignment Directive is a separately-approved governed record: it remains valid
+    // independently of the agent's activation state (reported honestly).
+    if (hasADR) {
+      const adr = activeAssignmentDirective!;
+      assignmentDirectiveStatus = `${adr.directiveId} — ${adr.status} (valid independently of activation)`;
+      currentAssignment = adr.title;
+    } else {
+      assignmentDirectiveStatus = 'Not Applicable — Pending Activation';
+      currentAssignment = 'None';
+    }
+    const pendingNote = pendingActivationEventIds.length
+      ? ` A pending (unapproved) Operational History activation event exists (${pendingActivationEventIds.join(', ')}) — awaiting Product Owner approval; it does not satisfy activation.`
+      : '';
+    logic = `Approved activation evidence incomplete (missing: ${missingEvidence.join(', ')}) ⇒ ${status}. No warning is derived.${pendingNote}`;
   } else if (!hasADR) {
     // Activated, no Assignment Directive: a valid constitutional chain through activation
     // and availability. Downstream links are Not Applicable — not a deficiency.

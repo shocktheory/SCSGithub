@@ -57,6 +57,25 @@ describe('Constitutional State Derivation Engine — activation evidence set', (
     const s = deriveAgentState({ ...full(), productOwnerAuthority: { id: 'ST-DEC-2026-008', approved: false } });
     expect(s.activated).toBe(false);
   });
+
+  it('an UNAPPROVED activation event does not satisfy activation (only approved passed)', () => {
+    // team.ts passes only approved events to activationEventIds; a pending one is separate.
+    const s = deriveAgentState({ ...full(), activationEventIds: [], pendingActivationEventIds: ['ST-OPH-2026-006'] });
+    expect(s.activated).toBe(false);
+    expect(s.missingEvidence).toContain('Operational History activation event');
+    expect(s.status).toBe('Pending activation'); // Standing Directive still Current
+    expect(s.trace.logic).toMatch(/pending .*Operational History/i);
+  });
+
+  it('a valid Assignment Directive is reported even when activation is pending', () => {
+    const s = deriveAgentState({
+      ...full(), activationEventIds: [],
+      activeAssignmentDirective: { directiveId: 'ST-ADR-2026-002', title: 'Build', status: 'Active', deliverable: 'D', reviewGate: 'G' },
+    });
+    expect(s.activated).toBe(false);
+    expect(s.status).toBe('Pending activation');
+    expect(s.assignmentDirectiveStatus).toMatch(/ST-ADR-2026-002.*valid independently/);
+  });
 });
 
 describe('assignment lifecycle derives only from Assignment Directives', () => {

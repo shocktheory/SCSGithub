@@ -335,7 +335,7 @@ export function SCSHomePage() {
             <StatTile value={team.metrics.blocked.value} label="Work blocked" tone={team.metrics.blocked.value ? 'review' : 'muted'} />
             <StatTile value={team.metrics.warnings.value} label="Alignment warnings" tone={team.metrics.warnings.value ? 'review' : 'muted'} />
             <StatTile value={team.metrics.directivesNoWork.value} label="Available — awaiting assignment" tone="muted" />
-            <StatTile value={team.metrics.pendingOnboarding.value} label="Pending onboarding" tone={team.metrics.pendingOnboarding.value ? 'review' : 'muted'} />
+            <StatTile value={team.metrics.pendingOnboarding.value} label="Pending activation" tone={team.metrics.pendingOnboarding.value ? 'review' : 'muted'} />
           </div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
             <Link className="scs-btn scs-btn--primary" to="/ai-work">Open Team Command Center <ArrowRight size={15} /></Link>
