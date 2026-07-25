@@ -23,7 +23,17 @@ export const FAMILY_LABEL: Record<Publication['family'], string> = {
 export function currentGateLabel(pub: Publication, phases: PublicationPhase[]): string {
   const current = phases.find((p) => p.id === pub.currentPhase);
   if (current) return current.name;
-  return '—';
+  return 'Not gated';
+}
+
+/**
+ * Display title for a publication. Disambiguates shortened titles from action words
+ * (e.g. the Component Playbook titled "Approval" reads as "Approval Playbook", not
+ * the action "Approval").
+ */
+export function pubDisplayTitle(pub: Publication): string {
+  if (pub.title.trim().toLowerCase() === 'approval') return 'Approval Playbook';
+  return pub.title;
 }
 
 /**

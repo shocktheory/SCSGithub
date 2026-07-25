@@ -1,5 +1,5 @@
 import type { Publication, PublicationPhase } from '../../domain/entities';
-import { FAMILY_LABEL, publicationTimeline, currentGateLabel } from '../../lib/derive';
+import { FAMILY_LABEL, publicationTimeline, currentGateLabel, pubDisplayTitle } from '../../lib/derive';
 import { GateTimeline } from './GateTimeline';
 import { DimensionTag, DimensionRow } from './Dimensions';
 
@@ -27,7 +27,7 @@ export function PublicationCard({
             {FAMILY_LABEL[pub.family]} · Vol {pub.volume}
             {productName ? ` · ${productName}` : ''}
           </div>
-          <div style={{ fontSize: 17, fontWeight: 600, marginTop: 3 }}>{pub.title}</div>
+          <div style={{ fontSize: 17, fontWeight: 600, marginTop: 3 }}>{pubDisplayTitle(pub)}</div>
         </div>
       </div>
 

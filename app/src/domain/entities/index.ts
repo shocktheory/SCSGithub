@@ -25,6 +25,12 @@ export interface SourceIntegrity {
    * constitutional review. This does NOT replace authorityStatus (Revision 02).
    */
   constitutionalReview?: boolean;
+  /**
+   * True = simulated demonstration record (constitutionally isolated: never real
+   * metrics, provenance, approval history, or exported truth). When omitted, the
+   * workspace-level demonstration flag applies. Real governed records set false.
+   */
+  demonstration?: boolean;
   confidence?: 'low' | 'medium' | 'high';
   notes?: string;
 }
@@ -43,6 +49,19 @@ export type SyncCode =
   | 'ST-OS';
 export type CanonicalClass = 'I' | 'II' | 'III';
 
+/**
+ * Methodology Maturity — an INDEPENDENT dimension for reusable SAPDOS artifacts.
+ * Never merged with authority, governance, work state, product maturity, or gate.
+ */
+export const METHODOLOGY_MATURITY = [
+  'Draft',
+  'Validated in Kidlytics',
+  'Validated in Additional Products',
+  'Reusable Standard',
+  'Constitutional Standard',
+] as const;
+export type MethodologyMaturity = (typeof METHODOLOGY_MATURITY)[number];
+
 export interface OSSystem extends Base {
   name: string;
   acronym: string;
@@ -58,6 +77,8 @@ export interface OSSystem extends Base {
   lastReview?: ISODate;
   nextReview?: ISODate;
   changeHistory: string[];
+  /** Independent Methodology Maturity for reusable SAPDOS artifacts. */
+  methodologyMaturity?: MethodologyMaturity;
 }
 
 export interface Product extends Base {
@@ -110,14 +131,20 @@ export interface Decision extends Base {
   decisionClass: string;
   question: string;
   status: string;
-  ruling?: string;
+  ruling?: string; // the decision text
   rationale?: string;
-  approvingAuthority?: string;
+  approvingAuthority?: string; // Product Owner
   date?: ISODate;
-  affectedArtifacts: ID[];
+  affectedArtifacts: ID[]; // affected products & artifacts (ids or names)
   downstreamImpact?: string;
   supersededDecision?: ID;
   reviewTrigger?: string;
+  // Extended for the interim constitutional decision source (ST-LOCK):
+  dependencies?: string[];
+  supersededAssumptions?: string;
+  sourceDirective?: string; // source conversation or directive
+  implementationConsequences?: string;
+  relatedDecisions?: ID[];
 }
 
 export interface CanonicalStatement extends Base {
@@ -158,8 +185,16 @@ export interface AICollaborator extends Base {
   openQuestions: string[];
   expectedNextAction?: string;
   conflictsDetected: string[];
-  /** Constitutional authority scope. AI recommends; it never approves (Rule #10). */
+  /** Constitutional authority scope / boundary. AI recommends; it never approves (Rule #10). */
   authorityScope?: string;
+  /** Secondary model-provider metadata (e.g. "Claude (Anthropic)"). Not the agent name. */
+  modelProvider?: string;
+  /** Constitutional synchronization state — SEPARATE from role (e.g. "Synchronized"). */
+  syncState?: string;
+  /** Governing reconciliation/decision record this agent's sync traces to. */
+  governingRecord?: ID;
+  /** Standing constitutional responsibility (distinct from any current assignment). */
+  standingResponsibility?: string;
 }
 
 export interface Assignment extends Base {

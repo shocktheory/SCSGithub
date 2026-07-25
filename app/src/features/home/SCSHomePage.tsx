@@ -5,14 +5,14 @@ import {
 } from 'lucide-react';
 import { useCollection, indexById, useIsSeed } from '../../lib/data';
 import { deriveReviews } from '../../lib/reviews';
-import { productExecutiveSummary, currentGateLabel, FAMILY_LABEL } from '../../lib/derive';
+import { productExecutiveSummary, currentGateLabel, FAMILY_LABEL, pubDisplayTitle } from '../../lib/derive';
 import {
   Card, SectionTitle, StatTile, StatusBadge, DemonstrationBadge, GovernanceBadge,
   DimensionTag, DimensionRow,
 } from '../../design-system/components';
 import type {
   OSSystem, Product, Publication, PublicationPhase, AICollaborator, Assignment,
-  NextAction, Gate, CanonicalStatement, Update, Artifact,
+  NextAction, Gate, CanonicalStatement, Update, Artifact, Decision,
 } from '../../domain/entities';
 import '../snapshot/snapshot.css';
 
@@ -31,6 +31,8 @@ export function SCSHomePage() {
   const canon = useCollection<CanonicalStatement>('canonicalStatements');
   const updates = useCollection<Update>('updates');
   const artifacts = useCollection<Artifact>('artifacts');
+  const decisions = useCollection<Decision>('decisions');
+  const decisionCount = (decisions.data ?? []).length;
 
   const [filter, setFilter] = useState<'all' | 'Approval' | 'Unresolved decision'>('all');
 
@@ -59,8 +61,8 @@ export function SCSHomePage() {
   // ---- Constitutional awareness (what / why / next) ----
   const missingCanon = (canon.data ?? []).filter((c) => c.classification === 'I' && !c.statement.trim());
   const unverifiedRefs = (artifacts.data ?? []).filter((a) => a.linkHealth === 'unverified' || a.linkHealth === 'broken');
-  const undatedLocks = (updates.data ?? []).filter((u) => u.code === 'ST-LOCK' && !u.date);
-  const noDecisions = (useCollection<unknown>('decisions').data ?? []).length === 0;
+  const undatedLocks = (updates.data ?? []).filter((u) => u.code === 'ST-LOCK' && !u.date && u.demonstration);
+  const noDecisions = decisionCount === 0;
   const awareness = [
     missingCanon.length && {
       what: `${missingCanon.length} Class I canonical statements have no approved wording`,
@@ -96,10 +98,12 @@ export function SCSHomePage() {
         <div className="scs-demo-banner">
           <Info size={18} className="scs-demo-banner__icon" />
           <div>
-            <div className="scs-demo-banner__title">Simulated Constitutional State — demonstration data</div>
+            <div className="scs-demo-banner__title">Phase 1 functional demonstration shell</div>
             <div className="scs-demo-banner__body">
-              Every record below is demonstration data, constitutionally isolated. Nothing here is an approved
-              constitutional truth, counted as a real metric, cited as provenance, or exported as governed truth.
+              Governed decision records and constitutional activity shown here are <strong>real Product Owner
+              rulings</strong> from the version-controlled decision source. Operational data (products, publications,
+              coordination) is <strong>demonstration</strong> and marked as such — never counted as a real metric,
+              cited as provenance, or exported as governed truth. No production implementation is authorized.
             </div>
           </div>
         </div>
@@ -121,13 +125,34 @@ export function SCSHomePage() {
         <div className="scs-hero__stats">
           <StatTile small value={scs?.version ?? '—'} label="SCS version" />
           <StatTile small value={scs?.status ?? '—'} label="Overall status" />
-          <StatTile small tone="accent" value={sosAI?.waitingState ?? 'Advising'} label="#SOS synchronization" />
+          <StatTile small tone="accent" value={sosAI?.syncState ?? '—'} label={`Constitutional sync${sosAI?.lastSynced ? ` · ${sosAI.lastSynced}` : ''}`} />
           <StatTile tone="review" value={reviews.length} label="Awaiting you" />
         </div>
         <p className="scs-hero__baseline">
-          No governed Product Owner decisions are recorded yet — the Decision Register arrives in Phase 2.
-          States shown are demonstration and trace to Recent Constitutional Activity, not to approved decisions.
+          <Link to="/decisions" className="scs-section-link">{decisionCount} governed decisions</Link> are recorded in the
+          interim decision source (ST-LOCK). #SOS role: constitutional guardian — separate from its synchronization state above.
         </p>
+      </section>
+
+      {/* Phase status — four states represented separately; no production authorization implied. */}
+      <section className="scs-snapshot__layer">
+        <SectionTitle>Phase status</SectionTitle>
+        <Card>
+          {[
+            { label: 'Phase 0 — Architecture', state: 'Approved', tone: 'approved' as const, note: 'Stack, data model, and deployment path locked.' },
+            { label: 'Phase 1 — Design baseline', state: 'Approved', tone: 'approved' as const, note: 'Executive Snapshot visual direction approved.' },
+            { label: 'Phase 1 — Functional shell', state: 'Functional demonstration shell', tone: 'review' as const, note: 'Current work — under Product Owner review.' },
+            { label: 'Production implementation', state: 'Not authorized', tone: 'neutral' as const, note: 'No Product Owner implementation ruling recorded.' },
+          ].map((p) => (
+            <div key={p.label} className="scs-row">
+              <div className="scs-row__main">
+                <div className="scs-row__title">{p.label}</div>
+                <div className="scs-row__sub">{p.note}</div>
+              </div>
+              <StatusBadge label={p.state} tone={p.tone} />
+            </div>
+          ))}
+        </Card>
       </section>
 
       {/* 2 — If You Do One Thing Today (strongest action, directly below the header) */}
@@ -151,7 +176,12 @@ export function SCSHomePage() {
 
       {/* 3 — What Needs You (reconciled metrics + actionable list) */}
       <section className="scs-snapshot__layer">
-        <SectionTitle>What needs you</SectionTitle>
+        <div className="scs-section-head">
+          <SectionTitle>What needs you</SectionTitle>
+          {reviews.length > 1 && (
+            <Link className="scs-section-link" to={`/review/${reviews[0].id}`}>Review Decision Packet →</Link>
+          )}
+        </div>
         <Card>
           <p className="scs-metric-note">
             <strong style={{ color: 'var(--text-secondary)' }}>{reviews.length} items awaiting you</strong>
@@ -264,16 +294,16 @@ export function SCSHomePage() {
             </div>
             <Card>
               {pubList.map((pub) => (
-                <div key={pub.id} className="scs-row">
+                <Link key={pub.id} to="/publications" className="scs-row scs-row-link">
                   <div className="scs-row__main">
-                    <div className="scs-row__title">{pub.title}</div>
+                    <div className="scs-row__title">{pubDisplayTitle(pub)}</div>
                     <div className="scs-row__sub">{FAMILY_LABEL[pub.family]} · {productById.get(pub.product)?.name}</div>
                   </div>
                   <DimensionRow>
                     <DimensionTag label="Gate" tone="gate">{currentGateLabel(pub, phaseList)}</DimensionTag>
                     <DimensionTag label="Authority" tone="authority">{pub.authorityStatus}</DimensionTag>
                   </DimensionRow>
-                </div>
+                </Link>
               ))}
             </Card>
           </div>
@@ -290,13 +320,13 @@ export function SCSHomePage() {
           {activeCollaborators.map((c) => {
             const a = (assignments.data ?? []).find((x) => x.collaborator === c.id);
             return (
-              <div key={c.id} className="scs-row">
+              <Link key={c.id} to="/ai-work" className="scs-row scs-row-link">
                 <div className="scs-row__main">
                   <div className="scs-row__title">{c.name}</div>
-                  <div className="scs-row__sub">{a?.task ?? c.currentTask}</div>
+                  <div className="scs-row__sub">{a?.task ?? c.currentTask ?? c.standingResponsibility}</div>
                 </div>
-                <StatusBadge label={c.waitingState ?? 'Active'} tone="neutral" />
-              </div>
+                <StatusBadge label={c.syncState ?? c.waitingState ?? 'Active'} tone="neutral" />
+              </Link>
             );
           })}
           <p style={{ margin: '12px 0 0', fontSize: 12.5, color: 'var(--text-muted)' }}>
@@ -313,18 +343,32 @@ export function SCSHomePage() {
         </div>
         <Card>
           <div className="scs-activity">
-            {activity.slice(0, 4).map((u) => (
-              <div className="scs-activity__item" key={u.id}>
-                <span className="scs-activity__code">{u.code}</span>
-                <span className="scs-activity__summary">
-                  {u.summary}
-                  <span style={{ display: 'block', fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>via {u.source ?? 'unknown'} · {u.syncStatus}</span>
-                </span>
-                <span className="scs-activity__date">
-                  {u.date ? u.date : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><Clock size={11} /> undated</span>}
-                </span>
-              </div>
-            ))}
+            {activity.slice(0, 5).map((u) => {
+              const hasDecisions = (u.decisionsCreated?.length ?? 0) > 0;
+              const body = (
+                <>
+                  <span className="scs-activity__code">{u.code}</span>
+                  <span className="scs-activity__summary">
+                    {u.summary}
+                    <span style={{ display: 'block', fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>
+                      via {u.source ?? 'unknown'} · {u.syncStatus}
+                      {u.demonstration
+                        ? <span style={{ color: 'var(--status-review)' }}> · Demonstration</span>
+                        : <span style={{ color: 'var(--status-approved)' }}> · Governed record</span>}
+                      {hasDecisions && ' · records DEC-0001…DEC-0008'}
+                    </span>
+                  </span>
+                  <span className="scs-activity__date">
+                    {u.date ? u.date : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><Clock size={11} /> undated</span>}
+                  </span>
+                </>
+              );
+              return hasDecisions ? (
+                <Link key={u.id} to="/decisions" className="scs-activity__item scs-row-link" style={{ color: 'inherit', textDecoration: 'none' }}>{body}</Link>
+              ) : (
+                <div className="scs-activity__item" key={u.id}>{body}</div>
+              );
+            })}
           </div>
         </Card>
       </section>

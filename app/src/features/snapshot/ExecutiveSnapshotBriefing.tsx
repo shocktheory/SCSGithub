@@ -3,7 +3,7 @@ import { useCollection, useIsSeed } from '../../lib/data';
 import { deriveReviews } from '../../lib/reviews';
 import { PageHeader, Card, DemonstrationBadge } from '../../design-system/components';
 import type {
-  OSSystem, Product, Publication, NextAction, Gate, Update, Artifact, AICollaborator,
+  OSSystem, Product, Publication, NextAction, Gate, Update, Artifact, AICollaborator, Decision,
 } from '../../domain/entities';
 import './snapshot.css';
 
@@ -22,8 +22,10 @@ export function ExecutiveSnapshotBriefing() {
   const updates = useCollection<Update>('updates');
   const artifacts = useCollection<Artifact>('artifacts');
   const ai = useCollection<AICollaborator>('aiCollaborators');
+  const decisions = useCollection<Decision>('decisions');
 
   const scs = (os.data ?? []).find((s) => s.acronym === 'SCS');
+  const decisionCount = (decisions.data ?? []).length;
   const reviews = deriveReviews({
     gates: gates.data ?? [], publications: pubs.data ?? [], products: products.data ?? [],
     artifacts: artifacts.data ?? [], aiCollaborators: ai.data ?? [], isSeed,
@@ -33,7 +35,7 @@ export function ExecutiveSnapshotBriefing() {
   const nextAction = (nextActions.data ?? [])[0];
 
   const answers: Array<[string, string]> = [
-    ['Where are we?', `${scs?.name ?? 'SCS'} ${scs?.version ?? ''} — ${scs?.status ?? 'status unknown'}. No governed decisions recorded yet (Phase 2).`],
+    ['Where are we?', `${scs?.name ?? 'SCS'} ${scs?.version ?? ''} — Phase 1 functional demonstration shell. ${decisionCount} governed decisions recorded (interim source); production implementation not authorized.`],
     ['What changed?', latest ? `${latest.summary} (${latest.date || 'undated'}, via ${latest.source ?? 'unknown'}).` : 'No constitutional activity recorded.'],
     ['What needs me?', reviews.length ? `${reviews.length} items awaiting you — ${reviews.filter((r) => r.kind === 'Approval').length} approval, ${reviews.filter((r) => r.kind === 'Unresolved decision').length} unresolved decision.` : 'Nothing is waiting on you.'],
     ['What is blocked?', blocked.length ? blocked.map((p) => `${p.title} (${p.status})`).join('; ') + '.' : 'Nothing is blocked.'],

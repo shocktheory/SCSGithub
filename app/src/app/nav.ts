@@ -53,7 +53,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { path: '/library', label: 'Constitutional Library', icon: Library, ...deferred('Product architecture, playbooks, canonical language, decisions, specifications, and benchmarks in one governed library.') } as NavItem,
       { path: '/artifacts', label: 'Artifact Registry', icon: FolderTree, ...deferred('Where every governing artifact lives, with direct open links and link-health.') } as NavItem,
       { path: '/canonical', label: 'Canonical Language', icon: Quote, ...planned(2, 'The three-tier language model (Canonical, Enduring, Narrative) and canonical concepts.') } as NavItem,
-      { path: '/decisions', label: 'Decisions', icon: Scale, ...planned(2, 'The governed decision register — rulings, rationale, approving authority, downstream impact.') } as NavItem,
+      { path: '/decisions', label: 'Decisions', icon: Scale, status: 'live', badge: 'Interim', badgeTip: 'Interim governed decision source (ST-LOCK) — the Phase 2 Decision Register will ingest these records.' },
     ],
   },
   {

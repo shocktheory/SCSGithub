@@ -203,8 +203,8 @@
 }
 .scs-dim__label {
   display: inline-flex; align-items: center; padding: 3px 8px;
-  font-size: 9.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--text-muted); background: rgba(255,255,255,0.03);
+  font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--text-secondary); background: rgba(255,255,255,0.04);
 }
 .scs-dim__value { display: inline-flex; align-items: center; padding: 3px 10px; font-weight: 600; color: var(--text-secondary); }
 .scs-dim--authority .scs-dim__value { color: var(--text-primary); }

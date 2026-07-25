@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "0.1.0",
+  "source": "ST-LOCK — Agent Naming, SCS Governance Corrections, and Interim Decision Capture (2026-07-24)",
+  "productOwner": "Sonja",
+  "demonstration": false,
+  "note": "Real governed Product Owner rulings. The Phase 2 Decision Register must ingest these unchanged. Mirrors app/src/seed/decisions.ts.",
+  "decisions": [
+    {
+      "decisionId": "DEC-0001", "title": "ShockBoard supersession", "status": "Approved", "date": "2026-07-24",
+      "productOwner": "Sonja", "area": "Operating System", "decisionClass": "Operating System",
+      "ruling": "ShockBoard is superseded.",
+      "rationale": "Recorded as an existing Product Owner ruling. Superseding artifact and full rationale pending Product Owner confirmation.",
+      "affected": ["ShockBoard"], "dependencies": [],
+      "supersededAssumptions": "Any prior reliance on ShockBoard as an active surface.",
+      "implementationConsequences": "References to ShockBoard are treated as superseded pending confirmation of the replacement.",
+      "relatedDecisions": ["DEC-0003"]
+    },
+    {
+      "decisionId": "DEC-0002", "title": "SCS naming and scope", "status": "Approved", "date": "2026-07-24",
+      "productOwner": "Sonja", "area": "SCS", "decisionClass": "Platform",
+      "ruling": "SCS is the ShockTheory Constitutional System product — the governed index, awareness, and artifact-navigation system for ShockTheory OS. It displays authority; it does not manufacture it.",
+      "rationale": "Establishes the product identity and boundary so SCS is not confused with an agent or a competing source of truth.",
+      "affected": ["SCS"], "dependencies": [],
+      "supersededAssumptions": "Treating SCS as a dashboard or as an authority-bearing system.",
+      "implementationConsequences": "All copy distinguishes the SCS product from the #SCS build agent.",
+      "relatedDecisions": ["DEC-0007"]
+    },
+    {
+      "decisionId": "DEC-0003", "title": "ProductOS under constitutional review", "status": "Approved", "date": "2026-07-24",
+      "productOwner": "Sonja", "area": "Operating System", "decisionClass": "Operating System",
+      "ruling": "ProductOS is placed under constitutional review.",
+      "rationale": "Recorded as an existing Product Owner ruling. Scope and outcome of the review pending Product Owner confirmation.",
+      "affected": ["ProductOS"], "dependencies": [],
+      "supersededAssumptions": "Treating ProductOS as settled or authoritative during review.",
+      "implementationConsequences": "ProductOS carries a Constitutional Review governance state until the review concludes.",
+      "relatedDecisions": ["DEC-0001"]
+    },
+    {
+      "decisionId": "DEC-0004", "title": "SCS Home versus Executive Snapshot", "status": "Approved", "date": "2026-07-24",
+      "productOwner": "Sonja", "area": "SCS", "decisionClass": "Design",
+      "ruling": "SCS Home is the interactive constitutional command center. Executive Snapshot is the concise, generated operational briefing produced from SCS state.",
+      "rationale": "Resolves an architectural conflation before further screens are built.",
+      "affected": ["SCS Home", "Executive Snapshot"], "dependencies": ["DEC-0002"],
+      "supersededAssumptions": "The single-screen Executive Snapshot performing the role of Home.",
+      "implementationConsequences": "Home and the briefing are separate routes; the briefing stays concise.",
+      "relatedDecisions": ["DEC-0002"]
+    },
+    {
+      "decisionId": "DEC-0005", "title": "Coupled SAPDOS–Kidlytics workstreams", "status": "Approved", "date": "2026-07-24",
+      "productOwner": "Sonja", "area": "Methodology", "decisionClass": "Methodology",
+      "ruling": "SAPDOS and Kidlytics workstreams are coupled.",
+      "rationale": "Recorded as an existing Product Owner ruling. Coupling mechanics pending Product Owner confirmation.",
+      "affected": ["SAPDOS", "Kidlytics"], "dependencies": [],
+      "supersededAssumptions": "Treating SAPDOS methodology and Kidlytics product work as independent.",
+      "implementationConsequences": "Methodology maturity of SAPDOS artifacts is validated through Kidlytics first.",
+      "relatedDecisions": ["DEC-0006"]
+    },
+    {
+      "decisionId": "DEC-0006", "title": "Methodology Maturity", "status": "Approved", "date": "2026-07-24",
+      "productOwner": "Sonja", "area": "Methodology", "decisionClass": "Methodology",
+      "ruling": "Methodology Maturity is an independent field for reusable SAPDOS artifacts: Draft, Validated in Kidlytics, Validated in Additional Products, Reusable Standard, Constitutional Standard. It is never merged with authority, governance status, work state, product maturity, or publication gate.",
+      "rationale": "Keeps methodology reusability distinct from other record dimensions.",
+      "affected": ["SAPDOS"], "dependencies": ["DEC-0005"],
+      "supersededAssumptions": "Conflating methodology maturity with product or publication maturity.",
+      "implementationConsequences": "A distinct Methodology Maturity dimension is added to the data model and UI.",
+      "relatedDecisions": ["DEC-0005"]
+    },
+    {
+      "decisionId": "DEC-0007", "title": "#SOS and #SCS authority boundaries", "status": "Approved", "date": "2026-07-24",
+      "productOwner": "Sonja", "area": "Operating System", "decisionClass": "Operating System",
+      "ruling": "No agent may approve its own proposals. #SOS protects and advises Product Owner authority but does not exercise it. #SCS designs and builds SCS but is not SCS and holds no constitutional authority.",
+      "rationale": "Prevents any agent from manufacturing constitutional authority.",
+      "affected": ["#SOS", "#SCS", "SCS"], "dependencies": ["DEC-0002"],
+      "supersededAssumptions": "Any implication that an AI agent can approve constitutional decisions.",
+      "implementationConsequences": "Authority scope is shown per agent; AI recommends, never approves.",
+      "relatedDecisions": ["DEC-0002", "DEC-0008"]
+    },
+    {
+      "decisionId": "DEC-0008", "title": "#CKL and #CIA naming and authority boundaries", "status": "Approved", "date": "2026-07-24",
+      "productOwner": "Sonja", "area": "Operating System", "decisionClass": "Operating System",
+      "ruling": "#CKL (ChatGPT Kidlytics) provides Product Owner advisory support, product architecture, specification drafting, product challenge, review, and cross-artifact reconciliation for Kidlytics but does not replace Product Owner approval. #CIA (Claude Kidlytics Invitation AI Agent) evaluates and synthesizes the Kidlytics invitation experience but may not change architecture, canonical language, or product decisions.",
+      "rationale": "Names the Kidlytics advisory and invitation agents and bounds their authority.",
+      "affected": ["#CKL", "#CIA", "Kidlytics"], "dependencies": ["DEC-0007"],
+      "supersededAssumptions": "Undefined naming for the Kidlytics advisory and invitation agents.",
+      "implementationConsequences": "The agent register lists #CKL and #CIA with explicit authority boundaries.",
+      "relatedDecisions": ["DEC-0007"]
+    }
+  ]
+}
