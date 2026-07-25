@@ -12,7 +12,7 @@ import { OSRegistryPage } from '../features/os/OSRegistryPage';
 import { ProductsPage } from '../features/products/ProductsPage';
 import { ProductCommandPage } from '../features/products/ProductCommandPage';
 import { PublicationsPage } from '../features/publications/PublicationsPage';
-import { AIWorkPage } from '../features/ai/AIWorkPage';
+import { TeamCommandCenter } from '../features/team/TeamCommandCenter';
 import { DecisionsPage } from '../features/decisions/DecisionsPage';
 import { SettingsPage } from '../features/settings/SettingsPage';
 import { PlaceholderPage } from '../features/PlaceholderPage';
@@ -47,7 +47,7 @@ export function App() {
             <Route path="/products" element={<ProductsPage />} />
             <Route path="/products/:id" element={<ProductCommandPage />} />
             <Route path="/publications" element={<PublicationsPage />} />
-            <Route path="/ai-work" element={<AIWorkPage />} />
+            <Route path="/ai-work" element={<TeamCommandCenter />} />
             <Route path="/decisions" element={<DecisionsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             {NAV.filter((n) => n.status !== 'live').map((n) => (

@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { useCollection, indexById, useIsSeed } from '../../lib/data';
 import { deriveReviews } from '../../lib/reviews';
+import { deriveTeam } from '../../lib/team';
 import { productExecutiveSummary, currentGateLabel, FAMILY_LABEL, pubDisplayTitle } from '../../lib/derive';
 import {
   Card, SectionTitle, StatTile, StatusBadge, DemonstrationBadge, GovernanceBadge,
@@ -88,9 +89,10 @@ export function SCSHomePage() {
 
   const activity = [...(updates.data ?? [])].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
   const latestChange = activity[0];
-  const activeCollaborators = (ai.data ?? []).filter((c) =>
-    (assignments.data ?? []).some((a) => a.collaborator === c.id) || c.currentTask,
-  );
+  const team = deriveTeam({
+    agents: ai.data ?? [], assignments: assignments.data ?? [],
+    decisions: decisions.data ?? [], products: products.data ?? [], isSeed,
+  });
 
   return (
     <div>
@@ -310,28 +312,29 @@ export function SCSHomePage() {
         </div>
       </section>
 
-      {/* 7 — Active AI Coordination (only active; full roster on AI Work) */}
+      {/* 7 — ShockTheory Agent Team (compact summary → Team Command Center) */}
       <section className="scs-snapshot__layer">
         <div className="scs-section-head">
-          <SectionTitle>Active AI coordination</SectionTitle>
-          <Link className="scs-section-link" to="/ai-work">AI Work →</Link>
+          <SectionTitle>ShockTheory agent team</SectionTitle>
+          <Link className="scs-section-link" to="/ai-work">Team Command Center →</Link>
         </div>
         <Card>
-          {activeCollaborators.map((c) => {
-            const a = (assignments.data ?? []).find((x) => x.collaborator === c.id);
-            return (
-              <Link key={c.id} to="/ai-work" className="scs-row scs-row-link">
-                <div className="scs-row__main">
-                  <div className="scs-row__title">{c.name}</div>
-                  <div className="scs-row__sub">{a?.task ?? c.currentTask ?? c.standingResponsibility}</div>
-                </div>
-                <StatusBadge label={c.syncState ?? c.waitingState ?? 'Active'} tone="neutral" />
-              </Link>
-            );
-          })}
-          <p style={{ margin: '12px 0 0', fontSize: 12.5, color: 'var(--text-muted)' }}>
-            Home shows active work only. The full participant roster and role descriptions live in AI Work.
-          </p>
+          <div className="scs-decisions__counts" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', marginBottom: 16 }}>
+            <StatTile value={team.metrics.activeAgents.value} label="Active agents" tone="accent" />
+            <StatTile value={team.metrics.activeAssignments.value} label="Active assignments" tone="accent" />
+            <StatTile value={team.metrics.deliverables.value} label="Deliverables awaiting review" tone={team.metrics.deliverables.value ? 'review' : 'muted'} />
+            <StatTile value={team.metrics.waitingPO.value} label="Waiting on you" tone={team.metrics.waitingPO.value ? 'review' : 'muted'} />
+            <StatTile value={team.metrics.blocked.value} label="Work blocked" tone={team.metrics.blocked.value ? 'review' : 'muted'} />
+            <StatTile value={team.metrics.warnings.value} label="Alignment warnings" tone={team.metrics.warnings.value ? 'review' : 'muted'} />
+            <StatTile value={team.metrics.directivesNoWork.value} label="Directives without linked work" tone="muted" />
+            <StatTile value={team.metrics.workNoDirective.value} label="Work without a directive" tone={team.metrics.workNoDirective.value ? 'review' : 'muted'} />
+          </div>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+            <Link className="scs-btn scs-btn--primary" to="/ai-work">Open Team Command Center <ArrowRight size={15} /></Link>
+            <Link className="scs-btn scs-btn--secondary" to="/decisions">View Active Decisions</Link>
+            <Link className="scs-btn scs-btn--secondary" to="/ai-work">Review Alignment</Link>
+            <span style={{ fontSize: 12.5, color: 'var(--text-muted)', marginLeft: 4 }}>Last full-team sync: {team.lastFullSync}</span>
+          </div>
         </Card>
       </section>
 

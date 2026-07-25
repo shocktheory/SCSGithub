@@ -1,0 +1,33 @@
+/* Team Command Center — operational + constitutional coordination surface. */
+
+.scs-tc-metrics {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 8px;
+}
+.scs-tabs { display: flex; gap: 6px; margin: 22px 0 18px; border-bottom: 1px solid var(--border); }
+.scs-tab {
+  appearance: none; background: none; border: none; font-family: inherit;
+  font-size: 14px; font-weight: 600; color: var(--text-muted); padding: 8px 4px; margin-right: 18px;
+  cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
+}
+.scs-tab:hover { color: var(--text-secondary); }
+.scs-tab--active { color: var(--text-primary); border-bottom-color: var(--color-electric-blue); }
+
+.scs-agents { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 18px; align-items: stretch; }
+.scs-agents > * { display: flex; }
+.scs-agents > * > .scs-card { flex: 1 1 auto; }
+
+.scs-agent__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.scs-agent__name { font-size: 18px; font-weight: 650; }
+.scs-agent__provider { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.scs-agent__role { font-size: 13px; color: var(--text-secondary); margin: 8px 0 0; line-height: 1.45; }
+
+.scs-trace { display: grid; gap: 6px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--divider); }
+.scs-trace__row { display: grid; grid-template-columns: 168px 1fr; gap: 12px; align-items: baseline; font-size: 12.5px; }
+.scs-trace__k { color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; font-size: 10.5px; }
+.scs-trace__v { color: var(--text-primary); }
+.scs-trace__link { color: var(--color-soft-sky); text-decoration: none; font-weight: 600; }
+.scs-trace__link:hover { text-decoration: underline; }
+.scs-trace__missing { color: var(--status-risk); font-weight: 600; }
+@media (max-width: 560px) { .scs-trace__row { grid-template-columns: 1fr; gap: 1px; } }
+
+.scs-po-card { border: 1px solid rgba(95,208,160,0.32); background: linear-gradient(180deg, rgba(95,208,160,0.06) 0%, rgba(22,27,37,0.4) 100%); }

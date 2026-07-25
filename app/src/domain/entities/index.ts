@@ -205,6 +205,10 @@ export interface Assignment extends Base {
   task: string;
   waitingState?: string;
   expectedOutput?: string;
+  /** Governing directive/decision record for this assignment (traceability). */
+  directive?: ID;
+  /** Review gate the deliverable must pass. */
+  reviewGate?: string;
 }
 
 export interface Benchmark extends Base {
