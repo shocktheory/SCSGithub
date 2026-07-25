@@ -153,7 +153,7 @@ export interface Decision extends Base {
    * Implementation Status — modeled INDEPENDENTLY of decision `status` (the
    * constitutional decision status). A decision may be Approved yet not-yet-Implemented.
    */
-  implementationStatus?: 'Not implemented' | 'In progress' | 'Implemented' | 'Reference only';
+  implementationStatus?: 'Not implemented' | 'In progress' | 'Implemented' | 'Verified and Accepted' | 'Reference only';
   /**
    * True when the authoritative constitutional text is held by the Product Owner and
    * the record here is a summary/reference (not the originating constitutional text).

@@ -3,6 +3,31 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-phase2-accepted] — 2026-07-25
+
+Product Owner Acceptance Ruling — accepts commit `a773bd6` as the Phase 2 reconciliation
+baseline and closes the Phase 2 implementation-reconciliation cycle. This entry **records**
+the acceptance only; it manufactures no authority.
+
+### Recorded (governed records)
+- **Acceptance milestone** `ST-OPH-2026-010` (approved) — Product Owner acceptance of commit
+  `a773bd6`; cycle closed; Constitutional State Derivation Engine **Verified and Accepted**.
+  Deliberately typed as a *Product Owner acceptance & closure* event, tied to no single agent,
+  so it is **not** an activation event and activates no agent.
+- **Closure:** deliverables ST-DLV-2026-002 / ST-DLV-2026-003 → **Accepted**; Assignment
+  Directives ST-ADR-2026-002 / ST-ADR-2026-003 / reconciliation directive → **Closed — accepted**;
+  review gates "Phase 2 review" / "Reconciliation review" → **Approved**.
+- **Implementation status:** Phase 2 baseline decisions (ST-DEC-2026-011…016) → **Verified and
+  Accepted**.
+- **Activity:** an `ST-REVIEW` acceptance entry surfaces on SCS Home.
+
+### Explicitly NOT done (Product Owner stop conditions honored)
+- ST-OPH-2026-006…009 remain **Pending / non-authoritative** — not approved or amended.
+- **No agent activated** — AGENT-001…004 remain *Pending activation*; #CIA remains the only
+  activated agent (Available). Derived agent states are unchanged from `a773bd6`.
+- The reconciliation **ST-ADR identifier remains Product-Owner-pending** — not assigned.
+- **AGENT-004 / #CKP organizational reconciliation not initiated.**
+
 ## [0.1.0-phase1-rev03] — 2026-07-24
 
 SCS Home vs Executive Snapshot reconciliation + constitutional trust (Revision 02/03).

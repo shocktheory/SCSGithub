@@ -30,36 +30,36 @@ export const assignmentDirectives: AssignmentDirective[] = [
   },
   {
     id: 'adr-002', directiveId: 'ST-ADR-2026-002', agent: 'ai-scs', title: 'Implement Phase 2 — Constitutional Governance',
-    status: 'Under Product Owner review',
+    status: 'Closed — accepted (reconciled baseline, Product Owner acceptance of commit a773bd6)',
     standingDirective: 'sdr-002', deliverable: 'dlv-002', reviewGate: 'rgate-002', productOwnerDecision: 'dec-0011',
-    authorityStatus: 'reported', demonstration: false,
+    authorityStatus: 'approved', demonstration: false,
   },
   {
     id: 'adr-003', directiveId: 'ST-ADR-2026-003', agent: 'ai-sos', title: 'Constitutional review of Phase 2 implementation',
-    status: 'Active',
+    status: 'Closed — accepted (constitutional review concluded; reconciliation accepted)',
     standingDirective: 'sdr-001', reviewGate: 'rgate-002', productOwnerDecision: 'dec-0007',
-    authorityStatus: 'reported', demonstration: false,
+    authorityStatus: 'approved', demonstration: false,
   },
   {
     id: 'adr-004', directiveId: 'Pending Product Owner-authorized ST-ADR identifier', agent: 'ai-scs',
     title: 'Phase 2 Constitutional Reconciliation',
-    status: 'Active',
+    status: 'Closed — accepted (Product Owner acceptance of commit a773bd6)',
     standingDirective: 'sdr-002', deliverable: 'dlv-003', reviewGate: 'rgate-003',
-    authorityStatus: 'reported', demonstration: false,
-    notes: 'Governed by the Product Owner Directive "Phase 2 Constitutional Reconciliation" (2026-07-24). Canonical Assignment Directive identifier is Product-Owner-authorized; #SCS does not originate it.',
+    authorityStatus: 'approved', demonstration: false,
+    notes: 'Governed by the Product Owner Directive "Phase 2 Constitutional Reconciliation" (2026-07-24) and closed by the Product Owner Acceptance Ruling (2026-07-25) accepting commit a773bd6. The canonical Assignment Directive identifier remains Product-Owner-pending — #SCS does not originate or assign it, and this acceptance does NOT assign it.',
   },
 ];
 
 export const deliverables: Deliverable[] = [
   { id: 'dlv-001', deliverableId: 'ST-DLV-2026-001', title: 'Team Command Center (Phase 1 Functional Demonstration)', assignmentDirective: 'adr-001', reviewGate: 'rgate-001', status: 'Accepted', authorityStatus: 'approved', demonstration: false },
-  { id: 'dlv-002', deliverableId: 'ST-DLV-2026-002', title: 'Phase 2 — Constitutional Governance Implementation', assignmentDirective: 'adr-002', reviewGate: 'rgate-002', status: 'Under review', authorityStatus: 'reported', demonstration: false },
-  { id: 'dlv-003', deliverableId: 'ST-DLV-2026-003', title: 'Phase 2 Constitutional Reconciliation', assignmentDirective: 'adr-004', reviewGate: 'rgate-003', status: 'In review', authorityStatus: 'reported', demonstration: false },
+  { id: 'dlv-002', deliverableId: 'ST-DLV-2026-002', title: 'Phase 2 — Constitutional Governance Implementation', assignmentDirective: 'adr-002', reviewGate: 'rgate-002', status: 'Accepted (Product Owner acceptance of commit a773bd6)', authorityStatus: 'approved', demonstration: false },
+  { id: 'dlv-003', deliverableId: 'ST-DLV-2026-003', title: 'Phase 2 Constitutional Reconciliation', assignmentDirective: 'adr-004', reviewGate: 'rgate-003', status: 'Accepted (Product Owner acceptance of commit a773bd6)', authorityStatus: 'approved', demonstration: false },
 ];
 
 export const reviewGates: Gate[] = [
   { id: 'rgate-001', name: 'Team Command Center review', requiresOwnerApproval: true, status: 'Approved', decisionRef: 'dec-0014', authorityStatus: 'approved', demonstration: false },
-  { id: 'rgate-002', name: 'Phase 2 review', requiresOwnerApproval: true, status: 'Open', authorityStatus: 'proposed', demonstration: false },
-  { id: 'rgate-003', name: 'Reconciliation review', requiresOwnerApproval: true, status: 'Open', authorityStatus: 'proposed', demonstration: false },
+  { id: 'rgate-002', name: 'Phase 2 review', requiresOwnerApproval: true, status: 'Approved', authorityStatus: 'approved', demonstration: false },
+  { id: 'rgate-003', name: 'Reconciliation review', requiresOwnerApproval: true, status: 'Approved', authorityStatus: 'approved', demonstration: false },
 ];
 
 // ---- Operational History — activation events preserved independently ----
@@ -75,6 +75,10 @@ export const operationalHistory: OperationalHistoryEntry[] = [
   { id: 'oh-007', entryId: 'ST-OPH-2026-007', date: '2026-07-24', agent: 'ai-scs', summary: 'AGENT-002 (#SCS) Standing Directive ST-SD-002 v1 Current; TEAM-002 membership Active.', evidenceType: 'Constitutional activation', relatedObject: 'sdr-002', authorityStatus: 'proposed', demonstration: false, notes: 'Pending Product Owner approval — NOT authoritative activation evidence; retained for Product Owner review.' },
   { id: 'oh-008', entryId: 'ST-OPH-2026-008', date: '2026-07-24', agent: 'ai-ckl', summary: 'AGENT-003 (#CKL) Standing Directive ST-SD-003 v1 Current; TEAM-001 membership Active.', evidenceType: 'Constitutional activation', relatedObject: 'sdr-003', authorityStatus: 'proposed', demonstration: false, notes: 'Pending Product Owner approval — NOT authoritative activation evidence; retained for Product Owner review.' },
   { id: 'oh-009', entryId: 'ST-OPH-2026-009', date: '2026-07-24', agent: 'ai-ckp', summary: 'AGENT-004 (#CKP) Standing Directive ST-SD-004 v1 Current; TEAM-001 membership Active.', evidenceType: 'Constitutional activation', relatedObject: 'sdr-004', authorityStatus: 'proposed', demonstration: false, notes: 'Pending Product Owner approval — NOT authoritative activation evidence; retained for Product Owner review.' },
+  // Product Owner Acceptance Ruling (2026-07-25) — records acceptance & closure only.
+  // Deliberately NOT a "Constitutional activation" event and tied to no single agent, so it
+  // activates no agent. It does not approve ST-OPH-2026-006..009 and does not assign the ST-ADR identifier.
+  { id: 'oh-010', entryId: 'ST-OPH-2026-010', date: '2026-07-25', summary: 'Product Owner accepted commit a773bd6 as the Phase 2 reconciliation baseline; the Phase 2 implementation-reconciliation cycle is closed and the Constitutional State Derivation Engine implementation is Verified and Accepted. This acceptance does NOT approve ST-OPH-2026-006 through ST-OPH-2026-009, activates no agent (AGENT-001..004 remain Pending activation), and does not assign the reconciliation ST-ADR identifier.', evidenceType: 'Product Owner acceptance & closure', relatedObject: 'dlv-003', authorityStatus: 'approved', demonstration: false },
 ];
 
 // ---- Team and Team Membership (first-class objects) ----
