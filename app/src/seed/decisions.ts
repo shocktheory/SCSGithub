@@ -11,14 +11,22 @@ import type { Decision } from '../domain/entities';
  * Where a ruling's full rationale or consequences were not specified in the
  * governing directive, the text says so rather than inventing detail.
  */
-const D = (d: Omit<Decision, 'authorityStatus' | 'demonstration'>): Decision => ({
-  ...d,
-  approvingAuthority: d.approvingAuthority ?? 'Sonja (Product Owner)',
-  sourceDirective: d.sourceDirective ?? 'ST-LOCK — Agent Naming, SCS Governance Corrections (2026-07-24)',
-  authorityStatus: 'approved',
-  demonstration: false,
-  confidence: d.confidence ?? 'high',
-});
+const D = (d: Omit<Decision, 'authorityStatus' | 'demonstration'>): Decision => {
+  const n = parseInt(d.id.replace('dec-', ''), 10);
+  const nnn = String(n).padStart(3, '0');
+  return {
+    ...d,
+    // Canonical constitutional identifier (Phase 2). Historical interim ID preserved.
+    decisionId: `ST-DEC-2026-${nnn}`,
+    historicalId: n <= 10 ? `DEC-${String(n).padStart(4, '0')}` : undefined,
+    queue: d.queue ?? (/pending Product Owner confirmation/i.test(d.rationale ?? '') ? 'documentation' : 'owner-action'),
+    approvingAuthority: d.approvingAuthority ?? 'Sonja (Product Owner)',
+    sourceDirective: d.sourceDirective ?? 'ST-LOCK — Agent Naming, SCS Governance Corrections (2026-07-24)',
+    authorityStatus: 'approved',
+    demonstration: false,
+    confidence: d.confidence ?? 'high',
+  };
+};
 
 export const interimDecisions: Decision[] = [
   D({
@@ -131,5 +139,73 @@ export const interimDecisions: Decision[] = [
     dependencies: ['dec-0007'], supersededAssumptions: 'Undefined naming for the Kidlytics advisory and invitation agents.',
     implementationConsequences: 'The agent register lists #CKL and #CIA with explicit authority boundaries.',
     relatedDecisions: ['dec-0007'],
+  }),
+
+  // ---- Phase 2 constitutional baseline (ST-DEC-2026-011 … 016) ----
+  D({
+    id: 'dec-0011', decisionId: 'ST-DEC-2026-011', title: 'Separation of constitutional objects',
+    area: 'Operating System', decisionClass: 'Architecture', status: 'Approved', date: '2026-07-24',
+    sourceDirective: 'Phase 2 — Constitutional Governance Implementation (2026-07-24)',
+    question: 'How are Decision Records, Standing Directives, and Assignment Directives related?',
+    ruling: 'Decision Records, Standing Directives, and Assignment Directives are independent constitutional objects. Each has its own identifier, lifecycle, interface, and traceability. Decision Records may not substitute for Standing Directives; Standing Directives may not substitute for Assignment Directives.',
+    rationale: 'Prevents conflation of governance objects and enables faithful traceability.',
+    affectedArtifacts: ['Decision Register', 'Standing Directive Library', 'Assignment Directives'],
+    dependencies: [], implementationConsequences: 'SCS implements three separate object types and workspaces.',
+    relatedDecisions: ['dec-0012', 'dec-0013', 'dec-0014'], queue: 'owner-action',
+  }),
+  D({
+    id: 'dec-0012', decisionId: 'ST-DEC-2026-012', title: 'Constitutional Decision Register',
+    area: 'SCS', decisionClass: 'Platform', status: 'Approved', date: '2026-07-24',
+    sourceDirective: 'Phase 2 — Constitutional Governance Implementation (2026-07-24)',
+    question: 'What is the authoritative interface for constitutional decisions?',
+    ruling: 'The Constitutional Decision Register is the authoritative interface for constitutional decisions, using the approved constitutional baseline. Interim identifiers are replaced by canonical ST-DEC-2026-### identifiers with preserved historical traceability.',
+    rationale: 'Establishes one authoritative decision surface.',
+    affectedArtifacts: ['Decision Register'], dependencies: ['dec-0011'],
+    implementationConsequences: 'Decisions carry canonical IDs; the Register is the authoritative view.',
+    relatedDecisions: ['dec-0011'], queue: 'owner-action',
+  }),
+  D({
+    id: 'dec-0013', decisionId: 'ST-DEC-2026-013', title: 'Standing Directive Library',
+    area: 'Operating System', decisionClass: 'Operating System', status: 'Approved', date: '2026-07-24',
+    sourceDirective: 'Phase 2 — Constitutional Governance Implementation (2026-07-24)',
+    question: 'How are durable agent role authorities governed?',
+    ruling: 'Each governed agent exposes a Standing Directive with its current directive, version, governing authority, and superseded history, maintained in the Standing Directive Library.',
+    rationale: 'Durable role authority is distinct from specific assignments.',
+    affectedArtifacts: ['Standing Directive Library'], dependencies: ['dec-0011'],
+    implementationConsequences: 'A Standing Directive object and Library workspace are implemented.',
+    relatedDecisions: ['dec-0011'], queue: 'owner-action',
+  }),
+  D({
+    id: 'dec-0014', decisionId: 'ST-DEC-2026-014', title: 'Assignment Directive management',
+    area: 'Operating System', decisionClass: 'Workflow', status: 'Approved', date: '2026-07-24',
+    sourceDirective: 'Phase 2 — Constitutional Governance Implementation (2026-07-24)',
+    question: 'How is specific assigned work governed and traced?',
+    ruling: 'Assignment Directives are managed with the approved lifecycle and link to a Standing Directive, Deliverables, a Review Gate, and a Product Owner Decision.',
+    rationale: 'Assigned work must be individually governed and traceable to authority.',
+    affectedArtifacts: ['Assignment Directives'], dependencies: ['dec-0011', 'dec-0013'],
+    implementationConsequences: 'An Assignment Directive object and workspace are implemented.',
+    relatedDecisions: ['dec-0013'], queue: 'owner-action',
+  }),
+  D({
+    id: 'dec-0015', decisionId: 'ST-DEC-2026-015', title: 'Artifact Registry, Deliverables, Review Gates, and Operational History',
+    area: 'SCS', decisionClass: 'Platform', status: 'Approved', date: '2026-07-24',
+    sourceDirective: 'Phase 2 — Constitutional Governance Implementation (2026-07-24)',
+    question: 'How are artifacts, deliverables, review gates, and history governed?',
+    ruling: 'The Artifact Registry, Deliverables, Review Gates, and Operational History are implemented as independent constitutional objects. Operational History is evidence, not performance scoring.',
+    rationale: 'Each governance object has its own workspace and traceability.',
+    affectedArtifacts: ['Artifact Registry', 'Deliverables', 'Review Gates', 'Operational History'],
+    dependencies: ['dec-0011'], implementationConsequences: 'Four object workspaces are implemented from the approved baseline.',
+    relatedDecisions: ['dec-0011'], queue: 'owner-action',
+  }),
+  D({
+    id: 'dec-0016', decisionId: 'ST-DEC-2026-016', title: 'Canonical traceability, version separation, and architecture freeze',
+    area: 'Operating System', decisionClass: 'Architecture', status: 'Approved', date: '2026-07-24',
+    sourceDirective: 'Phase 2 — Constitutional Governance Implementation (2026-07-24)',
+    question: 'What is the canonical traceability chain and what is frozen?',
+    ruling: 'The canonical chain is Agent → Standing Directive → Assignment Directive → Artifact → Deliverable → Review Gate → Product Owner Decision → Operational History, with bidirectional navigation. ShockTheory OS Constitution v1.0 Baseline and SCS Functional Demonstration Phase 1 are independent version systems. Capability Registry and Organizational Maturity remain reserved, deferred, and roadmap-only. The Constitutional Architecture Freeze is governing: no new entities, layers, schemas, or concepts.',
+    rationale: 'Locks the approved architecture and prevents constitutional expansion.',
+    affectedArtifacts: ['SCS'], dependencies: ['dec-0011', 'dec-0012', 'dec-0013', 'dec-0014', 'dec-0015'],
+    implementationConsequences: 'Traceability, version display, and reserved-concept handling are implemented; no expansion.',
+    relatedDecisions: ['dec-0011'], queue: 'owner-action',
   }),
 ];

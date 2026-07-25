@@ -145,6 +145,61 @@ export interface Decision extends Base {
   sourceDirective?: string; // source conversation or directive
   implementationConsequences?: string;
   relatedDecisions?: ID[];
+  /** Prior interim identifier (e.g. "DEC-0007"), preserved for traceability. */
+  historicalId?: string;
+  /** Whether this decision is awaiting Product Owner action vs. documentation only. */
+  queue?: 'owner-action' | 'documentation';
+}
+
+/**
+ * Standing Directive — a governed agent's DURABLE role authority. An independent
+ * constitutional object (Phase 2). Not a Decision Record; not an Assignment Directive.
+ */
+export interface StandingDirective extends Base {
+  directiveId: string; // ST-SDR-2026-###
+  agent: ID;
+  title: string;
+  version: string;
+  governingAuthority: string;
+  governingDecision?: ID;
+  text: string;
+  supersededHistory: string[];
+  status: string;
+}
+
+/**
+ * Assignment Directive — governs one specific assignment. Independent object with
+ * its own lifecycle, linking Standing Directive → Deliverable → Review Gate → Decision.
+ */
+export interface AssignmentDirective extends Base {
+  directiveId: string; // ST-ADR-2026-###
+  agent: ID;
+  title: string;
+  status: string; // Proposed · Active · Completed · Closed
+  standingDirective?: ID;
+  deliverable?: ID;
+  reviewGate?: ID;
+  productOwnerDecision?: ID;
+  artifact?: ID;
+}
+
+/** Deliverable — an independent constitutional object with its own review gate. */
+export interface Deliverable extends Base {
+  deliverableId: string; // ST-DLV-2026-###
+  title: string;
+  assignmentDirective?: ID;
+  reviewGate?: ID;
+  status: string;
+}
+
+/** Operational History entry — evidence, not performance scoring. */
+export interface OperationalHistoryEntry extends Base {
+  entryId: string;
+  date: ISODate;
+  agent?: ID;
+  summary: string;
+  evidenceType: string;
+  relatedObject?: ID;
 }
 
 export interface CanonicalStatement extends Base {

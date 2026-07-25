@@ -29,7 +29,11 @@ export type CollectionName =
   | 'artifacts'
   | 'reviewItems'
   | 'nextActions'
-  | 'relationships';
+  | 'relationships'
+  | 'standingDirectives'
+  | 'assignmentDirectives'
+  | 'deliverables'
+  | 'operationalHistory';
 
 export interface WorkspaceBackup {
   schemaVersion: typeof SCHEMA_VERSION;

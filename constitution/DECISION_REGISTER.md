@@ -1,9 +1,39 @@
-# Interim Constitutional Decision Register
+# Constitutional Decision Register
 
 **Governed, version-controlled source of Product Owner decisions.** Created per ST-LOCK
-(2026-07-24) so decision recording does not wait for the Phase 2 Decision Register interface.
-The Phase 2 Register **must ingest these records unchanged**. Machine-readable mirror:
-[`decisions.json`](decisions.json). App ingestion: `app/src/seed/decisions.ts`.
+(2026-07-24); adopted as the authoritative interface under **ST-DEC-2026-012** (Phase 2).
+App ingestion: `app/src/seed/decisions.ts`. Machine-readable mirror: [`decisions.json`](decisions.json).
+
+**Canonical identifiers (Phase 2):** decisions now carry canonical `ST-DEC-2026-###` IDs; the
+prior interim `DEC-000#` IDs are preserved as historical references. The Phase 2 baseline is
+established by **ST-DEC-2026-011 … 016** (separation of constitutional objects, the Decision
+Register, the Standing Directive Library, Assignment Directive management, the Artifact Registry /
+Deliverables / Review Gates / Operational History objects, and canonical traceability + version
+separation + the architecture freeze). See `app/src/seed/decisions.ts` for full records.
+
+| Canonical ID | Historical | Title |
+|---|---|---|
+| ST-DEC-2026-001 | DEC-0001 | ShockBoard supersession |
+| ST-DEC-2026-002 | DEC-0002 | SCS naming and scope |
+| ST-DEC-2026-003 | DEC-0003 | ProductOS under constitutional review |
+| ST-DEC-2026-004 | DEC-0004 | SCS Home versus Executive Snapshot |
+| ST-DEC-2026-005 | DEC-0005 | Coupled SAPDOS–Kidlytics workstreams |
+| ST-DEC-2026-006 | DEC-0006 | Methodology Maturity |
+| ST-DEC-2026-007 | DEC-0007 | #SOS and #SCS authority boundaries |
+| ST-DEC-2026-008 | DEC-0008 | #CKL and #CIA naming and authority boundaries |
+| ST-DEC-2026-009 | DEC-0009 | #CKP naming and authority boundary |
+| ST-DEC-2026-010 | DEC-0010 | Product Owner authority |
+| ST-DEC-2026-011 | — | Separation of constitutional objects |
+| ST-DEC-2026-012 | — | Constitutional Decision Register |
+| ST-DEC-2026-013 | — | Standing Directive Library |
+| ST-DEC-2026-014 | — | Assignment Directive management |
+| ST-DEC-2026-015 | — | Artifact Registry, Deliverables, Review Gates, Operational History |
+| ST-DEC-2026-016 | — | Canonical traceability, version separation, architecture freeze |
+
+The records below retain their original ST-LOCK text under historical IDs for traceability.
+
+---
+
 
 - **Product Owner / final authority:** Sonja
 - **Status of these records:** real governed rulings (not demonstration)

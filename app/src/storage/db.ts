@@ -24,6 +24,10 @@ export class SCSDatabase extends Dexie {
   reviewItems!: Table<Record<string, unknown>, string>;
   nextActions!: Table<Record<string, unknown>, string>;
   relationships!: Table<Record<string, unknown>, string>;
+  standingDirectives!: Table<Record<string, unknown>, string>;
+  assignmentDirectives!: Table<Record<string, unknown>, string>;
+  deliverables!: Table<Record<string, unknown>, string>;
+  operationalHistory!: Table<Record<string, unknown>, string>;
   meta!: Table<{ key: string; value: unknown }, string>;
 
   constructor() {
@@ -48,6 +52,13 @@ export class SCSDatabase extends Dexie {
       relationships: 'id',
       meta: 'key',
     });
+    // v2 (Phase 2): independent constitutional objects.
+    this.version(2).stores({
+      standingDirectives: 'id, agent',
+      assignmentDirectives: 'id, agent',
+      deliverables: 'id',
+      operationalHistory: 'id',
+    });
   }
 }
 
@@ -69,6 +80,10 @@ export const COLLECTIONS: CollectionName[] = [
   'reviewItems',
   'nextActions',
   'relationships',
+  'standingDirectives',
+  'assignmentDirectives',
+  'deliverables',
+  'operationalHistory',
 ];
 
 export const db = new SCSDatabase();

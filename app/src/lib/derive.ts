@@ -13,6 +13,13 @@ export function authorityTone(state: AuthorityState): 'approved' | 'proposed' | 
   }
 }
 
+/** Map an internal decision id (dec-0007) to its canonical constitutional id. */
+export function canonicalDecId(id?: string): string | undefined {
+  if (!id) return undefined;
+  const n = parseInt(id.replace('dec-', ''), 10);
+  return Number.isNaN(n) ? id : `ST-DEC-2026-${String(n).padStart(3, '0')}`;
+}
+
 export const FAMILY_LABEL: Record<Publication['family'], string> = {
   experience: 'Experience Playbook',
   workflow: 'Workflow Playbook',

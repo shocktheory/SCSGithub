@@ -1,6 +1,6 @@
 import {
-  Home, ClipboardList, Network, Library, FolderTree, Quote, Scale,
-  Package, BookOpen, Bot, Target, AlertTriangle, History, Settings,
+  Home, ClipboardList, Network, Scale, Landmark, ClipboardCheck, FolderTree, Quote,
+  Package, BookOpen, Users, PackageCheck, DoorOpen, Activity, Target, AlertTriangle, Settings,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -12,7 +12,6 @@ export interface NavItem {
   icon: LucideIcon;
   status: NavStatus;
   phase?: number;
-  /** Short badge text (e.g. "Phase 2", "Deferred"); tooltip explains its meaning. */
   badge?: string;
   badgeTip?: string;
   blurb?: string;
@@ -24,18 +23,8 @@ export interface NavGroup {
 }
 
 const planned = (phase: number, blurb: string): Partial<NavItem> => ({
-  status: 'planned',
-  phase,
-  badge: `Phase ${phase}`,
-  badgeTip: `Planned for Phase ${phase} — defined in the data model, not built yet.`,
-  blurb,
-});
-
-const deferred = (blurb: string): Partial<NavItem> => ({
-  status: 'deferred',
-  badge: 'Deferred',
-  badgeTip: 'Deferred from Phase 1 — represented explicitly in the phase plan.',
-  blurb,
+  status: 'planned', phase, badge: `Phase ${phase}`,
+  badgeTip: `Planned for Phase ${phase} — defined in the data model, not built yet.`, blurb,
 });
 
 export const NAV_GROUPS: NavGroup[] = [
@@ -50,10 +39,11 @@ export const NAV_GROUPS: NavGroup[] = [
     title: 'Constitution',
     items: [
       { path: '/os', label: 'ShockTheory OS', icon: Network, status: 'live' },
-      { path: '/library', label: 'Constitutional Library', icon: Library, ...deferred('Product architecture, playbooks, canonical language, decisions, specifications, and benchmarks in one governed library.') } as NavItem,
-      { path: '/artifacts', label: 'Artifact Registry', icon: FolderTree, ...deferred('Where every governing artifact lives, with direct open links and link-health.') } as NavItem,
-      { path: '/canonical', label: 'Canonical Language', icon: Quote, ...planned(2, 'The three-tier language model (Canonical, Enduring, Narrative) and canonical concepts.') } as NavItem,
-      { path: '/decisions', label: 'Decisions', icon: Scale, status: 'live', badge: 'Interim', badgeTip: 'Interim governed decision source (ST-LOCK) — the Phase 2 Decision Register will ingest these records.' },
+      { path: '/decisions', label: 'Constitutional Register', icon: Scale, status: 'live' },
+      { path: '/standing-directives', label: 'Standing Directives', icon: Landmark, status: 'live' },
+      { path: '/assignment-directives', label: 'Assignment Directives', icon: ClipboardCheck, status: 'live' },
+      { path: '/artifacts', label: 'Artifact Registry', icon: FolderTree, status: 'live' },
+      { path: '/canonical', label: 'Canonical Language', icon: Quote, ...planned(3, 'The three-tier language model (Canonical, Enduring, Narrative) and canonical concepts.') } as NavItem,
     ],
   },
   {
@@ -66,10 +56,12 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     title: 'Operations',
     items: [
-      { path: '/ai-work', label: 'AI Work', icon: Bot, status: 'live' },
-      { path: '/benchmarks', label: 'Benchmarks', icon: Target, ...planned(2, 'The registry of governing quality standards — what each benchmark governs and does not.') } as NavItem,
-      { path: '/risks', label: 'Risks & Divergence', icon: AlertTriangle, ...planned(2, 'Governed risks — drift, conflicting authority, missing decisions — with evidence and correction.') } as NavItem,
-      { path: '/updates', label: 'Update Log', icon: History, ...planned(2, 'A chronological, filterable operating log driven by the adopted sync codes.') } as NavItem,
+      { path: '/ai-work', label: 'Team Command Center', icon: Users, status: 'live' },
+      { path: '/deliverables', label: 'Deliverables', icon: PackageCheck, status: 'live' },
+      { path: '/review-gates', label: 'Review Gates', icon: DoorOpen, status: 'live' },
+      { path: '/operational-history', label: 'Operational History', icon: Activity, status: 'live' },
+      { path: '/benchmarks', label: 'Benchmarks', icon: Target, ...planned(3, 'The registry of governing quality standards — what each benchmark governs and does not.') } as NavItem,
+      { path: '/risks', label: 'Risks & Divergence', icon: AlertTriangle, ...planned(3, 'Governed risks — drift, conflicting authority, missing decisions — with evidence and correction.') } as NavItem,
     ],
   },
   {

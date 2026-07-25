@@ -79,10 +79,10 @@ function Sidebar({ open, onNavigate }: { open: boolean; onNavigate: () => void }
         ))}
       </nav>
 
-      <div style={{ marginTop: 'auto', padding: '14px 10px 4px', color: 'var(--text-muted)', fontSize: 11, lineHeight: 1.5 }}>
-        v0.1 MVP · Phase 1
-        <br />
-        Confidential — Internal Use Only
+      <div style={{ marginTop: 'auto', padding: '14px 10px 4px', color: 'var(--text-muted)', fontSize: 11, lineHeight: 1.55 }}>
+        <div><span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>ShockTheory OS Constitution</span> · v1.0 Baseline</div>
+        <div style={{ marginTop: 2 }}><span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>SCS Functional Demonstration</span> · Phase 1</div>
+        <div style={{ marginTop: 6, opacity: 0.85 }}>Confidential — Internal Use Only</div>
       </div>
     </aside>
   );

@@ -3,15 +3,17 @@ import { Link } from 'react-router-dom';
 import { ShieldCheck, ShieldAlert, Info, ExternalLink, X } from 'lucide-react';
 import { useCollection, useIsSeed } from '../../lib/data';
 import { deriveTeam, type AgentCard } from '../../lib/team';
+import { canonicalDecId } from '../../lib/derive';
 import {
   PageHeader, Card, SectionTitle, StatTile, StatusBadge, DimensionTag, DimensionRow,
 } from '../../design-system/components';
 import type { AICollaborator, Assignment, Decision, Product } from '../../domain/entities';
 import './team.css';
 
-const DEC = (id?: string) => (id ? id.replace('dec-', 'DEC-').toUpperCase() : undefined);
+const DEC = (id?: string) => canonicalDecId(id);
 
 type View = 'team' | 'assignment' | 'governance';
+type Density = 'compact' | 'expanded' | 'collapsed';
 
 export function TeamCommandCenter() {
   const isSeed = useIsSeed();
@@ -20,6 +22,7 @@ export function TeamCommandCenter() {
   const decisions = useCollection<Decision>('decisions');
   const products = useCollection<Product>('products');
   const [view, setView] = useState<View>('team');
+  const [density, setDensity] = useState<Density>('compact');
   const [filterIds, setFilterIds] = useState<string[] | null>(null);
   const [filterLabel, setFilterLabel] = useState('');
 
@@ -90,10 +93,17 @@ export function TeamCommandCenter() {
 
       {view === 'team' && (
         <>
-          <ProductOwnerCard model={model} />
-          <SectionTitle>Agents</SectionTitle>
+          <ProductOwnerCard model={model} docQueue={(decisions.data ?? []).filter((d) => d.queue === 'documentation').length} />
+          <div className="scs-section-head">
+            <SectionTitle>Agents</SectionTitle>
+            <div className="scs-tabs" style={{ margin: 0, border: 'none' }}>
+              {(['collapsed', 'compact', 'expanded'] as Density[]).map((d) => (
+                <button key={d} className={`scs-tab${density === d ? ' scs-tab--active' : ''}`} style={{ marginRight: 12, fontSize: 12.5, textTransform: 'capitalize' }} onClick={() => setDensity(d)}>{d}</button>
+              ))}
+            </div>
+          </div>
           <div className="scs-agents">
-            {model.agents.map((a) => <AgentCardView key={a.id} a={a} />)}
+            {model.agents.map((a) => <AgentCardView key={a.id} a={a} density={density} />)}
           </div>
         </>
       )}
@@ -122,7 +132,30 @@ export function TeamCommandCenter() {
   );
 }
 
-function AgentCardView({ a }: { a: AgentCard }) {
+function AgentCardView({ a, density }: { a: AgentCard; density: Density }) {
+  // Collapsed = identity + status only; Compact = key traceability; Expanded = everything.
+  if (density === 'collapsed') {
+    return (
+      <div>
+        <Card className="scs-card--fill">
+          <div className="scs-agent__head">
+            <div>
+              <div className="scs-agent__name">{a.name}</div>
+              {a.modelProvider && <div className="scs-agent__provider">{a.modelProvider}</div>}
+            </div>
+            <DimensionRow>
+              <DimensionTag label="Status" tone="work">{a.status}</DimensionTag>
+              <DimensionTag label="Alignment" tone={a.alignment === 'Aligned' ? 'maturity' : 'gate'}>{a.alignment}</DimensionTag>
+            </DimensionRow>
+          </div>
+          {a.missingLinks.length > 0 && (
+            <div style={{ marginTop: 10, fontSize: 12, color: 'var(--status-risk)' }}>{a.missingLinks.length} missing link(s)</div>
+          )}
+        </Card>
+      </div>
+    );
+  }
+  const expanded = density === 'expanded';
   return (
     <div>
       <Card className="scs-card--fill">
@@ -137,23 +170,23 @@ function AgentCardView({ a }: { a: AgentCard }) {
           </DimensionRow>
         </div>
         <p className="scs-agent__role">{a.role}</p>
-        {a.standingResponsibility && (
+        {expanded && a.standingResponsibility && (
           <p style={{ fontSize: 12.5, color: 'var(--text-secondary)', margin: '8px 0 0' }}>
             <span className="scs-trace__k" style={{ display: 'block' }}>Standing responsibility</span>{a.standingResponsibility}
           </p>
         )}
         <div className="scs-trace">
           <Row k="Current assignment" v={a.assignment ?? '—'} />
-          <Row k="Expected deliverable" v={a.deliverable ?? '—'} />
-          {a.waitingOn && <Row k="Waiting on" v={a.waitingOn} />}
-          <Row k="Blocker / risk" v={a.blocker ?? 'None'} />
-          <Row k="Affected" v={a.affected ?? '—'} />
-          <Row k="Current gate" v={a.gate ?? 'Not gated'} />
-          <Row k="Last synchronization" v={`${a.lastSync}${a.isDemonstration ? ' · demo' : ''}`} />
+          {expanded && <Row k="Expected deliverable" v={a.deliverable ?? '—'} />}
+          {expanded && a.waitingOn && <Row k="Waiting on" v={a.waitingOn} />}
+          {expanded && <Row k="Blocker / risk" v={a.blocker ?? 'None'} />}
+          {expanded && <Row k="Affected" v={a.affected ?? '—'} />}
+          {expanded && <Row k="Current gate" v={a.gate ?? 'Not gated'} />}
+          {expanded && <Row k="Last synchronization" v={`${a.lastSync}${a.isDemonstration ? ' · demo' : ''}`} />}
           <Row k="Directive coverage" v={<StatusBadge label={a.directiveCoverage} tone={a.directiveCoverage === 'Full' ? 'approved' : a.directiveCoverage === 'Partial' ? 'review' : 'risk'} />} />
-          <Row k="Role directive" v={a.roleDirectiveId ? <Link className="scs-trace__link" to="/decisions">{DEC(a.roleDirectiveId)} ↗</Link> : <span className="scs-trace__missing">Missing</span>} />
-          <Row k="Assignment directive" v={a.assignmentDirectiveId ? <Link className="scs-trace__link" to="/decisions">{DEC(a.assignmentDirectiveId)} ↗</Link> : (a.assignment ? <span className="scs-trace__missing">Missing</span> : '—')} />
-          <Row k="Review gate → decision" v={a.reviewGate ? <Link className="scs-trace__link" to="/decisions">{a.reviewGate} ↗</Link> : '—'} />
+          <Row k="Standing / role directive" v={a.roleDirectiveId ? <Link className="scs-trace__link" to="/standing-directives">{DEC(a.roleDirectiveId)} ↗</Link> : <span className="scs-trace__missing">Missing</span>} />
+          <Row k="Assignment directive" v={a.assignmentDirectiveId ? <Link className="scs-trace__link" to="/assignment-directives">view ↗</Link> : (a.assignment ? <span className="scs-trace__missing">Missing</span> : '—')} />
+          {expanded && <Row k="Review gate → decision" v={a.reviewGate ? <Link className="scs-trace__link" to="/review-gates">{a.reviewGate} ↗</Link> : '—'} />}
         </div>
         {a.missingLinks.length > 0 && (
           <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
@@ -176,7 +209,7 @@ function Row({ k, v }: { k: string; v: React.ReactNode }) {
   );
 }
 
-function ProductOwnerCard({ model }: { model: ReturnType<typeof deriveTeam> }) {
+function ProductOwnerCard({ model, docQueue }: { model: ReturnType<typeof deriveTeam>; docQueue: number }) {
   const deliverables = model.metrics.deliverables.value;
   const waiting = model.metrics.waitingPO.value;
   return (
@@ -191,12 +224,12 @@ function ProductOwnerCard({ model }: { model: ReturnType<typeof deriveTeam> }) {
           <DimensionTag label="Authority" tone="authority">Approves</DimensionTag>
         </div>
         <div className="scs-trace" style={{ marginTop: 12 }}>
-          <Row k="Decisions awaiting review" v={<Link className="scs-trace__link" to="/decisions">0 pending · view register ↗</Link>} />
-          <Row k="Deliverables awaiting review" v={<Link className="scs-trace__link" to="/">{deliverables} · review on SCS Home ↗</Link>} />
-          <Row k="Unresolved constitutional rulings" v="3 governed rulings pending confirmation (DEC-0001, DEC-0003, DEC-0005)" />
+          <Row k="Decisions awaiting your action" v={<Link className="scs-trace__link" to="/">2 review items · on SCS Home ↗</Link>} />
+          <Row k="Historical decisions awaiting documentation" v={<Link className="scs-trace__link" to="/decisions">{docQueue} pending confirmation (ST-DEC-2026-001/003/005) ↗</Link>} />
+          <Row k="Deliverables awaiting review" v={<Link className="scs-trace__link" to="/deliverables">{deliverables} · Phase 2 (ST-DLV-2026-002) ↗</Link>} />
           <Row k="Approvals due" v={`${waiting} deliverable awaiting Product Owner review`} />
           <Row k="Blocked work needing you" v={`${model.metrics.blocked.value}`} />
-          <Row k="Queues" v={<><Link className="scs-trace__link" to="/decisions">Decision queue ↗</Link>{'   '}<Link className="scs-trace__link" to="/">Approval queue ↗</Link></>} />
+          <Row k="Queues" v={<><Link className="scs-trace__link" to="/decisions">Decision register ↗</Link>{'   '}<Link className="scs-trace__link" to="/">Approval queue ↗</Link></>} />
         </div>
       </Card>
     </>

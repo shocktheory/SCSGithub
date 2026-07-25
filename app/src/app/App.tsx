@@ -14,6 +14,12 @@ import { ProductCommandPage } from '../features/products/ProductCommandPage';
 import { PublicationsPage } from '../features/publications/PublicationsPage';
 import { TeamCommandCenter } from '../features/team/TeamCommandCenter';
 import { DecisionsPage } from '../features/decisions/DecisionsPage';
+import { StandingDirectivesPage } from '../features/directives/StandingDirectivesPage';
+import { AssignmentDirectivesPage } from '../features/directives/AssignmentDirectivesPage';
+import { ArtifactRegistryPage } from '../features/artifacts/ArtifactRegistryPage';
+import { DeliverablesPage } from '../features/deliverables/DeliverablesPage';
+import { ReviewGatesPage } from '../features/gates/ReviewGatesPage';
+import { OperationalHistoryPage } from '../features/history/OperationalHistoryPage';
 import { SettingsPage } from '../features/settings/SettingsPage';
 import { PlaceholderPage } from '../features/PlaceholderPage';
 
@@ -49,6 +55,12 @@ export function App() {
             <Route path="/publications" element={<PublicationsPage />} />
             <Route path="/ai-work" element={<TeamCommandCenter />} />
             <Route path="/decisions" element={<DecisionsPage />} />
+            <Route path="/standing-directives" element={<StandingDirectivesPage />} />
+            <Route path="/assignment-directives" element={<AssignmentDirectivesPage />} />
+            <Route path="/artifacts" element={<ArtifactRegistryPage />} />
+            <Route path="/deliverables" element={<DeliverablesPage />} />
+            <Route path="/review-gates" element={<ReviewGatesPage />} />
+            <Route path="/operational-history" element={<OperationalHistoryPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             {NAV.filter((n) => n.status !== 'live').map((n) => (
               <Route key={n.path} path={n.path} element={<PlaceholderPage item={n} />} />

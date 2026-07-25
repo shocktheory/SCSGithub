@@ -1,6 +1,9 @@
 import type { WorkspaceBackup, CollectionName } from '../storage/StorageAdapter';
 import { SCHEMA_VERSION } from '../domain/schemaVersion';
 import { interimDecisions } from './decisions';
+import {
+  standingDirectives, assignmentDirectives, deliverables, operationalHistory, reviewGates,
+} from './directives';
 import type {
   OSSystem,
   Product,
@@ -257,7 +260,7 @@ const aiCollaborators: AICollaborator[] = [
     role: 'SCS architecture, design, implementation, testing, repository delivery, and technical documentation.',
     modelProvider: 'Claude (Anthropic)',
     authorityScope: 'Designs and builds SCS but is not SCS and holds no constitutional authority. May not approve.',
-    currentTask: 'SCS build — Team Command Center and interim decision source.',
+    currentTask: 'SCS build — Phase 2 Constitutional Governance Implementation.',
     waitingState: 'Product Owner review',
     expectedNextAction: 'Begin Phase 2 (Governance) on approval.',
     syncState: 'Synchronized',
@@ -319,11 +322,11 @@ const assignments: Assignment[] = [
   {
     id: 'assign-scs-build',
     collaborator: 'ai-scs',
-    task: 'SCS build — Team Command Center and interim decision source.',
+    task: 'SCS build — Phase 2 Constitutional Governance Implementation.',
     waitingState: 'Product Owner review',
-    expectedOutput: 'Team Command Center and revised SCS Home for Product Owner review.',
-    directive: 'dec-0004',
-    reviewGate: 'Product Owner review',
+    expectedOutput: 'Phase 2 constitutional governance implementation for Product Owner review.',
+    directive: 'adr-002',
+    reviewGate: 'Phase 2 review',
     authorityStatus: 'reported',
     demonstration: false,
     confidence: 'high',
@@ -531,8 +534,12 @@ export const seedWorkspace: WorkspaceBackup = {
     products,
     publications,
     publicationPhases,
-    gates,
+    gates: [...gates, ...reviewGates],
     decisions: interimDecisions,
+    standingDirectives,
+    assignmentDirectives,
+    deliverables,
+    operationalHistory,
     canonicalStatements,
     canonicalConcepts: [],
     aiCollaborators,
