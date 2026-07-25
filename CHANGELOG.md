@@ -3,6 +3,23 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-scs-completion-rev2-accepted] — 2026-07-25
+
+**Completion Program Rev 2 — ACCEPTED as the governing roadmap.** Recording only — no implementation,
+no Phase 6 records, baseline unaltered, no canonical identifiers assigned.
+
+- Assignment **adr-009** → Closed — completed & accepted; **ST-DLV-2026-008** → Accepted; **Completion
+  Program Review** gate → Approved & closed; `dec-scs-completion` → Verified and Accepted.
+- **Six architectural decisions approved** (recorded; canonical ST-DEC ids await the separate identifier
+  standard): capability-based completion model authoritative · domain-based measurement (initial
+  weighting) · Trust/Security separation · Platform Architecture governance required · SDK = Not
+  Applicable (current scope) · Platform Evolution governance required before final production acceptance.
+- Completion estimate **~25% approved** as an order-of-magnitude planning measure (not a release forecast).
+- Disposition recorded in **Activity and Operational History** (OpHistory entry with Product-Owner-pending
+  ST-OPH identifier — no improvised canonical id). Commit `b6c9305` preserved as the accepted revision.
+- Product record → *Completion Program: Governing & Active*. Phase 6 / confidential data / deployment /
+  launch **Not Authorized**. typecheck clean · 39 pass + 5 e2e skipped · build ok.
+
 ## [0.1.0-scs-completion-program-rev2] — 2026-07-25
 
 **Completion Program — Rev 2 (capability-based, governance-first).** Product Owner review returned

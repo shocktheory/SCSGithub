@@ -119,7 +119,7 @@ const products: Product[] = [
     ecosystem: 'ShockTheory · Internal software platform',
     purpose: 'The active software platform that implements approved ShockTheory OS concepts, stores and links authoritative records, derives governed organizational and product state, and presents dashboards, action queues, history, traceability, contradictions, and portfolio status — tracking its own development through the same governed structures.',
     lifecycleStage: 'Awaiting Phase 6 Authorization',
-    status: 'Active — internal platform. Phase 5 Accepted · Production Baseline v1.0 Established · Completion Program: Authorized for Planning.',
+    status: 'Active — internal platform. Phase 5 Accepted · Production Baseline v1.0 Established · Completion Program: Governing & Active (Rev 2 accepted, ~25%).',
     owner: 'Sonja Ross (Product Owner) · #SCS (steward/implementer)',
     authorityStatus: 'approved',
     demonstration: false,
@@ -275,9 +275,9 @@ const aiCollaborators: AICollaborator[] = [
     role: 'SCS architecture, design, implementation, testing, repository delivery, and technical documentation.',
     modelProvider: 'Claude (Anthropic)',
     authorityScope: 'Designs and builds SCS but is not SCS and holds no constitutional authority. May not approve.',
-    currentTask: 'SCS Platform Completion Program — completion roadmap (Phases 6–12), register, capability inventory, and proposed Phase 6 package prepared and submitted for review. Completion is a binding requirement; phase progression stays governed.',
-    waitingState: 'Product Owner review (SCS Platform Completion Program Review); then a separate Phase 6 authorization directive',
-    expectedNextAction: 'Await approval of the Completion Program and a separate Phase 6 authorization; begin no Phase 6 implementation until then.',
+    currentTask: 'SCS Platform Completion Program Rev 2 ACCEPTED as the governing completion roadmap. Next governed action: prepare a separate Phase 6 Authorization Directive (preparation does not authorize implementation).',
+    waitingState: 'Awaiting a separate Product Owner Phase 6 Authorization Directive',
+    expectedNextAction: 'Prepare the Phase 6 Authorization Directive on Product Owner request; begin no Phase 6 implementation until separately authorized.',
     syncState: 'Synchronized',
     lastSynced: '2026-07-25',
     governingRecord: 'dec-0007',
@@ -462,6 +462,21 @@ const canonicalStatements: CanonicalStatement[] = [
 // Constitutional activity — only real, honest events. Cue's Phase-4 approval is
 // spec-stated but undated here, so its date is left empty rather than invented.
 const updates: Update[] = [
+  {
+    id: 'upd-scs-completion-rev2-accepted',
+    code: 'ST-REVIEW',
+    date: '2026-07-25',
+    summary: 'SCS Platform Completion Program Review — APPROVED. Product Owner accepted Completion Program Rev 2 (commit b6c9305) as the governing completion roadmap: assignment closed, ST-DLV-2026-008 accepted, review gate closed. Six architectural decisions approved (capability-based model; domain-based measurement; Trust/Security separation; Platform Architecture governance; SDK = Not Applicable; Platform Evolution governance). Completion estimate ~25% approved as an order-of-magnitude planning measure. Canonical identifiers await the separate identifier standard; Baseline v1.0 unaltered. Next governed action: prepare a separate Phase 6 Authorization Directive (which itself does not authorize implementation). NOT authorized: Phase 6, auth, hosting, confidential data, deployment, launch.',
+    source: 'Sonja (Product Owner)',
+    scope: 'SCS',
+    affectedSystems: ['os-scs', 'prod-scs'],
+    decisionsCreated: [],
+    documentsUpdated: ['dlv-008', 'rgate-008', 'adr-009', 'dec-scs-completion'],
+    syncStatus: 'Approved — Completion Program Rev 2 governing & active',
+    authorityStatus: 'approved',
+    demonstration: false,
+    confidence: 'high',
+  },
   {
     id: 'upd-scs-completion-rev2',
     code: 'ST-REVIEW',
