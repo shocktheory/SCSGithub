@@ -133,6 +133,43 @@ export function TeamCommandCenter() {
 }
 
 function AgentCardView({ a, density }: { a: AgentCard; density: Density }) {
+  // Pending onboarding: no divergence/stale/warning — the agent has not yet entered
+  // the governed operating environment (Product Owner correction).
+  if (a.onboarding) {
+    return (
+      <div>
+        <Card className="scs-card--fill">
+          <div className="scs-agent__head">
+            <div>
+              <div className="scs-agent__name">{a.name}</div>
+              {a.modelProvider && <div className="scs-agent__provider">{a.modelProvider}</div>}
+            </div>
+            <DimensionRow>
+              <DimensionTag label="Status" tone="gate">Pending Onboarding</DimensionTag>
+              <DimensionTag label="Gate" tone="gate">Constitutional Onboarding</DimensionTag>
+            </DimensionRow>
+          </div>
+          {density !== 'collapsed' && (
+            <>
+              <p className="scs-agent__role">{a.role}</p>
+              <div className="scs-trace">
+                <Row k="Current assignment" v="None" />
+                <Row k="Synchronization" v="Not Yet Applicable" />
+                <Row k="Standing directive" v={a.standingDirectiveLabel} />
+                <Row k="Directive coverage" v="Not Active" />
+                <Row k="Current gate" v="Constitutional Onboarding" />
+              </div>
+              <p style={{ marginTop: 12, fontSize: 12.5, color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                AGENT-005 has not yet entered the governed operating environment. Awaiting a Product
+                Owner-approved onboarding package (identity, ST-SD-005, TEAM-001 membership,
+                acknowledgement, effective date, first synchronization).
+              </p>
+            </>
+          )}
+        </Card>
+      </div>
+    );
+  }
   // Collapsed = identity + status only; Compact = key traceability; Expanded = everything.
   if (density === 'collapsed') {
     return (
@@ -182,7 +219,7 @@ function AgentCardView({ a, density }: { a: AgentCard; density: Density }) {
           {expanded && <Row k="Blocker / risk" v={a.blocker ?? 'None'} />}
           {expanded && <Row k="Affected" v={a.affected ?? '—'} />}
           {expanded && <Row k="Current gate" v={a.gate ?? 'Not gated'} />}
-          {expanded && <Row k="Last synchronization" v={`${a.lastSync}${a.isDemonstration ? ' · demo' : ''}`} />}
+          {expanded && <Row k="Synchronization" v={`${a.syncDisplay}${a.isDemonstration && a.syncDisplay !== 'Not Required' ? ' · demo' : ''}`} />}
           <Row k="Directive coverage" v={<StatusBadge label={a.directiveCoverage} tone={a.directiveCoverage === 'Full' ? 'approved' : a.directiveCoverage === 'Partial' ? 'review' : 'risk'} />} />
           <Row k="Standing / role directive" v={a.roleDirectiveId ? <Link className="scs-trace__link" to="/standing-directives">{DEC(a.roleDirectiveId)} ↗</Link> : <span className="scs-trace__missing">Missing</span>} />
           <Row k="Assignment directive" v={a.assignmentDirectiveId ? <Link className="scs-trace__link" to="/assignment-directives">view ↗</Link> : (a.assignment ? <span className="scs-trace__missing">Missing</span> : '—')} />

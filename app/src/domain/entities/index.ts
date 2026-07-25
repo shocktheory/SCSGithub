@@ -250,6 +250,12 @@ export interface AICollaborator extends Base {
   governingRecord?: ID;
   /** Standing constitutional responsibility (distinct from any current assignment). */
   standingResponsibility?: string;
+  /**
+   * Whether the agent has completed constitutional onboarding (entered the governed
+   * operating environment). Absence of onboarding is NOT a divergence/stale finding.
+   * Defaults to true when omitted. An attribute on the existing Agent — not a new object.
+   */
+  onboarded?: boolean;
 }
 
 export interface Assignment extends Base {

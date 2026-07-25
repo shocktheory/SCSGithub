@@ -20,14 +20,19 @@ export interface AgentCard {
   waitingOn?: string;
   blocker?: string;
   alignment: AlignmentState;
+  /** Human-readable synchronization state (may be "Not Yet Applicable"). */
+  syncDisplay: string;
   lastSync: string;
   affected?: string;
   gate?: string;
   roleDirectiveId?: string; // decision id
   assignmentDirectiveId?: string; // decision id
   reviewGate?: string;
-  directiveCoverage: 'Full' | 'Partial' | 'None';
+  directiveCoverage: 'Full' | 'Partial' | 'None' | 'Not Active';
   missingLinks: string[];
+  /** True when the agent has not yet completed constitutional onboarding. */
+  onboarding: boolean;
+  standingDirectiveLabel: string;
   isDemonstration: boolean;
 }
 
@@ -61,16 +66,47 @@ export function deriveTeam(input: {
     const assignment = assignments.find((x) => x.collaborator === a.id);
     const advising = /govern|advis|guardian/i.test(`${assignment?.waitingState ?? ''} ${a.role}`);
     const active = Boolean(assignment || a.currentTask);
+    const onboarding = a.onboarded === false;
+
+    // Un-onboarded agents have no active governed obligation: no divergence, stale,
+    // or workstream-synchronization finding may fire (Product Owner correction).
+    if (onboarding) {
+      return {
+        id: a.id, name: a.name, role: a.role, modelProvider: a.modelProvider,
+        standingResponsibility: a.standingResponsibility,
+        assignment: undefined, deliverable: undefined,
+        status: 'Pending Onboarding',
+        waitingOn: undefined, blocker: undefined,
+        alignment: 'Aligned', // not displayed as a warning while onboarding
+        syncDisplay: 'Not Yet Applicable',
+        lastSync: 'Not Yet Applicable',
+        affected: productName(a.assignedProduct),
+        gate: 'Constitutional Onboarding',
+        roleDirectiveId: a.governingRecord,
+        assignmentDirectiveId: undefined,
+        reviewGate: undefined,
+        directiveCoverage: 'Not Active',
+        missingLinks: [],
+        onboarding: true,
+        standingDirectiveLabel: 'Pending Product Owner-approved onboarding activation',
+        isDemonstration: a.demonstration ?? isSeed,
+      };
+    }
+
     const stale = isStale(a.lastSynced ?? '', a.syncState);
     const alignment: AlignmentState = stale ? 'Not synchronized' : 'Aligned';
     const missing: string[] = [];
     if (!decExists(a.governingRecord)) missing.push('No approved role directive');
-    if (assignment && !decExists(assignment.directive)) missing.push('Assignment has no governing directive');
+    // The assignment's governing directive is an Assignment Directive (ST-ADR), not a
+    // decision — a present reference is a valid governing link.
+    if (assignment && !assignment.directive) missing.push('Assignment has no governing directive');
     if (assignment && !assignment.expectedOutput) missing.push('Directive has no expected deliverable');
     if (assignment && assignment.expectedOutput && !assignment.reviewGate) missing.push('Deliverable has no review gate');
     if (stale) missing.push('Workstream is not synchronized');
     const coverage: AgentCard['directiveCoverage'] =
       missing.length === 0 ? 'Full' : decExists(a.governingRecord) ? 'Partial' : 'None';
+    // After onboarding but before assignment, synchronization is Not Required.
+    const syncDisplay = a.syncState ?? (assignment ? (a.lastSynced || 'Never') : 'Not Required');
 
     return {
       id: a.id, name: a.name, role: a.role, modelProvider: a.modelProvider,
@@ -81,6 +117,7 @@ export function deriveTeam(input: {
       waitingOn: active && !advising ? (assignment?.waitingState ?? a.waitingState) : undefined,
       blocker: a.conflictsDetected.length ? a.conflictsDetected.join('; ') : undefined,
       alignment,
+      syncDisplay,
       lastSync: a.lastSynced || 'Never',
       affected: productName(a.assignedProduct),
       gate: assignment?.reviewGate,
@@ -89,6 +126,8 @@ export function deriveTeam(input: {
       reviewGate: assignment?.reviewGate,
       directiveCoverage: coverage,
       missingLinks: missing,
+      onboarding: false,
+      standingDirectiveLabel: '',
       isDemonstration: a.demonstration ?? isSeed,
     };
   });
@@ -97,9 +136,11 @@ export function deriveTeam(input: {
   const waitingPO = activeCards.filter((c) => /product owner|review/i.test(c.waitingOn ?? ''));
   const deliverablesAwaiting = activeCards.filter((c) => c.deliverable && /product owner|review/i.test(c.waitingOn ?? ''));
   const blocked = cards.filter((c) => c.blocker);
-  const warnings = cards.filter((c) => c.alignment !== 'Aligned');
-  const stale = cards.filter((c) => c.lastSync === 'Never' || c.alignment === 'Not synchronized');
-  const directivesNoWork = cards.filter((c) => c.roleDirectiveId && !c.assignment);
+  // Un-onboarded agents are excluded from warning/stale metrics — absence of
+  // synchronization is not a warning before onboarding (Product Owner correction).
+  const warnings = cards.filter((c) => !c.onboarding && c.alignment !== 'Aligned');
+  const stale = cards.filter((c) => !c.onboarding && (c.lastSync === 'Never' || c.alignment === 'Not synchronized'));
+  const directivesNoWork = cards.filter((c) => c.roleDirectiveId && !c.assignment && !c.onboarding);
   const workNoDirective = activeCards.filter((c) => !c.assignmentDirectiveId);
 
   const m = (key: string, label: string, list: AgentCard[]): TeamMetric => ({
@@ -130,11 +171,8 @@ export function deriveTeam(input: {
     why: 'Unsynchronized agents can diverge from the current constitutional state.',
     next: 'Run a constitutional synchronization and record the governing reconciliation.',
   });
-  if (directivesNoWork.length) signals.push({
-    what: `${directivesNoWork.length} agents have an approved role directive but no active assignment`,
-    why: 'Governed roles without work may indicate unstarted or unrecorded assignments.',
-    next: 'Record a current assignment directive, or confirm the agent is intentionally idle.',
-  });
+  // No "role directive without work" warning: an onboarded-but-available agent is a
+  // valid state, not a governance issue (Product Owner correction). It stays a metric.
   if (workNoDirective.length) signals.push({
     what: `${workNoDirective.length} active assignments have no approved governing directive`,
     why: 'Work without a governing directive is untraceable to Product Owner authority.',
