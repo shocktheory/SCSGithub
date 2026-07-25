@@ -3,6 +3,22 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-scs-baseline-v1-accepted] — 2026-07-25
+
+**SCS Production Baseline v1.0 — ACCEPTED by the Product Owner.** Recorded as the first authoritative
+implementation baseline and the comparison point for every future review. Recording only — no
+implementation, architecture, code, or identifier changes; Phase 6 not authorized.
+
+- Baseline **Assignment** (adr-008) → Closed — completed & accepted; **ST-DLV-2026-007** → Accepted
+  (approved); **SCS Production Baseline v1.0 Review** gate → Approved & closed; `dec-scs-baseline` → Verified and Accepted.
+- **SCS product record** → *Production Baseline v1.0 Established*; status dimensions recorded (Portfolio
+  Active · Impl Phase 5 Accepted · Baseline v1.0 Accepted · Not Operational · Not Production · Internal ·
+  Lifecycle **Awaiting Phase 6 Authorization**).
+- New governance classification **"Baseline"** recorded (distinct from ST-ADR/ST-DEC/ST-DLV/ST-OPH);
+  **Baseline Identifier Product-Owner-pending**. Baseline v1.0 is **immutable** except through approved supersession.
+- The baseline document itself was not modified (immutability). Active Assignments back to 1 (#CKL-R).
+  typecheck clean, tests pass, build ok.
+
 ## [0.1.0-scs-baseline-v1] — 2026-07-25
 
 **SCS Production Baseline v1.0 (documentation).** Authoritative snapshot of the accepted state
