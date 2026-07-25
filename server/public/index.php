@@ -56,7 +56,26 @@ $app->get('/api/health', fn(Request $r, Response $s) =>
 $app->get('/api/derived/{view}', fn(Request $r, Response $s, array $a) =>
     Http::json($s, ['view' => $a['view'], 'derivationVersion' => $config->derivationVersion, 'source' => 'server', 'note' => 'derivation-foundation-seam']));
 
-/** Collection reads. */
+// IMPORTANT: register specific/static routes BEFORE the generic variable collection routes.
+// FastRoute rejects a static route (e.g. GET /api/admin/export) that is shadowed by a
+// previously-registered variable route of the same shape (GET /api/{collection}/{id}).
+
+/** Governed commands. Authority changes never happen via raw document replacement. */
+$app->post('/api/commands/{command}', function (Request $r, Response $s, array $a) use ($cmd) {
+    return $cmd->handle($a['command'], (array)$r->getParsedBody(), $s);
+});
+
+/** Admin: validated import, export, guarded reset. */
+$app->post('/api/admin/import', fn(Request $r, Response $s) => $import->run((array)$r->getParsedBody(), $s));
+$app->get('/api/admin/export', fn(Request $r, Response $s) => Http::json($s, $repo->exportWorkspace()));
+$app->post('/api/admin/reset', function (Request $r, Response $s) use ($repo, $config) {
+    $token = (string)(((array)$r->getParsedBody())['confirmationToken'] ?? '');
+    if ($token !== $config->resetToken) return Http::json($s->withStatus(400), ['error' => 'missing confirmation token']);
+    $repo->resetAll();
+    return Http::json($s, ['ok' => true]);
+});
+
+/** Generic collection reads (variable routes — registered LAST). */
 $app->get('/api/{collection}', function (Request $r, Response $s, array $a) use ($repo) {
     Http::assertCollection($a['collection']);
     return Http::json($s, ['items' => $repo->list($a['collection'])]);
@@ -67,25 +86,10 @@ $app->get('/api/{collection}/{id}', function (Request $r, Response $s, array $a)
     return $row ? Http::json($s, $row) : Http::json($s->withStatus(404), ['error' => 'not found']);
 });
 
-/** Governed commands. Authority changes never happen via raw document replacement. */
-$app->post('/api/commands/{command}', function (Request $r, Response $s, array $a) use ($cmd) {
-    return $cmd->handle($a['command'], (array)$r->getParsedBody(), $s);
-});
-
 /** Dev/test delete (restricted; production uses archive/supersede commands). */
 $app->delete('/api/{collection}/{id}', function (Request $r, Response $s, array $a) use ($repo) {
     Http::assertCollection($a['collection']);
     $repo->delete($a['collection'], $a['id']);
-    return Http::json($s, ['ok' => true]);
-});
-
-/** Admin: validated import, export, guarded reset. */
-$app->post('/api/admin/import', fn(Request $r, Response $s) => $import->run((array)$r->getParsedBody(), $s));
-$app->get('/api/admin/export', fn(Request $r, Response $s) => Http::json($s, $repo->exportWorkspace()));
-$app->post('/api/admin/reset', function (Request $r, Response $s) use ($repo, $config) {
-    $token = (string)(((array)$r->getParsedBody())['confirmationToken'] ?? '');
-    if ($token !== $config->resetToken) return Http::json($s->withStatus(400), ['error' => 'missing confirmation token']);
-    $repo->resetAll();
     return Http::json($s, ['ok' => true]);
 });
 
