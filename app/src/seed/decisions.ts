@@ -220,4 +220,29 @@ export const interimDecisions: Decision[] = [
   // Product Owner. AGENT-005 activation authority now references the approved
   // Product Owner directive, the acceptance record, and Operational History
   // (ST-OPH-2026-004 / -005), not a self-created decision.
+
+  // AGENT-006/#CKL-R activation authority — records the Product Owner's EXPRESS ruling
+  // (2026-07-25). This is a real, Product-Owner-authorized decision (authorityStatus
+  // 'approved'), not a self-originated one. The ruling did not assign a canonical ST-DEC
+  // number, so the canonical identifier remains Product-Owner-pending; #SCS does not mint it.
+  {
+    id: 'dec-cklr-activation',
+    decisionId: 'Pending Product Owner-authorized ST-DEC identifier',
+    title: 'AGENT-006/#CKL-R onboarding & activation authority',
+    area: 'Agent Governance', decisionClass: 'Activation', status: 'Approved', date: '2026-07-25',
+    approvingAuthority: 'Sonja (Product Owner)',
+    sourceDirective: 'Product Owner Acceptance, Constitutional Approval, and Implementation Directive — "Accept Phase 3 and Constitutionally Onboard AGENT-006/#CKL-R" (2026-07-25)',
+    question: 'Are AGENT-006/#CKL-R onboarding records approved and is #CKL-R activated?',
+    ruling: 'The Product Owner approves AGENT-006 (#CKL-R, Kidlytics Competitive Research Agent), Standing Directive ST-SD-006 (Current), Team Membership TM-009 (Active in TEAM-001), and the activation event ST-OPH-2026-012, and expressly activates #CKL-R to Available — Awaiting Assignment. No competitive-research Assignment Directive is approved; no research may begin.',
+    rationale: 'Records the Product Owner exercise of authority already held under the accepted Constitution. Does not grant new authority.',
+    affectedArtifacts: ['AGENT-006', 'ST-SD-006', 'TM-009', 'ST-OPH-2026-012'],
+    implementationConsequences: 'AGENT-006/#CKL-R derives as Available — Awaiting Assignment. The proposed competitive-research Assignment Directive remains nonauthoritative (Proposed — Not Active).',
+    implementationStatus: 'Verified and Accepted',
+    authoritativeTextByProductOwner: true,
+    queue: 'owner-action',
+    authorityStatus: 'approved',
+    demonstration: false,
+    confidence: 'high',
+    notes: 'Canonical ST-DEC identifier is Product-Owner-pending. The engine requires an approved governing Decision for the Product Owner activation-authority evidence; this record supplies it without originating a canonical number.',
+  },
 ];

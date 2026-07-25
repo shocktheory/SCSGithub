@@ -318,6 +318,25 @@ const aiCollaborators: AICollaborator[] = [
     confidence: 'medium',
     notes: 'AGENT-005 — constitutionally activated (state derived from ST-SD-005 v1 Current, approved Product Owner activation authority, Operational History activation events ST-OPH-2026-004/005, and active TEAM-001 membership).',
   },
+  {
+    id: 'ai-cklr',
+    name: '#CKL-R',
+    role: 'Kidlytics Competitive Research Agent — evidence-based competitive and market research supporting Kidlytics, performed only when authorized through an approved Assignment Directive.',
+    modelProvider: 'ChatGPT (OpenAI)',
+    assignedProduct: 'prod-kidlytics',
+    authorityScope: 'Advisory research only. May not change architecture, modify the prototype, implement features, make product decisions, direct other agents, or begin research without an approved Assignment Directive.',
+    standingResponsibility: 'Evidence-based competitive and market research supporting Kidlytics; submits findings for Product Owner review.',
+    currentTask: 'None — Available, awaiting an approved Assignment Directive. No competitive research authorized.',
+    syncState: 'Not Required',
+    lastSynced: '2026-07-25',
+    governingRecord: 'dec-cklr-activation',
+    openQuestions: [],
+    conflictsDetected: [],
+    authorityStatus: 'approved',
+    demonstration: false,
+    confidence: 'high',
+    notes: 'AGENT-006 — constitutionally activated by express Product Owner ruling (2026-07-25). State derived from ST-SD-006 v1 Current, approved Product Owner activation authority, Operational History activation event ST-OPH-2026-012, and active TEAM-001 membership TM-009. Available — Awaiting Assignment; competitive research is prohibited until a separate Assignment Directive is approved.',
+  },
 ];
 
 const assignments: Assignment[] = [
@@ -428,6 +447,21 @@ const canonicalStatements: CanonicalStatement[] = [
 // Constitutional activity — only real, honest events. Cue's Phase-4 approval is
 // spec-stated but undated here, so its date is left empty rather than invented.
 const updates: Update[] = [
+  {
+    id: 'upd-cklr-activation',
+    code: 'ST-REVIEW',
+    date: '2026-07-25',
+    summary: 'Product Owner accepted Phase 3 (commit 0ecbf2a) and expressly activated AGENT-006/#CKL-R (Kidlytics Competitive Research Agent): ST-SD-006 Current, TM-009 Active in TEAM-001, activation event ST-OPH-2026-012. #CKL-R derives as Available — Awaiting Assignment. No research Assignment Directive was approved and no competitive research has begun.',
+    source: 'Sonja (Product Owner)',
+    scope: 'ShockTheory OS',
+    affectedSystems: ['os-scs', 'prod-kidlytics'],
+    decisionsCreated: ['dec-cklr-activation'],
+    documentsUpdated: [],
+    syncStatus: 'Approved',
+    authorityStatus: 'approved',
+    demonstration: false,
+    confidence: 'high',
+  },
   {
     id: 'upd-transition-kidlytics',
     code: 'ST-OS',

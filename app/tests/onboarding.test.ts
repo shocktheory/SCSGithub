@@ -1,91 +1,77 @@
 import { describe, expect, it } from 'vitest';
 import { deriveOnboarding } from '../src/lib/onboarding';
-import { cklrCandidate, type OnboardingCandidate } from '../src/seed/onboarding';
+import { cklrCandidate } from '../src/seed/onboarding';
 import { deriveTeam } from '../src/lib/team';
 import { seedWorkspace } from '../src/seed';
 
-const clone = (): OnboardingCandidate => JSON.parse(JSON.stringify(cklrCandidate));
+describe('Phase 3 — AGENT-006/#CKL-R is onboarded and ACTIVATED (Available — Awaiting Assignment)', () => {
+  const m = deriveOnboarding(cklrCandidate);
 
-describe('Phase 3 — #CKL-R onboarding is prepared but nonauthoritative', () => {
-  it('the proposed package does NOT activate #CKL-R', () => {
-    const m = deriveOnboarding(cklrCandidate);
-    expect(m.before.activated).toBe(false);
-    expect(m.before.status).toBe('Pending Onboarding');
-    expect(m.statusLabel).toMatch(/Proposed \/ Pending constitutional onboarding/);
+  it('derives as activated from the approved evidence', () => {
+    expect(m.activated).toBe(true);
+    expect(m.current.activated).toBe(true);
   });
 
-  it('every checklist item is present-but-proposed or pending — none satisfies activation now', () => {
-    const m = deriveOnboarding(cklrCandidate);
-    expect(m.checklist.length).toBeGreaterThan(0);
-    for (const item of m.checklist) {
-      expect(item.satisfiesActivationNow).toBe(false);
-      expect(['present-proposed', 'pending-approval']).toContain(item.status);
-    }
+  it('is Available — Awaiting Assignment, NOT Working', () => {
+    expect(m.current.status).toBe('Available');
+    expect(m.current.currentGate).toBe('Awaiting Assignment');
+    expect(m.isAvailableAwaitingAssignment).toBe(true);
+    expect(m.current.status).not.toBe('Working');
   });
 
-  it('missing approved activation authority is exactly what prevents activation', () => {
-    const m = deriveOnboarding(cklrCandidate);
-    // Standing Directive is proposed (not Current) and no approved authority/event/active membership.
-    expect(m.before.missingEvidence).toContain('Current Standing Directive');
-    expect(m.before.missingEvidence).toContain('Product Owner activation authority');
-    expect(m.before.missingEvidence).toContain('Operational History activation event');
-    expect(m.before.missingEvidence).toContain('active Team Membership');
+  it('has no missing evidence and no contradictions', () => {
+    expect(m.current.missingEvidence).toEqual([]);
+    expect(m.contradictions).toEqual([]);
   });
 
-  it('the proposed activation event is traced as PENDING, never counted', () => {
-    const m = deriveOnboarding(cklrCandidate);
-    const traced = m.before.trace.sourceRecords.join(' ');
-    expect(traced).toMatch(/PENDING approval, not valid evidence/i);
-    expect(m.before.trace.sourceRecords.some((r) => /\(approved Operational History\)/.test(r))).toBe(false);
+  it('the onboarding evidence records count toward activation', () => {
+    const byLabel = Object.fromEntries(m.checklist.map((i) => [i.label, i]));
+    expect(byLabel['Standing Directive (Current)'].satisfiesActivationNow).toBe(true);
+    expect(byLabel['Product Owner activation authority'].satisfiesActivationNow).toBe(true);
+    expect(byLabel['Operational History activation event'].satisfiesActivationNow).toBe(true);
+    expect(byLabel['Team Membership (TEAM-001, Active)'].satisfiesActivationNow).toBe(true);
+    expect(byLabel['Standing Directive (Current)'].status).toBe('present-approved');
+  });
+
+  it('preserves proposal → approval provenance', () => {
+    const sd = m.provenance.find((p) => p.record === 'Standing Directive')!;
+    expect(sd.from).toBe('PROPOSED-ST-SD-CKL-R');
+    expect(sd.to).toBe('ST-SD-006');
+    const id = m.provenance.find((p) => p.record === 'Agent identity')!;
+    expect(id.from).toBe('PROPOSED-AGENT-CKL-R');
+    expect(id.to).toBe('AGENT-006');
   });
 });
 
-describe('Phase 3 — preview shows the effect of approval before authority is created', () => {
-  it('approving the onboarding records WOULD activate and make assignment-ready (Available)', () => {
-    const m = deriveOnboarding(cklrCandidate);
-    expect(m.afterActivation.activated).toBe(true);
-    expect(m.afterActivation.status).toBe('Available');
-    expect(m.wouldActivate).toBe(true);
-    expect(m.wouldBecomeAssignmentReady).toBe(true);
+describe('Phase 3 — the competitive-research assignment remains nonauthoritative; research is blocked', () => {
+  const m = deriveOnboarding(cklrCandidate);
+
+  it('the research Assignment Directive is proposed / not active', () => {
+    expect(cklrCandidate.assignmentDirective.status).toBe('Proposed — not active');
+    const item = m.checklist.find((i) => i.label === 'Competitive-research Assignment Directive')!;
+    expect(item.status).toBe('present-proposed');
+    expect(item.satisfiesActivationNow).toBe(false);
   });
 
-  it('research begins only when the Assignment Directive is ALSO approved and activated', () => {
-    const m = deriveOnboarding(cklrCandidate);
-    // Available (assignment-ready) is not the same as Working (research active).
-    expect(m.afterActivation.status).toBe('Available');
-    expect(m.afterAssignment.status).toBe('Working');
+  it('no canonical ST-ADR identifier is assigned', () => {
+    expect(cklrCandidate.assignmentDirective.ref).not.toHaveProperty('approvedId');
+    expect(cklrCandidate.assignmentDirective.ref.recommendedId).toMatch(/not assigned/i);
+  });
+
+  it('research is blocked and the only remaining decision is the research assignment', () => {
     expect(m.researchBlocked).toBe(true);
+    expect(m.requiredDecisions).toHaveLength(1);
+    expect(m.requiredDecisions[0]).toMatch(/Assignment Directive/i);
   });
 
-  it('a proposed (not-Current) Standing Directive can never activate, even with other evidence present', () => {
-    const c = clone();
-    // Force-approve authority + event + membership, but keep the Standing Directive PROPOSED.
-    const m = deriveOnboarding(c);
-    // `before` uses only approved evidence and the SD stays proposed → not activated.
-    expect(m.before.activated).toBe(false);
-    expect(m.before.missingEvidence).toContain('Current Standing Directive');
-  });
-});
-
-describe('Phase 3 — no canonical identifier is originated', () => {
-  it('every proposed record carries a nonauthoritative working ref and a separate recommended id', () => {
-    const c = cklrCandidate;
-    expect(c.identity.tempRef).toMatch(/^PROPOSED-/);
-    expect(c.standingDirective.ref.tempRef).toMatch(/^PROPOSED-/);
-    expect(c.teamMembership.ref.tempRef).toMatch(/^PROPOSED-/);
-    expect(c.activationEvent.ref.tempRef).toMatch(/^PROPOSED-/);
-    expect(c.assignmentDirective.ref.tempRef).toMatch(/^PROPOSED-/);
-    // Recommended ids exist but are explicitly recommendations, gated behind a PO decision.
-    expect(c.identity.recommendedId).toBe('AGENT-006');
-    expect(c.identity.authorizingDecisionNeeded).toMatch(/Product Owner/);
-  });
-
-  it('the activation event authorityStatus is proposed (nonauthoritative)', () => {
-    expect(cklrCandidate.activationEvent.authorityStatus).toBe('proposed');
+  it('an active research assignment WOULD make it Working — but that state is illustrative only', () => {
+    expect(m.withAssignment.status).toBe('Working');
+    // The current, real state is not Working.
+    expect(m.current.status).toBe('Available');
   });
 });
 
-describe('Phase 3 — existing five agent states are unchanged (isolation)', () => {
+describe('Phase 3 — the full team now derives two activated agents', () => {
   const c = seedWorkspace.collections as unknown as Record<string, unknown[]>;
   const model = deriveTeam({
     agents: c.aiCollaborators as never, decisions: c.decisions as never, products: c.products as never,
@@ -95,21 +81,32 @@ describe('Phase 3 — existing five agent states are unchanged (isolation)', () 
   });
   const byName = Object.fromEntries(model.agents.map((a) => [a.name, a]));
 
-  it('the roster still has exactly the five governed agents (no #CKL-R leaked in)', () => {
-    expect(model.agents.map((a) => a.name).sort()).toEqual(['#CIA', '#CKL', '#CKP', '#SCS', '#SOS']);
+  it('the roster now includes #CKL-R alongside the five existing agents', () => {
+    expect(model.agents.map((a) => a.name).sort()).toEqual(['#CIA', '#CKL', '#CKL-R', '#CKP', '#SCS', '#SOS']);
   });
 
-  it('#CIA remains the only activated agent (Available)', () => {
-    expect(model.agents.filter((a) => a.activated).map((a) => a.name)).toEqual(['#CIA']);
+  it('exactly two agents are activated: #CIA and #CKL-R', () => {
+    expect(model.agents.filter((a) => a.activated).map((a) => a.name).sort()).toEqual(['#CIA', '#CKL-R']);
+    expect(model.metrics.activeAgents.value).toBe(2);
+  });
+
+  it('#CKL-R is Available — Awaiting Assignment and not Working', () => {
+    expect(byName['#CKL-R'].status).toBe('Available');
+    expect(byName['#CKL-R'].currentGate).toBe('Awaiting Assignment');
+    expect(byName['#CKL-R'].assigned).toBe(false);
+  });
+
+  it('the five existing agent states are unchanged', () => {
     expect(byName['#CIA'].status).toBe('Available');
-  });
-
-  it('#SOS/#SCS/#CKL/#CKP remain Pending activation', () => {
     for (const n of ['#SOS', '#SCS', '#CKL', '#CKP']) expect(byName[n].activated).toBe(false);
-    expect(model.metrics.activeAgents.value).toBe(1);
+    expect(model.metrics.pendingOnboarding.value).toBe(4);
   });
 
-  it('no contradictions in the existing roster', () => {
+  it('no contradictions introduced by this ruling', () => {
     expect(model.agents.reduce((s, a) => s + a.contradictions.length, 0)).toBe(0);
+  });
+
+  it('no active assignments (the research directive is not active)', () => {
+    expect(model.metrics.activeAssignments.value).toBe(0);
   });
 });

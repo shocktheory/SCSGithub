@@ -3,6 +3,33 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-cklr-activated] — 2026-07-25
+
+**AGENT-006/#CKL-R constitutionally onboarded and activated.** Records the Product Owner ruling
+accepting Phase 3 (commit `0ecbf2a`) and exercising authority to approve the #CKL-R onboarding
+records and activate the agent to **Available — Awaiting Assignment**. The competitive-research
+Assignment Directive is **not** approved; no research begins.
+
+### Approved → authoritative (added to the constitutional collections)
+- **AGENT-006 / #CKL-R** collaborator record (approved).
+- **ST-SD-006** — Standing Directive, recorded **Current** (governing decision: the PO activation ruling).
+- **TM-009** — Team Membership, **Active** in TEAM-001.
+- **ST-OPH-2026-012** — authoritative **Constitutional activation** event.
+- **Governing decision** (`dec-cklr-activation`, approved) recording the PO activation authority —
+  its **canonical ST-DEC identifier remains Product-Owner-pending** (no number originated).
+- Each converted record preserves proposal → approval provenance (working ref retained).
+
+### Held proposed / nonauthoritative
+- The competitive-research **Assignment Directive** stays **Proposed — Not Active**; **no ST-ADR
+  identifier assigned**; research remains blocked pending a separate Product Owner directive.
+
+### Result (verified)
+- **2 activated agents:** #CIA and #CKL-R (both Available — Awaiting Assignment).
+- **4 Pending activation:** #SOS, #SCS, #CKL, #CKP — unchanged. **0 active assignments.** No contradictions.
+- #CKL-R does **not** derive as Working.
+- Onboarding Workspace updated to the approved result (provenance, derived state, research-blocked boundary).
+- typecheck clean · 35 tests pass (16 derivation unchanged + 4 authority + 15 onboarding) · build succeeds · screens inspected.
+
 ## [0.1.0-phase3-onboarding] — 2026-07-25
 
 **Phase 3 — Operational Governance and Agent Onboarding.** Advances the Constitutional
