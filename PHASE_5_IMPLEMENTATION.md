@@ -147,20 +147,24 @@ Confirmed: **no** authentication rollout, confidential-data hosting, integration
 - **`.github/workflows/phase5-verify.yml`** — GitHub Actions job with a **MySQL 8 service** + **PHP 8.2**: PHP syntax, `composer`, migrations (+status), PHPUnit, boot backend, frontend typecheck/tests/build, then the **end-to-end RemoteAdapter↔real-backend** test. This executes every acceptance-threshold item on infrastructure that has the runtime.
 - **`server/docker-compose.yml`** + **`scripts/verify-phase5.sh`** — one-command local host verification (PHP 8.2 + MySQL 8) for a reviewer with Docker.
 
-**Executed vs. not (honest):**
+**EXECUTED runtime results — GitHub Actions "Phase 5 Runtime Verification", commit `2ae3a64`, run `30168236724`, conclusion SUCCESS (real PHP 8.2 + MySQL 8):**
 
-| Check | Executed here | Where it executes |
+| Check | Result | Where executed |
 | --- | --- | --- |
-| Frontend typecheck / unit tests / build | ✅ (39 pass; e2e 5 skipped) | local + CI |
+| Frontend typecheck / unit tests / build | ✅ (39 pass; e2e 5 skipped locally) | local + CI |
 | Client RemoteAdapter parity (in-memory) | ✅ (7 pass) | local + CI |
-| PHP syntax (`php -l`) | ❌ no PHP | CI / host |
-| composer install, migrations, DB constraints | ❌ no PHP/MySQL | CI / host |
-| PHPUnit persistence / concurrency / idempotency / import / rollback | ❌ | CI / host |
-| E2E RemoteAdapter ↔ real PHP/MySQL | ❌ (skipped locally) | CI / host |
-| Nestify hosting capabilities | ❌ (no access) | host verification |
+| PHP syntax (`php -l`, all 9 files) | ✅ | **CI (executed)** |
+| composer install (Slim 4 + PHP-DI) | ✅ | **CI (executed)** |
+| MySQL migrations (23 tables, FKs, generated cols) + status | ✅ | **CI (executed)** |
+| PHPUnit — persistence, optimistic-concurrency 409, idempotency, FK rejection, transaction rollback, import dry-run/apply, schema-mismatch | ✅ | **CI (executed)** |
+| Backend boot + `/api/health` | ✅ | **CI (executed)** |
+| **E2E — real RemoteAdapter ↔ real PHP/MySQL backend** (health, CRUD, optimistic concurrency, import/export, guarded reset) | ✅ | **CI (executed)** |
+| Nestify hosting capabilities | ❌ still unverified (no account access) | host verification |
 
-**Product Owner decision required (genuine blocker):** executed PHP/MySQL runtime results cannot be produced in this sealed environment. Options: (a) let the pushed **CI workflow** run on GitHub and review its results/logs in the Actions tab; (b) run `scripts/verify-phase5.sh` (or `docker compose`) on a host with PHP 8.2 + MySQL 8; (c) provide me a runtime with those tools and network. Any of these yields the required evidence; I will fold the executed results into this same deliverable and resubmit. Per the STOP condition ("the required runtime cannot be established as written"), I am returning this decision rather than fabricating results.
+**Runtime verification found and fixed a real defect** (value of executing, not just reviewing): FastRoute rejected the app at HTTP dispatch because the static `GET /api/admin/export` was shadowed by the earlier variable `GET /api/{collection}/{id}`. Route registration was reordered (specific/static before generic variable). Prior runs proved migrations + PHPUnit pass; the boot/e2e steps then went green after the fix.
+
+**Environment note:** the authoring sandbox has no PHP/MySQL/Docker/network, so the runtime verification was executed on **GitHub Actions runners** (which provide the runtime), observed via the GitHub API, and driven to green. This is executed evidence — the e2e step ran the actual client adapter against the actual PHP/MySQL server. Reproduce locally with `scripts/verify-phase5.sh` or `server/docker-compose.yml`. **Remaining host item:** Nestify capability verification (needs account access).
 
 ## Readiness statement
 
-**SCS Phase 5 Backend Foundation & Persistence IS ready for Product Owner acceptance at the contract level** — the client-side seam and parity are fully verified, and the backend is complete and reviewable — **subject to host-side runtime verification** (PHP/MySQL execution, migration run, Nestify capabilities), which Phase 5 does not authorize deploying. The Product Owner may Approve, Approve with Conditions (e.g., require host runtime verification), Return for Correction, Reject, or Defer.
+**SCS Phase 5 Backend Foundation & Persistence IS ready for Product Owner acceptance following host runtime verification.** The full runtime verification the Product Owner required has been **executed and passed** on real PHP 8.2 + MySQL 8 in CI (commit `2ae3a64`, run `30168236724`): migrations, PHPUnit (persistence, optimistic-concurrency 409, idempotency, FK rejection, transaction rollback, import), backend boot, and the **end-to-end RemoteAdapter ↔ real PHP/MySQL** test — all green — plus the local frontend suite. The only remaining unverified item is **Nestify hosting capability** (needs account access), which does not gate Phase 5's dev/test scope. The Product Owner may Approve, Approve with Conditions, Return for Correction, Reject, or Defer.

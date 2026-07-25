@@ -3,6 +3,23 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-scs-phase5-runtime-verified] — 2026-07-25
+
+**Phase 5 runtime verification — EXECUTED and PASSED (real PHP 8.2 + MySQL 8).** The Product Owner's
+required host runtime verification ran green end-to-end in GitHub Actions (commit `2ae3a64`,
+run `30168236724`): PHP syntax, composer, **migrations (23 tables/FKs/generated columns)**, **PHPUnit**
+(persistence, optimistic-concurrency 409, idempotency, FK rejection, transaction rollback, import),
+backend boot, and the **end-to-end RemoteAdapter ↔ real PHP/MySQL** test.
+
+- Runtime verification **caught and fixed a real defect**: FastRoute route-order shadowing
+  (`GET /api/admin/export` shadowed by `GET /api/{collection}/{id}`) — reordered specific/static
+  routes before generic variable ones. Unit tests couldn't see it (they hit the repository directly).
+- CI backend-boot fix: pass `public/index.php` as the PHP built-in-server router script.
+- Records: **ST-DLV-2026-006** → *corrected & runtime-verified; resubmitted for review* (not accepted);
+  gate **open**; assignment **active**; identifiers **Product-Owner-pending**. Nothing closed by #SCS.
+- Executed on GitHub runners (authoring sandbox has no PHP/MySQL/Docker/network); observed via the
+  GitHub API. Reproduce locally with `scripts/verify-phase5.sh` or `server/docker-compose.yml`.
+
 ## [0.1.0-scs-phase5-runtime-verification] — 2026-07-25
 
 **Phase 5 — Return for Correction: host runtime verification harness.** The Product Owner returned
