@@ -92,11 +92,17 @@ jobs:
           npx vitest run
           npx vite build
 
-      - name: E2E — RemoteAdapter <-> real PHP/MySQL backend
+      - name: E2E — RemoteAdapter <-> real PHP/MySQL backend (Phase 5 persistence)
         working-directory: app
         env:
           SCS_E2E_BASE: http://127.0.0.1:8787
         run: npx vitest run tests/remoteAdapter.e2e.test.ts
+
+      - name: E2E — Identity/Authority/Trust (Phase 6 auth boundary)
+        working-directory: app
+        env:
+          SCS_E2E_BASE: http://127.0.0.1:8787
+        run: npx vitest run tests/auth.e2e.test.ts
 
       - name: Backend log (on failure)
         if: failure()

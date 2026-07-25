@@ -116,4 +116,16 @@ final class Repository
             foreach (Http::COLLECTIONS as $c) $pdo->exec("DELETE FROM `{$this->table($c)}`");
         });
     }
+
+    /** Attribution seam (Phase 6): record who mutated what, with a request id. Not the full audit log. */
+    public function attribute(string $collection, string $recordId, ?array $actor, string $action, ?string $requestId): void
+    {
+        try {
+            $this->db->pdo()->prepare(
+                'INSERT INTO mutation_attributions (collection, record_id, actor_id, actor_role, request_id, action) VALUES (?, ?, ?, ?, ?, ?)'
+            )->execute([$collection, $recordId, $actor['id'] ?? null, $actor['role'] ?? 'anon', $requestId, $action]);
+        } catch (\Throwable) {
+            // Attribution table may not exist before migration 0002 (dev); never block the mutation.
+        }
+    }
 }
