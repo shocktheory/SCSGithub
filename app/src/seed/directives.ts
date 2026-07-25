@@ -48,7 +48,16 @@ export const assignmentDirectives: AssignmentDirective[] = [
     status: 'Closed — accepted (Product Owner acceptance of commit a773bd6)',
     standingDirective: 'sdr-002', deliverable: 'dlv-003', reviewGate: 'rgate-003',
     authorityStatus: 'approved', demonstration: false,
-    notes: 'Governed by the Product Owner Directive "Phase 2 Constitutional Reconciliation" (2026-07-24) and closed by the Product Owner Acceptance Ruling (2026-07-25) accepting commit a773bd6. The canonical Assignment Directive identifier remains Product-Owner-pending — #SCS does not originate or assign it, and this acceptance does NOT assign it.',
+    notes: 'Governed by the Product Owner Directive "Phase 2 Constitutional Reconciliation" (2026-07-24) and closed by the Product Owner Acceptance Ruling (2026-07-25) accepting commit a773bd6. The canonical Assignment Directive identifier remains Product-Owner-pending — #SCS does not originate or assign it, and this acceptance does NOT assign it. Expected to occupy ST-ADR-2026-004; that number stays RESERVED and unresolved.',
+  },
+  // AGENT-006/#CKL-R competitive-research assignment — approved & activated by the Product Owner
+  // ruling (2026-07-25). Canonical identifier ST-ADR-2026-005 (skips the reserved ST-ADR-2026-004).
+  {
+    id: 'adr-005', directiveId: 'ST-ADR-2026-005', agent: 'ai-cklr', title: 'Kidlytics Competitive Landscape Research',
+    status: 'Active',
+    standingDirective: 'sdr-006', deliverable: 'dlv-004', reviewGate: 'rgate-004', productOwnerDecision: 'dec-cklr-research-assignment',
+    authorityStatus: 'approved', demonstration: false,
+    notes: 'Reconciled from proposed PROPOSED-ST-ADR-CKL-R upon Product Owner approval. Authorizes evidence-based competitive research only; findings are advisory and do not automatically modify Kidlytics or authorize implementation.',
   },
 ];
 
@@ -56,12 +65,16 @@ export const deliverables: Deliverable[] = [
   { id: 'dlv-001', deliverableId: 'ST-DLV-2026-001', title: 'Team Command Center (Phase 1 Functional Demonstration)', assignmentDirective: 'adr-001', reviewGate: 'rgate-001', status: 'Accepted', authorityStatus: 'approved', demonstration: false },
   { id: 'dlv-002', deliverableId: 'ST-DLV-2026-002', title: 'Phase 2 — Constitutional Governance Implementation', assignmentDirective: 'adr-002', reviewGate: 'rgate-002', status: 'Accepted (Product Owner acceptance of commit a773bd6)', authorityStatus: 'approved', demonstration: false },
   { id: 'dlv-003', deliverableId: 'ST-DLV-2026-003', title: 'Phase 2 Constitutional Reconciliation', assignmentDirective: 'adr-004', reviewGate: 'rgate-003', status: 'Accepted (Product Owner acceptance of commit a773bd6)', authorityStatus: 'approved', demonstration: false },
+  // Required deliverable for ST-ADR-2026-005. Pending #CKL-R's research; NOT yet in review.
+  { id: 'dlv-004', deliverableId: 'ST-DLV-2026-004', title: 'Kidlytics Competitive Landscape Report', assignmentDirective: 'adr-005', reviewGate: 'rgate-004', status: 'Pending — awaiting #CKL-R research', authorityStatus: 'approved', demonstration: false, notes: 'Must separate verified facts, reasonable inferences, unresolved questions, research limitations, and recommendations requiring Product Owner or #CKL review. Includes a complete source register.' },
 ];
 
 export const reviewGates: Gate[] = [
   { id: 'rgate-001', name: 'Team Command Center review', requiresOwnerApproval: true, status: 'Approved', decisionRef: 'dec-0014', authorityStatus: 'approved', demonstration: false },
   { id: 'rgate-002', name: 'Phase 2 review', requiresOwnerApproval: true, status: 'Approved', authorityStatus: 'approved', demonstration: false },
   { id: 'rgate-003', name: 'Reconciliation review', requiresOwnerApproval: true, status: 'Approved', authorityStatus: 'approved', demonstration: false },
+  // Review gate for ST-DLV-2026-004. Product Owner is primary authority; #CKL is a product-review participant.
+  { id: 'rgate-004', name: 'Competitive Research Review', requiresOwnerApproval: true, status: 'Open — pending deliverable', authorityStatus: 'approved', demonstration: false },
 ];
 
 // ---- Operational History — activation events preserved independently ----

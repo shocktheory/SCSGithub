@@ -326,8 +326,9 @@ const aiCollaborators: AICollaborator[] = [
     assignedProduct: 'prod-kidlytics',
     authorityScope: 'Advisory research only. May not change architecture, modify the prototype, implement features, make product decisions, direct other agents, or begin research without an approved Assignment Directive.',
     standingResponsibility: 'Evidence-based competitive and market research supporting Kidlytics; submits findings for Product Owner review.',
-    currentTask: 'None — Available, awaiting an approved Assignment Directive. No competitive research authorized.',
-    syncState: 'Not Required',
+    currentTask: 'Kidlytics Competitive Landscape Research (ST-ADR-2026-005) — evidence-based competitive research; deliverable ST-DLV-2026-004 pending.',
+    expectedNextAction: 'Deliver the Kidlytics Competitive Landscape Report for Product Owner review (Competitive Research Review gate).',
+    syncState: 'Synchronized',
     lastSynced: '2026-07-25',
     governingRecord: 'dec-cklr-activation',
     openQuestions: [],
@@ -447,6 +448,21 @@ const canonicalStatements: CanonicalStatement[] = [
 // Constitutional activity — only real, honest events. Cue's Phase-4 approval is
 // spec-stated but undated here, so its date is left empty rather than invented.
 const updates: Update[] = [
+  {
+    id: 'upd-cklr-research-assignment',
+    code: 'ST-REVIEW',
+    date: '2026-07-25',
+    summary: 'Product Owner approved and activated #CKL-R\'s competitive-research Assignment Directive as ST-ADR-2026-005 (deliverable ST-DLV-2026-004; Competitive Research Review gate). #CKL-R now derives as Working; Active Assignments 0 → 1. ST-ADR-2026-004 remains reserved. Findings are advisory only.',
+    source: 'Sonja (Product Owner)',
+    scope: 'Kidlytics',
+    affectedSystems: ['prod-kidlytics', 'os-scs'],
+    decisionsCreated: ['dec-cklr-research-assignment'],
+    documentsUpdated: [],
+    syncStatus: 'Active',
+    authorityStatus: 'approved',
+    demonstration: false,
+    confidence: 'high',
+  },
   {
     id: 'upd-cklr-activation',
     code: 'ST-REVIEW',

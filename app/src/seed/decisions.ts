@@ -245,4 +245,28 @@ export const interimDecisions: Decision[] = [
     confidence: 'high',
     notes: 'Canonical ST-DEC identifier is Product-Owner-pending. The engine requires an approved governing Decision for the Product Owner activation-authority evidence; this record supplies it without originating a canonical number.',
   },
+
+  // #CKL-R competitive-research assignment authority — records the Product Owner ruling (2026-07-25)
+  // approving and activating ST-ADR-2026-005. Stable noncanonical working reference; canonical ST-DEC
+  // identifier remains Product-Owner-pending. #SCS does not originate a canonical ST-DEC identifier.
+  {
+    id: 'dec-cklr-research-assignment',
+    decisionId: 'Pending Product Owner-authorized ST-DEC identifier',
+    title: 'AGENT-006/#CKL-R competitive-research assignment authority (ST-ADR-2026-005)',
+    area: 'Agent Governance', decisionClass: 'Assignment', status: 'Approved', date: '2026-07-25',
+    approvingAuthority: 'Sonja (Product Owner)',
+    sourceDirective: 'Product Owner Assignment Activation Directive — "Approve and Activate #CKL-R Kidlytics Competitive Research" (2026-07-25)',
+    question: 'Is #CKL-R\'s competitive-research Assignment Directive approved and active?',
+    ruling: 'The Product Owner assigns canonical identifier ST-ADR-2026-005 and approves & activates the Kidlytics Competitive Landscape Research Assignment Directive for AGENT-006/#CKL-R, with deliverable ST-DLV-2026-004 and the Competitive Research Review gate. Findings are advisory evidence and do not automatically modify Kidlytics or authorize implementation. ST-ADR-2026-004 remains reserved and unresolved.',
+    rationale: 'Records the Product Owner exercise of authority already held. Assigns the next non-colliding ST-ADR identifier without disturbing the reserved ST-ADR-2026-004.',
+    affectedArtifacts: ['ST-ADR-2026-005', 'ST-DLV-2026-004', 'AGENT-006', 'ST-SD-006'],
+    implementationConsequences: 'AGENT-006/#CKL-R derives as Working; Active Assignments increases from 0 to 1. The reserved ST-ADR-2026-004 is untouched.',
+    implementationStatus: 'Verified and Accepted',
+    authoritativeTextByProductOwner: true,
+    queue: 'owner-action',
+    authorityStatus: 'approved',
+    demonstration: false,
+    confidence: 'high',
+    notes: 'Canonical ST-DEC identifier Product-Owner-pending; not originated by #SCS.',
+  },
 ];

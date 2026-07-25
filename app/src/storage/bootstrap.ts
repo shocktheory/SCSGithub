@@ -8,7 +8,7 @@ import { seedWorkspace } from '../seed';
  * to lose in a demo workspace). Real Product Owner workspaces (isSeed=false) are
  * never auto-overwritten.
  */
-export const SEED_VERSION = '2026-07-25-cklr-activated';
+export const SEED_VERSION = '2026-07-25-cklr-research-assignment';
 
 /**
  * Load labeled seed data on first run. Also refresh a demonstration workspace when

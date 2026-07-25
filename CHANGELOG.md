@@ -3,6 +3,27 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-cklr-research-assignment] — 2026-07-25
+
+**#CKL-R competitive-research assignment approved & activated — now Working.** Records the Product
+Owner ruling assigning canonical **ST-ADR-2026-005** and activating #CKL-R's Kidlytics Competitive
+Landscape Research. Findings are advisory evidence only; no Kidlytics architecture/prototype work begins.
+
+### Approved → authoritative
+- **ST-ADR-2026-005** — Assignment Directive, agent AGENT-006/#CKL-R, **Active**, linked to ST-SD-006,
+  deliverable ST-DLV-2026-004, gate Competitive Research Review. Reconciled from `PROPOSED-ST-ADR-CKL-R`.
+- **ST-DLV-2026-004** — "Kidlytics Competitive Landscape Report" (status *Pending — awaiting #CKL-R research*).
+- **Competitive Research Review** gate — `requiresOwnerApproval: true`, Open — pending deliverable.
+- Governing decision `dec-cklr-research-assignment` (approved) — **canonical ST-DEC id Product-Owner-pending** (none originated).
+
+### Result (verified)
+- **#CKL-R derives as Working** under ST-ADR-2026-005; gate Competitive Research Review; coverage Full.
+- **Active Assignments 0 → 1**; **Available — Awaiting Assignment 2 → 1** (#CIA). Active Governed Agents = 2.
+- **ST-ADR-2026-004 remains reserved and unresolved** (still a Product-Owner-pending placeholder).
+- Five existing agent states unchanged; no contradictions; no alignment warnings.
+- Onboarding Workspace updated (research-authorized banner, ST-ADR-2026-005 Active, provenance, next PO decision).
+- typecheck clean · 32 tests pass (16 derivation unchanged) · build succeeds · screens inspected · no console errors.
+
 ## [0.1.0-cklr-activated] — 2026-07-25
 
 **AGENT-006/#CKL-R constitutionally onboarded and activated.** Records the Product Owner ruling

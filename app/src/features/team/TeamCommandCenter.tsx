@@ -84,7 +84,7 @@ export function TeamCommandCenter() {
       <div className="scs-onb-pointer">
         <span>
           <strong>Phase 3 · Agent onboarding.</strong> AGENT-006/#CKL-R (Kidlytics Competitive Research Agent) is
-          constitutionally onboarded and activated — Available — Awaiting Assignment. No research assignment is active.
+          onboarded, activated, and assigned to Kidlytics competitive research under ST-ADR-2026-005 — now Working.
         </span>
         <Link to="/onboarding" className="scs-onb-pointer__link">
           Open Onboarding Workspace <ExternalLink size={13} />

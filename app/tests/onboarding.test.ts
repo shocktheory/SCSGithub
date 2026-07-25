@@ -4,74 +4,42 @@ import { cklrCandidate } from '../src/seed/onboarding';
 import { deriveTeam } from '../src/lib/team';
 import { seedWorkspace } from '../src/seed';
 
-describe('Phase 3 — AGENT-006/#CKL-R is onboarded and ACTIVATED (Available — Awaiting Assignment)', () => {
+describe('#CKL-R is activated AND assigned — derives as Working', () => {
   const m = deriveOnboarding(cklrCandidate);
 
-  it('derives as activated from the approved evidence', () => {
+  it('is activated with no missing evidence and no contradictions', () => {
     expect(m.activated).toBe(true);
-    expect(m.current.activated).toBe(true);
-  });
-
-  it('is Available — Awaiting Assignment, NOT Working', () => {
-    expect(m.current.status).toBe('Available');
-    expect(m.current.currentGate).toBe('Awaiting Assignment');
-    expect(m.isAvailableAwaitingAssignment).toBe(true);
-    expect(m.current.status).not.toBe('Working');
-  });
-
-  it('has no missing evidence and no contradictions', () => {
     expect(m.current.missingEvidence).toEqual([]);
     expect(m.contradictions).toEqual([]);
   });
 
-  it('the onboarding evidence records count toward activation', () => {
-    const byLabel = Object.fromEntries(m.checklist.map((i) => [i.label, i]));
-    expect(byLabel['Standing Directive (Current)'].satisfiesActivationNow).toBe(true);
-    expect(byLabel['Product Owner activation authority'].satisfiesActivationNow).toBe(true);
-    expect(byLabel['Operational History activation event'].satisfiesActivationNow).toBe(true);
-    expect(byLabel['Team Membership (TEAM-001, Active)'].satisfiesActivationNow).toBe(true);
-    expect(byLabel['Standing Directive (Current)'].status).toBe('present-approved');
+  it('derives as Working under the active Assignment Directive (not Available)', () => {
+    expect(m.current.status).toBe('Working');
+    expect(m.isAvailableAwaitingAssignment).toBe(false);
+    expect(m.researchBlocked).toBe(false);
+    expect(m.statusLabel).toMatch(/Working \(ST-ADR-2026-005\)/);
   });
 
-  it('preserves proposal → approval provenance', () => {
-    const sd = m.provenance.find((p) => p.record === 'Standing Directive')!;
-    expect(sd.from).toBe('PROPOSED-ST-SD-CKL-R');
-    expect(sd.to).toBe('ST-SD-006');
-    const id = m.provenance.find((p) => p.record === 'Agent identity')!;
-    expect(id.from).toBe('PROPOSED-AGENT-CKL-R');
-    expect(id.to).toBe('AGENT-006');
+  it('the current gate is the Competitive Research Review', () => {
+    expect(m.current.currentGate).toBe('Competitive Research Review');
+    expect(m.current.directiveCoverage).toBe('Full');
   });
-});
 
-describe('Phase 3 — the competitive-research assignment remains nonauthoritative; research is blocked', () => {
-  const m = deriveOnboarding(cklrCandidate);
-
-  it('the research Assignment Directive is proposed / not active', () => {
-    expect(cklrCandidate.assignmentDirective.status).toBe('Proposed — not active');
+  it('the assignment record is present-approved with ST-ADR-2026-005', () => {
     const item = m.checklist.find((i) => i.label === 'Competitive-research Assignment Directive')!;
-    expect(item.status).toBe('present-proposed');
-    expect(item.satisfiesActivationNow).toBe(false);
+    expect(item.status).toBe('present-approved');
+    expect(cklrCandidate.assignmentDirective.status).toBe('Active');
+    expect(cklrCandidate.assignmentDirective.ref.approvedId).toBe('ST-ADR-2026-005');
   });
 
-  it('no canonical ST-ADR identifier is assigned', () => {
-    expect(cklrCandidate.assignmentDirective.ref).not.toHaveProperty('approvedId');
-    expect(cklrCandidate.assignmentDirective.ref.recommendedId).toMatch(/not assigned/i);
-  });
-
-  it('research is blocked and the only remaining decision is the research assignment', () => {
-    expect(m.researchBlocked).toBe(true);
-    expect(m.requiredDecisions).toHaveLength(1);
-    expect(m.requiredDecisions[0]).toMatch(/Assignment Directive/i);
-  });
-
-  it('an active research assignment WOULD make it Working — but that state is illustrative only', () => {
-    expect(m.withAssignment.status).toBe('Working');
-    // The current, real state is not Working.
-    expect(m.current.status).toBe('Available');
+  it('preserves proposal → approval provenance for the assignment', () => {
+    const adr = m.provenance.find((p) => p.record === 'Research Assignment Directive')!;
+    expect(adr.from).toBe('PROPOSED-ST-ADR-CKL-R');
+    expect(adr.to).toBe('ST-ADR-2026-005');
   });
 });
 
-describe('Phase 3 — the full team now derives two activated agents', () => {
+describe('The team now shows two activated agents, one of them Working', () => {
   const c = seedWorkspace.collections as unknown as Record<string, unknown[]>;
   const model = deriveTeam({
     agents: c.aiCollaborators as never, decisions: c.decisions as never, products: c.products as never,
@@ -81,19 +49,22 @@ describe('Phase 3 — the full team now derives two activated agents', () => {
   });
   const byName = Object.fromEntries(model.agents.map((a) => [a.name, a]));
 
-  it('the roster now includes #CKL-R alongside the five existing agents', () => {
-    expect(model.agents.map((a) => a.name).sort()).toEqual(['#CIA', '#CKL', '#CKL-R', '#CKP', '#SCS', '#SOS']);
-  });
-
   it('exactly two agents are activated: #CIA and #CKL-R', () => {
     expect(model.agents.filter((a) => a.activated).map((a) => a.name).sort()).toEqual(['#CIA', '#CKL-R']);
     expect(model.metrics.activeAgents.value).toBe(2);
   });
 
-  it('#CKL-R is Available — Awaiting Assignment and not Working', () => {
-    expect(byName['#CKL-R'].status).toBe('Available');
-    expect(byName['#CKL-R'].currentGate).toBe('Awaiting Assignment');
-    expect(byName['#CKL-R'].assigned).toBe(false);
+  it('#CKL-R derives as Working under ST-ADR-2026-005', () => {
+    expect(byName['#CKL-R'].status).toBe('Working');
+    expect(byName['#CKL-R'].assigned).toBe(true);
+    expect(byName['#CKL-R'].assignmentDirectiveStatus).toMatch(/ST-ADR-2026-005/);
+  });
+
+  it('Active Assignments is 1 and Available — Awaiting Assignment is 1 (#CIA)', () => {
+    expect(model.metrics.activeAssignments.value).toBe(1);
+    expect(model.metrics.activeAssignments.ids).toEqual([byName['#CKL-R'].id]);
+    expect(model.metrics.directivesNoWork.value).toBe(1);
+    expect(model.metrics.directivesNoWork.ids).toEqual([byName['#CIA'].id]);
   });
 
   it('the five existing agent states are unchanged', () => {
@@ -102,11 +73,26 @@ describe('Phase 3 — the full team now derives two activated agents', () => {
     expect(model.metrics.pendingOnboarding.value).toBe(4);
   });
 
-  it('no contradictions introduced by this ruling', () => {
+  it('no contradictions and no alignment warnings introduced', () => {
     expect(model.agents.reduce((s, a) => s + a.contradictions.length, 0)).toBe(0);
+    expect(model.metrics.warnings.value).toBe(0);
+  });
+});
+
+describe('ST-ADR-2026-004 remains reserved and untouched', () => {
+  const adrs = (seedWorkspace.collections as unknown as { assignmentDirectives: Array<{ id: string; directiveId: string; status: string }> }).assignmentDirectives;
+
+  it('ST-ADR-2026-005 is the only newly-authoritative ST-ADR; -004 stays a Product-Owner-pending placeholder', () => {
+    const ids = adrs.map((a) => a.directiveId);
+    expect(ids).toContain('ST-ADR-2026-005');
+    expect(ids).not.toContain('ST-ADR-2026-004');
+    const reconciliation = adrs.find((a) => a.id === 'adr-004')!;
+    expect(reconciliation.directiveId).toMatch(/Pending Product Owner-authorized ST-ADR identifier/);
   });
 
-  it('no active assignments (the research directive is not active)', () => {
-    expect(model.metrics.activeAssignments.value).toBe(0);
+  it('#CKL-R uses -005, not the reserved -004', () => {
+    const cklr = adrs.find((a) => a.id === 'adr-005')!;
+    expect(cklr.directiveId).toBe('ST-ADR-2026-005');
+    expect(cklr.status).toBe('Active');
   });
 });

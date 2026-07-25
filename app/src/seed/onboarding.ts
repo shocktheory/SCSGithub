@@ -69,11 +69,12 @@ export interface OnboardingCandidate {
     authorityStatus: AuthorityState;
   };
 
-  /** Competitive-research Assignment Directive — remains proposed / not active. No research may begin. */
+  /** Competitive-research Assignment Directive. Active once the Product Owner approves it. */
   assignmentDirective: {
     ref: ProposedIdentifier;
     title: string;
-    status: 'Proposed — not active';
+    /** 'Active' once approved; 'Proposed — not active' before. */
+    status: 'Proposed — not active' | 'Active';
     deliverable: string;
     reviewGate: string;
   };
@@ -154,14 +155,14 @@ export const cklrCandidate: OnboardingCandidate = {
   assignmentDirective: {
     ref: {
       tempRef: 'PROPOSED-ST-ADR-CKL-R',
-      recommendedId:
-        'not assigned — a canonical ST-ADR identifier is assigned only by a separate Product Owner directive approving the research assignment',
-      authorizingDecision: 'A SEPARATE future Product Owner directive — not this ruling.',
+      recommendedId: 'ST-ADR-2026-005',
+      approvedId: 'ST-ADR-2026-005',
+      authorizingDecision: 'Product Owner Assignment Activation Directive (2026-07-25) — assigns ST-ADR-2026-005 and activates the assignment.',
     },
-    title: 'Kidlytics competitive landscape research',
-    status: 'Proposed — not active',
-    deliverable: 'Kidlytics Competitive Landscape Report (proposed)',
-    reviewGate: 'Competitive Research review (proposed)',
+    title: 'Kidlytics Competitive Landscape Research',
+    status: 'Active',
+    deliverable: 'ST-DLV-2026-004 — Kidlytics Competitive Landscape Report',
+    reviewGate: 'Competitive Research Review',
   },
 
   responsibilities: [
@@ -186,7 +187,7 @@ export const cklrCandidate: OnboardingCandidate = {
     'May not treat onboarding or activation as permission to begin competitive research',
   ],
   requiredDecisions: [
-    'Separately approve and activate a competitive-research Assignment Directive (assigning its canonical ST-ADR identifier, scope, and return requirements) before any research begins.',
+    'None outstanding for onboarding or assignment. The competitive-research Assignment Directive (ST-ADR-2026-005) is approved and Active; #CKL-R is authorized to research. The next Product Owner decision is the review of the delivered Competitive Landscape Report.',
   ],
   audit: {
     initiatedBy: '#SCS (implementation — no constitutional authority)',

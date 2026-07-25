@@ -83,9 +83,12 @@ const STAGE_NAMES = [
 
 export function deriveOnboarding(c: OnboardingCandidate): OnboardingModel {
   const approved = c.onboardingApproved;
+  const assignmentActive = c.assignmentDirective.status === 'Active';
 
   // CURRENT state — from the evidence that is actually approved. Only approved evidence
-  // governs, so a still-proposed package can never activate here.
+  // governs, so a still-proposed package can never activate here. When the competitive-research
+  // Assignment Directive is Active, it is supplied and the agent derives as Working; otherwise it
+  // is omitted and the agent derives as Available — Awaiting Assignment.
   const current = deriveAgentState({
     agentName: c.name,
     standingDirective: {
@@ -99,8 +102,13 @@ export function deriveOnboarding(c: OnboardingCandidate): OnboardingModel {
     teamMembership: c.teamMembership.status === 'Active'
       ? { label: `${c.teamMembership.teamId} — Active`, active: true }
       : undefined,
-    // The competitive-research Assignment Directive is intentionally NOT supplied: it is
-    // proposed/not-active, so the agent must derive as Available — Awaiting Assignment.
+    activeAssignmentDirective: assignmentActive ? {
+      directiveId: c.assignmentDirective.ref.approvedId ?? 'ST-ADR-2026-005',
+      title: c.assignmentDirective.title,
+      status: 'Active',
+      deliverable: c.assignmentDirective.deliverable,
+      reviewGate: c.assignmentDirective.reviewGate,
+    } : undefined,
   });
 
   // Illustrative preview only — the research ADR is NOT active; this shows what a future,
@@ -136,12 +144,14 @@ export function deriveOnboarding(c: OnboardingCandidate): OnboardingModel {
     { label: 'Product Owner activation authority', status: c.activationAuthority.approved ? 'present-approved' : 'pending-approval', detail: c.activationAuthority.decision, satisfiesActivationNow: c.activationAuthority.approved, note: c.activationAuthority.approved ? 'Approved Product Owner activation authority on record.' : 'Awaiting Product Owner activation authority.' },
     { label: 'Operational History activation event', status: ophR.status, detail: `${c.activationEvent.ref.approvedId ?? c.activationEvent.ref.recommendedId} — authority: ${c.activationEvent.authorityStatus}.`, satisfiesActivationNow: c.activationEvent.authorityStatus === 'approved', note: ophR.note },
     { label: 'Team Membership (TEAM-001, Active)', status: tmR.status, detail: `${c.teamMembership.ref.approvedId ?? c.teamMembership.ref.recommendedId} → ${c.teamMembership.teamId}, ${c.teamMembership.status}. Derived independently of activation.`, satisfiesActivationNow: c.teamMembership.status === 'Active', note: tmR.note },
-    { label: 'Competitive-research Assignment Directive', status: 'present-proposed', detail: `${c.assignmentDirective.ref.tempRef} — ${c.assignmentDirective.status}. Prepared for a future, separate Product Owner approval.`, satisfiesActivationNow: false, note: 'Not active. Research may not begin until this is separately approved and activated. No canonical ST-ADR identifier is assigned.' },
+    assignmentActive
+      ? { label: 'Competitive-research Assignment Directive', status: 'present-approved', detail: `${c.assignmentDirective.ref.approvedId} — Active. Deliverable ${c.assignmentDirective.deliverable}; gate ${c.assignmentDirective.reviewGate}.`, satisfiesActivationNow: false, note: `Approved & Active (reconciled from ${c.assignmentDirective.ref.tempRef}). #CKL-R is authorized to research; findings are advisory.` }
+      : { label: 'Competitive-research Assignment Directive', status: 'present-proposed', detail: `${c.assignmentDirective.ref.tempRef} — ${c.assignmentDirective.status}. Prepared for a future, separate Product Owner approval.`, satisfiesActivationNow: false, note: 'Not active. Research may not begin until this is separately approved and activated. No canonical ST-ADR identifier is assigned.' },
   ];
 
-  // With onboarding approved, stages 1–7 are complete and the agent is at operational
-  // availability (stage 8) — Available, awaiting its first assignment.
-  const completeThrough = approved ? 7 : 2;
+  // Onboarding approved → stages 1–7 complete, stage 8 (operational availability) current.
+  // With the research assignment Active, all eight stages are complete (operational & assigned).
+  const completeThrough = assignmentActive ? 8 : approved ? 7 : 2;
   const stages: OnboardingStage[] = STAGE_NAMES.map((name, i) => ({
     index: i + 1,
     name,
@@ -153,23 +163,27 @@ export function deriveOnboarding(c: OnboardingCandidate): OnboardingModel {
     { record: 'Standing Directive', from: c.standingDirective.ref.tempRef, to: c.standingDirective.ref.approvedId ?? '(pending)' },
     { record: 'Team Membership', from: c.teamMembership.ref.tempRef, to: c.teamMembership.ref.approvedId ?? '(pending)' },
     { record: 'Activation event', from: c.activationEvent.ref.tempRef, to: c.activationEvent.ref.approvedId ?? '(pending)' },
-    { record: 'Research Assignment Directive', from: c.assignmentDirective.ref.tempRef, to: 'remains proposed — not active' },
+    { record: 'Research Assignment Directive', from: c.assignmentDirective.ref.tempRef, to: assignmentActive ? (c.assignmentDirective.ref.approvedId ?? 'ST-ADR-2026-005') : 'remains proposed — not active' },
   ];
+
+  const statusLabel = !approved
+    ? 'Proposed / Pending constitutional onboarding'
+    : assignmentActive
+      ? `Activated — Working (${c.assignmentDirective.ref.approvedId ?? 'ST-ADR-2026-005'})`
+      : `Activated — ${current.status}${current.status === 'Available' ? ' — Awaiting Assignment' : ''}`;
 
   return {
     handle: c.handle,
     name: c.name,
     approved,
-    statusLabel: approved
-      ? `Activated — ${current.status}${current.status === 'Available' ? ' — Awaiting Assignment' : ''}`
-      : 'Proposed / Pending constitutional onboarding',
+    statusLabel,
     stages,
     checklist,
     current,
     withAssignment,
     activated: current.activated,
     isAvailableAwaitingAssignment: current.activated && current.status === 'Available',
-    researchBlocked: true,
+    researchBlocked: !assignmentActive,
     provenance,
     requiredDecisions: c.requiredDecisions,
     contradictions: current.contradictions,

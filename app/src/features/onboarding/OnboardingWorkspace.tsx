@@ -36,18 +36,18 @@ export function OnboardingWorkspace() {
       <PageHeader
         eyebrow="Phase 3 · Operational Governance & Agent Onboarding"
         title="Governed Agent Onboarding"
-        subtitle="A controlled, traceable path from proposed identity to operational availability. Every stage stays distinguishable in the data, the derivation engine, and Operational History. #CKL-R has completed onboarding by express Product Owner ruling; the competitive-research assignment remains a separate, future approval."
+        subtitle="A controlled, traceable path from proposed identity to operational availability. Every stage stays distinguishable in the data, the derivation engine, and Operational History. #CKL-R is constitutionally onboarded, activated, and now assigned to Kidlytics competitive research under ST-ADR-2026-005."
       />
 
       <div className="scs-onb-boundary" style={{ borderColor: 'var(--status-approved)', background: 'color-mix(in srgb, var(--status-approved) 10%, transparent)' }}>
         <ShieldCheck size={20} className="scs-onb-boundary__icon" style={{ color: 'var(--status-approved)' }} />
         <div>
-          <p className="scs-onb-boundary__title">Onboarding approved — {c.handle} is activated</p>
+          <p className="scs-onb-boundary__title">Onboarding complete — {c.handle} is activated and assigned</p>
           <p className="scs-onb-boundary__body">
-            By Product Owner ruling (2026-07-25), AGENT-006/{c.handle} is constitutionally onboarded and activated:
-            {' '}<b>ST-SD-006 Current</b>, <b>TM-009 Active in TEAM-001</b>, activation event <b>ST-OPH-2026-012</b> authoritative.
-            {' '}{c.handle} derives as <b>{m.current.status} — Awaiting Assignment</b>. No competitive-research Assignment Directive
-            was approved and no research has begun.
+            By Product Owner ruling (2026-07-25), AGENT-006/{c.handle} is constitutionally onboarded and activated
+            ({' '}<b>ST-SD-006 Current</b>, <b>TM-009 Active in TEAM-001</b>, <b>ST-OPH-2026-012</b> authoritative), and its
+            competitive-research Assignment Directive is approved and Active as <b>ST-ADR-2026-005</b>. {c.handle} derives
+            as <b>{m.current.status}</b> on deliverable <b>ST-DLV-2026-004</b>. Findings are advisory evidence only.
           </p>
         </div>
       </div>
@@ -104,9 +104,13 @@ export function OnboardingWorkspace() {
         <SectionTitle>Derived constitutional state</SectionTitle>
         <div className="scs-onb-preview">
           <PreviewColumn cap="Current (approved evidence)" state={m.current} after
-            note="Activated from approved evidence: ST-SD-006 Current, activation authority, ST-OPH-2026-012, and TM-009 Active. No active Assignment Directive ⇒ Available — Awaiting Assignment." />
-          <PreviewColumn cap="Illustrative — if a research assignment were approved" state={m.withAssignment}
-            note="Shown only to reinforce that research is a SEPARATE approval. No such Assignment Directive is active; #CKL-R does not derive as Working today." />
+            note={m.researchBlocked
+              ? 'Activated from approved evidence; no active Assignment Directive ⇒ Available — Awaiting Assignment.'
+              : 'Activated from approved evidence, with an approved & Active Assignment Directive (ST-ADR-2026-005) ⇒ Working. Gate: Competitive Research Review; deliverable ST-DLV-2026-004 pending.'} />
+          {m.researchBlocked && (
+            <PreviewColumn cap="Illustrative — if a research assignment were approved" state={m.withAssignment}
+              note="Shown only to reinforce that research is a SEPARATE approval. No such Assignment Directive is active; #CKL-R does not derive as Working today." />
+          )}
         </div>
       </Card>
 
@@ -179,32 +183,45 @@ export function OnboardingWorkspace() {
         <RecordCard
           title="Assignment Directive — competitive research"
           rows={[
-            ['Working ref', <span className="scs-onb-rec" key="r">{c.assignmentDirective.ref.tempRef}</span>],
-            ['Canonical id', c.assignmentDirective.ref.recommendedId],
+            ['Canonical id', <strong key="i">{c.assignmentDirective.ref.approvedId ?? c.assignmentDirective.ref.recommendedId}</strong>],
+            ['Reconciled from', <span className="scs-onb-rec" key="r">{c.assignmentDirective.ref.tempRef}</span>],
             ['Title', c.assignmentDirective.title],
             ['Deliverable', c.assignmentDirective.deliverable],
             ['Review gate', c.assignmentDirective.reviewGate],
-            ['Status', <StatusBadge key="s" label="Proposed — not active" tone="proposed" />],
+            ['Status', <StatusBadge key="s" label={c.assignmentDirective.status} tone={c.assignmentDirective.status === 'Active' ? 'approved' : 'proposed'} />],
           ]}
         />
       </div>
 
-      {/* Research-blocked confirmation */}
-      <div className="scs-onb-boundary" style={{ borderColor: 'var(--status-risk)', background: 'color-mix(in srgb, var(--status-risk) 8%, transparent)' }}>
-        <Lock size={20} className="scs-onb-boundary__icon" style={{ color: 'var(--status-risk)' }} />
-        <div>
-          <p className="scs-onb-boundary__title">Competitive research is blocked</p>
-          <p className="scs-onb-boundary__body">
-            Activation is not assignment. No competitive research may begin until a <b>separate</b> Product Owner
-            directive approves and activates a competitive-research Assignment Directive (assigning its canonical
-            ST-ADR identifier, scope, and return requirements).
-          </p>
+      {/* Research authorization / boundary */}
+      {m.researchBlocked ? (
+        <div className="scs-onb-boundary" style={{ borderColor: 'var(--status-risk)', background: 'color-mix(in srgb, var(--status-risk) 8%, transparent)' }}>
+          <Lock size={20} className="scs-onb-boundary__icon" style={{ color: 'var(--status-risk)' }} />
+          <div>
+            <p className="scs-onb-boundary__title">Competitive research is blocked</p>
+            <p className="scs-onb-boundary__body">
+              Activation is not assignment. No competitive research may begin until a <b>separate</b> Product Owner
+              directive approves and activates a competitive-research Assignment Directive.
+            </p>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="scs-onb-boundary" style={{ borderColor: 'var(--status-approved)', background: 'color-mix(in srgb, var(--status-approved) 8%, transparent)' }}>
+          <ShieldCheck size={20} className="scs-onb-boundary__icon" style={{ color: 'var(--status-approved)' }} />
+          <div>
+            <p className="scs-onb-boundary__title">Competitive research authorized</p>
+            <p className="scs-onb-boundary__body">
+              Assignment Directive <b>ST-ADR-2026-005</b> is approved and Active. {c.handle} is authorized to conduct the
+              defined Kidlytics competitive research and deliver <b>ST-DLV-2026-004</b> to the Competitive Research Review
+              gate. Findings are advisory evidence — they do not automatically modify Kidlytics or authorize implementation.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Next Product Owner decision */}
       <Card style={{ margin: '16px 0' }}>
-        <SectionTitle>Product Owner decisions still required</SectionTitle>
+        <SectionTitle>{m.researchBlocked ? 'Product Owner decisions still required' : 'Next Product Owner decision'}</SectionTitle>
         <ol className="scs-onb-decisions">
           {m.requiredDecisions.map((d) => <li key={d}>{d}</li>)}
         </ol>
