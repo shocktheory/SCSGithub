@@ -3,6 +3,26 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-agent-card-refinement] — 2026-07-25
+
+**Agent Card presentation refinements (presentation only).** Executive-readability polish on the
+Team Command Center agent card. **No constitutional behavior, derivation logic, records, authority,
+activation, or state calculations changed** — display formatting and CSS only. All 32 tests
+(16 derivation unchanged) still pass.
+
+- **Operational readiness** de-duplicated against the Status pill — "Operational — Assigned" now
+  displays as "Assigned" (display transform only; the derived value is unchanged).
+- **Execution platform** label added above the model provider, clarifying it as the run environment,
+  not the constitutional identity. Factored into a single `AgentProvider` helper used by all card
+  densities (consistency).
+- **Assignment/value layout** — label/value columns top-aligned with graceful wrapping
+  (`min-width:0`, `overflow-wrap`); long assignment and gate names never truncate.
+- **Current gate** cell wrapped in a styled hook prepared for future hover/linked-gate/status
+  metadata (not implemented).
+- **Resilience** — long agent names wrap; the card grid uses `minmax(min(400px,100%),1fr)` so cards
+  shrink to fit narrow/mobile viewports instead of overflowing.
+- Validated on desktop, tablet, and mobile; no console errors.
+
 ## [0.1.0-cklr-research-assignment] — 2026-07-25
 
 **#CKL-R competitive-research assignment approved & activated — now Working.** Records the Product

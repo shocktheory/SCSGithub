@@ -160,7 +160,7 @@ function AgentCardView({ a, density }: { a: AgentCard; density: Density }) {
           <div className="scs-agent__head">
             <div>
               <div className="scs-agent__name">{a.name}</div>
-              {a.modelProvider && <div className="scs-agent__provider">{a.modelProvider}</div>}
+              <AgentProvider provider={a.modelProvider} />
             </div>
             <DimensionRow>
               <DimensionTag label="Status" tone="gate">{a.status}</DimensionTag>
@@ -201,7 +201,7 @@ function AgentCardView({ a, density }: { a: AgentCard; density: Density }) {
           <div className="scs-agent__head">
             <div>
               <div className="scs-agent__name">{a.name}</div>
-              {a.modelProvider && <div className="scs-agent__provider">{a.modelProvider}</div>}
+              <AgentProvider provider={a.modelProvider} />
             </div>
             <DimensionRow>
               <DimensionTag label="Status" tone="work">{a.status}</DimensionTag>
@@ -222,7 +222,7 @@ function AgentCardView({ a, density }: { a: AgentCard; density: Density }) {
         <div className="scs-agent__head">
           <div>
             <div className="scs-agent__name">{a.name}</div>
-            {a.modelProvider && <div className="scs-agent__provider">{a.modelProvider}</div>}
+            <AgentProvider provider={a.modelProvider} />
           </div>
           <DimensionRow>
             <DimensionTag label="Status" tone="work">{a.status}</DimensionTag>
@@ -236,12 +236,12 @@ function AgentCardView({ a, density }: { a: AgentCard; density: Density }) {
           </p>
         )}
         <div className="scs-trace">
-          <Row k="Operational readiness" v={a.operationalReadiness} />
+          <Row k="Operational readiness" v={readinessLabel(a.operationalReadiness)} />
           <Row k="Standing directive" v={a.roleDirectiveId ? <Link className="scs-trace__link" to="/standing-directives">{a.standingDirectiveStatus} ↗</Link> : <span className="scs-trace__missing">None on record</span>} />
           <Row k="Current assignment" v={a.currentAssignment} />
           <Row k="Synchronization" v={a.synchronization} />
           <Row k="Directive coverage" v={<StatusBadge label={a.directiveCoverage} tone={a.directiveCoverage === 'Full' ? 'approved' : a.directiveCoverage === 'Partial' ? 'review' : 'risk'} />} />
-          <Row k="Current gate" v={a.currentGate} />
+          <Row k="Current gate" v={<span className="scs-trace__gate">{a.currentGate}</span>} />
           <Row k="Assignment directive" v={a.assignmentDirectiveId ? <Link className="scs-trace__link" to="/assignment-directives">{a.assignmentDirectiveStatus} ↗</Link> : a.assignmentDirectiveStatus} />
           <Row k="Team membership" v={a.teamMembership} />
           {expanded && <Row k="Expected deliverable" v={a.deliverable ?? '—'} />}
@@ -280,6 +280,30 @@ function Row({ k, v }: { k: string; v: React.ReactNode }) {
     <div className="scs-trace__row">
       <div className="scs-trace__k">{k}</div>
       <div className="scs-trace__v">{v}</div>
+    </div>
+  );
+}
+
+/**
+ * Presentation only: the Status pill already communicates operational state, so the
+ * "Operational — X" readiness value is de-duplicated to its distinguishing suffix.
+ * This does NOT change the derived value (a.operationalReadiness) — display formatting only.
+ */
+function readinessLabel(s: string): string {
+  const prefix = 'Operational — ';
+  return s.startsWith(prefix) ? s.slice(prefix.length) : s;
+}
+
+/**
+ * Presentation only: labels the model provider as the execution environment, distinct from
+ * the agent's constitutional identity. No underlying value changes.
+ */
+function AgentProvider({ provider }: { provider?: string }) {
+  if (!provider) return null;
+  return (
+    <div className="scs-agent__provider">
+      <span className="scs-agent__provider-label">Execution platform</span>
+      <span className="scs-agent__provider-value">{provider}</span>
     </div>
   );
 }

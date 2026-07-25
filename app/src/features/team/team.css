@@ -12,22 +12,33 @@
 .scs-tab:hover { color: var(--text-secondary); }
 .scs-tab--active { color: var(--text-primary); border-bottom-color: var(--color-electric-blue); }
 
-.scs-agents { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 18px; align-items: stretch; }
+/* min(400px, 100%) lets a card shrink to the viewport on narrow screens instead of
+   forcing a 400px column that overflows (mobile resilience). */
+.scs-agents { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr)); gap: 18px; align-items: stretch; }
 .scs-agents > * { display: flex; }
 .scs-agents > * > .scs-card { flex: 1 1 auto; }
 
 .scs-agent__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
-.scs-agent__name { font-size: 18px; font-weight: 650; }
-.scs-agent__provider { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
-.scs-agent__role { font-size: 13px; color: var(--text-secondary); margin: 8px 0 0; line-height: 1.45; }
+/* Resilient to long agent names — wrap rather than overflow the card. */
+.scs-agent__name { font-size: 18px; font-weight: 650; overflow-wrap: anywhere; }
+.scs-agent__provider { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+/* The execution platform is the run environment, not the constitutional identity. */
+.scs-agent__provider-label { display: block; font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); line-height: 1.3; }
+.scs-agent__provider-value { font-size: 11.5px; color: var(--text-secondary); }
+.scs-agent__role { font-size: 13px; color: var(--text-secondary); margin: 10px 0 0; line-height: 1.45; }
 
-.scs-trace { display: grid; gap: 6px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--divider); }
-.scs-trace__row { display: grid; grid-template-columns: 168px 1fr; gap: 12px; align-items: baseline; font-size: 12.5px; }
-.scs-trace__k { color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; font-size: 10.5px; }
-.scs-trace__v { color: var(--text-primary); }
+.scs-trace { display: grid; gap: 7px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--divider); }
+/* align-items:start keeps the label aligned to the first line of a wrapped value;
+   min-width:0 lets long values (assignment/gate names) wrap gracefully instead of overflowing. */
+.scs-trace__row { display: grid; grid-template-columns: 168px minmax(0, 1fr); gap: 12px; align-items: start; font-size: 12.5px; min-width: 0; }
+.scs-trace__k { color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; font-size: 10.5px; line-height: 1.5; padding-top: 1px; }
+.scs-trace__v { color: var(--text-primary); min-width: 0; overflow-wrap: anywhere; line-height: 1.45; }
 .scs-trace__link { color: var(--color-soft-sky); text-decoration: none; font-weight: 600; }
 .scs-trace__link:hover { text-decoration: underline; }
 .scs-trace__missing { color: var(--status-risk); font-weight: 600; }
+/* Current-gate cell hook: styled as a plain value now; prepared to carry hover details,
+   a linked review gate, or status metadata in a future enhancement (not implemented here). */
+.scs-trace__gate { display: inline-flex; align-items: center; gap: 6px; }
 @media (max-width: 560px) { .scs-trace__row { grid-template-columns: 1fr; gap: 1px; } }
 
 .scs-po-card { border: 1px solid rgba(95,208,160,0.32); background: linear-gradient(180deg, rgba(95,208,160,0.06) 0%, rgba(22,27,37,0.4) 100%); }
