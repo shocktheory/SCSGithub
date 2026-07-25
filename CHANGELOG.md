@@ -3,6 +3,20 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-scs-phase5-accepted] — 2026-07-25
+
+**Phase 5 — ACCEPTED by the Product Owner.** Final disposition recorded: Approved · Assignment
+Completed · Deliverable ST-DLV-2026-006 Accepted · Review Gate Closed · Implementation Status
+**Phase 5 Accepted** · Production Status Not Production · **Phase 6 Not Authorized**.
+
+- Assignment **adr-007** → Closed — completed & accepted; deliverable **ST-DLV-2026-006** → Accepted
+  (approved); gate **rgate-006** → Approved & closed; `dec-scs-phase5` → **Verified and Accepted**.
+- SCS product → *Phase 5 accepted; eligible for Phase 6 authorization (not authorized)*.
+- Readiness statement recorded in the Product Owner's words: "…has satisfied the approved Phase 5
+  acceptance criteria and is accepted by the Product Owner." Milestone sequence: Phase 4 ✓ → Phase 5 ✓ → await authorization → Phase 6 (not yet authorized).
+- Nestify hosting verification: unresolved (noted, not blocking). Identifiers remain Product-Owner-pending.
+- Result: Active Assignments back to 1 (#CKL-R; #SCS Phase 5 assignment closed). typecheck clean, 39 pass + 5 e2e skipped, build ok.
+
 ## [0.1.0-scs-phase5-runtime-verified] — 2026-07-25
 
 **Phase 5 runtime verification — EXECUTED and PASSED (real PHP 8.2 + MySQL 8).** The Product Owner's

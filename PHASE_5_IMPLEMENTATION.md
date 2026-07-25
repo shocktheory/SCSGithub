@@ -165,6 +165,22 @@ Confirmed: **no** authentication rollout, confidential-data hosting, integration
 
 **Environment note:** the authoring sandbox has no PHP/MySQL/Docker/network, so the runtime verification was executed on **GitHub Actions runners** (which provide the runtime), observed via the GitHub API, and driven to green. This is executed evidence — the e2e step ran the actual client adapter against the actual PHP/MySQL server. Reproduce locally with `scripts/verify-phase5.sh` or `server/docker-compose.yml`. **Remaining host item:** Nestify capability verification (needs account access).
 
-## Readiness statement
+## Readiness statement (Product Owner disposition)
 
-**SCS Phase 5 Backend Foundation & Persistence IS ready for Product Owner acceptance following host runtime verification.** The full runtime verification the Product Owner required has been **executed and passed** on real PHP 8.2 + MySQL 8 in CI (commit `2ae3a64`, run `30168236724`): migrations, PHPUnit (persistence, optimistic-concurrency 409, idempotency, FK rejection, transaction rollback, import), backend boot, and the **end-to-end RemoteAdapter ↔ real PHP/MySQL** test — all green — plus the local frontend suite. The only remaining unverified item is **Nestify hosting capability** (needs account access), which does not gate Phase 5's dev/test scope. The Product Owner may Approve, Approve with Conditions, Return for Correction, Reject, or Defer.
+**SCS Phase 5 Backend Foundation & Persistence has satisfied the approved Phase 5 acceptance criteria and is accepted by the Product Owner.** (Product Owner ruling, 2026-07-25.)
+
+Final disposition: **Approved.** Assignment: **Completed.** Deliverable ST-DLV-2026-006: **Accepted.** Review Gate: **Closed.** Implementation Status: **Phase 5 Accepted.** Production Status: **Not Production.** Phase 6: **Not Authorized.** Nestify hosting verification: unresolved (noted, not blocking).
+
+The full runtime verification was **executed and passed** on real PHP 8.2 + MySQL 8 in CI (commit `2ae3a64`, run `30168236724`): migrations, PHPUnit (persistence, optimistic-concurrency 409, idempotency, FK rejection, transaction rollback, import), backend boot, and the **end-to-end RemoteAdapter ↔ real PHP/MySQL** test — all green — plus the local frontend suite.
+
+## Milestone sequence
+
+```
+Phase 4  ✓ Accepted
+   ↓
+Phase 5  ✓ Accepted
+   ↓
+Await Product Owner Authorization
+   ↓
+Phase 6  (not yet authorized)
+```
