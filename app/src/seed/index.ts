@@ -100,13 +100,13 @@ const osSystems: OSSystem[] = [
     purpose: 'The living constitutional command, awareness, and artifact-navigation system for ShockTheory OS.',
     authority: 'ShockTheory OS',
     version: 'v0.1 MVP',
-    status: 'Initial Product Build',
+    status: 'Operational infrastructure — Constitutional State Derivation accepted',
     owner: 'Sonja Ross',
     dependencies: ['os-sapdos', 'os-stacl', 'os-stp', 'os-sos'],
     relatedProducts: ['prod-kidlytics', 'prod-civicai'],
-    changeHistory: ['Phase 0 architecture approved', 'Phase 1 functional shell in progress'],
-    authorityStatus: 'reported',
-    constitutionalReview: true,
+    changeHistory: ['Phase 0 architecture approved', 'Phase 1 functional shell', 'Phase 2 Constitutional State Derivation accepted (commit a773bd6)', 'Transition to Product Execution — SCS now operational infrastructure'],
+    authorityStatus: 'approved',
+    constitutionalReview: false,
     confidence: 'high',
   },
 ];
@@ -309,6 +309,7 @@ const aiCollaborators: AICollaborator[] = [
     modelProvider: 'Claude (Anthropic)',
     assignedProduct: 'prod-kidlytics',
     authorityScope: 'Evaluates and synthesizes the Kidlytics invitation experience; may not change architecture, canonical language, or product decisions.',
+    currentTask: 'Independent evaluation of Kidlytics — usability, clarity, trust, product communication, onboarding, and workflow.',
     syncState: 'Not Required',
     governingRecord: 'dec-0008',
     openQuestions: [],
@@ -427,6 +428,21 @@ const canonicalStatements: CanonicalStatement[] = [
 // Constitutional activity — only real, honest events. Cue's Phase-4 approval is
 // spec-stated but undated here, so its date is left empty rather than invented.
 const updates: Update[] = [
+  {
+    id: 'upd-transition-kidlytics',
+    code: 'ST-OS',
+    date: '2026-07-25',
+    summary: 'Milestone (Approved) — Transition from Constitutional Foundation to Product Execution. The Constitutional State Derivation initiative is complete; the SCS is now accepted operational infrastructure. Kidlytics is restored as the primary governed initiative. Reserved governance matters (AGENT-001..004 activation history, ST-OPH-2026-006..009, the reconciliation ST-ADR identifier, #CKL/#CKP evidence review) remain separate and do not delay Kidlytics.',
+    source: 'Sonja (Product Owner)',
+    scope: 'ShockTheory OS',
+    affectedSystems: ['os-scs', 'prod-kidlytics'],
+    decisionsCreated: [],
+    documentsUpdated: [],
+    syncStatus: 'Approved',
+    authorityStatus: 'approved',
+    demonstration: false,
+    confidence: 'high',
+  },
   {
     id: 'upd-accept-a773bd6',
     code: 'ST-REVIEW',

@@ -3,6 +3,31 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-transition] — 2026-07-25
+
+**Milestone — Transition from Constitutional Foundation to Product Execution (Approved).**
+Records the Product Owner Strategic Transition Directive. The Constitutional State Derivation
+implementation initiative is **complete**; the SCS is now accepted **operational infrastructure**,
+and Kidlytics is restored as the primary governed initiative. Recording only — no engine reopened,
+no constitutional redesign, no reserved matter resolved.
+
+### Recorded
+- **`ST-OPH-2026-011`** (approved) — the transition milestone; restates that the constitutional
+  models and derivation engine are operational infrastructure and Kidlytics leads.
+- **SCS system record** → status *"Operational infrastructure — Constitutional State Derivation
+  accepted"*; `constitutionalReview` cleared (no active constitutional review); changeHistory
+  extended with the acceptance and transition.
+- **Home activity:** an `ST-OS` Approved milestone entry.
+- **#CIA** (the only activated agent) given its Kidlytics evaluation focus.
+
+### Reserved — untouched (remain separate Product Owner governance work)
+- Authorized activation history for AGENT-001…004.
+- Disposition of ST-OPH-2026-006…009.
+- Assignment of the reconciliation ST-ADR identifier.
+- Organizational evidence review for AGENT-003/#CKL and AGENT-004/#CKP.
+
+Derived agent states are unchanged: #CIA Available; #SOS/#SCS/#CKL/#CKP Pending activation.
+
 ## [0.1.0-phase2-accepted] — 2026-07-25
 
 Product Owner Acceptance Ruling — accepts commit `a773bd6` as the Phase 2 reconciliation
