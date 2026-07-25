@@ -59,6 +59,18 @@ export const assignmentDirectives: AssignmentDirective[] = [
     authorityStatus: 'approved', demonstration: false,
     notes: 'Reconciled from proposed PROPOSED-ST-ADR-CKL-R upon Product Owner approval. Authorizes evidence-based competitive research only; findings are advisory and do not automatically modify Kidlytics or authorize implementation.',
   },
+  // Phase 4 — SCS Production Architecture. Authorized (planning only) by the Product Owner
+  // Product Continuation & Architecture Directive (2026-07-25). Canonical ST-ADR identifier is
+  // Product-Owner-pending (recommended ST-ADR-2026-006, which skips the reserved ST-ADR-2026-004);
+  // #SCS does not originate it. Valid independently of #SCS activation.
+  {
+    id: 'adr-006', directiveId: 'Pending Product Owner-authorized ST-ADR identifier (recommended: ST-ADR-2026-006)', agent: 'ai-scs',
+    title: 'Prepare the SCS Production Architecture & Authorization Package (Phase 4)',
+    status: 'Active',
+    standingDirective: 'sdr-002', deliverable: 'dlv-005', reviewGate: 'rgate-005', productOwnerDecision: 'dec-scs-phase4',
+    authorityStatus: 'approved', demonstration: false,
+    notes: 'Architecture and planning only. Does NOT authorize production backend implementation, migration, authentication, integrations, hosting deployment, or go-live — those require acceptance of this architecture and a separate Product Owner production-implementation authorization.',
+  },
 ];
 
 export const deliverables: Deliverable[] = [
@@ -67,6 +79,8 @@ export const deliverables: Deliverable[] = [
   { id: 'dlv-003', deliverableId: 'ST-DLV-2026-003', title: 'Phase 2 Constitutional Reconciliation', assignmentDirective: 'adr-004', reviewGate: 'rgate-003', status: 'Accepted (Product Owner acceptance of commit a773bd6)', authorityStatus: 'approved', demonstration: false },
   // Required deliverable for ST-ADR-2026-005. Pending #CKL-R's research; NOT yet in review.
   { id: 'dlv-004', deliverableId: 'ST-DLV-2026-004', title: 'Kidlytics Competitive Landscape Report', assignmentDirective: 'adr-005', reviewGate: 'rgate-004', status: 'Pending — awaiting #CKL-R research', authorityStatus: 'approved', demonstration: false, notes: 'Must separate verified facts, reasonable inferences, unresolved questions, research limitations, and recommendations requiring Product Owner or #CKL review. Includes a complete source register.' },
+  // Phase 4 deliverable — submitted for Product Owner review at the SCS Production Architecture Review gate.
+  { id: 'dlv-005', deliverableId: 'ST-DLV-2026-005', title: 'SCS Production Architecture & Authorization Package', assignmentDirective: 'adr-006', reviewGate: 'rgate-005', status: 'In review — SCS Production Architecture Review', authorityStatus: 'reported', demonstration: false, notes: 'Architecture and planning only (see PHASE_4_PRODUCTION_ARCHITECTURE.md). Acceptance is a Product Owner act and does not authorize production implementation.' },
 ];
 
 export const reviewGates: Gate[] = [
@@ -75,6 +89,9 @@ export const reviewGates: Gate[] = [
   { id: 'rgate-003', name: 'Reconciliation review', requiresOwnerApproval: true, status: 'Approved', authorityStatus: 'approved', demonstration: false },
   // Review gate for ST-DLV-2026-004. Product Owner is primary authority; #CKL is a product-review participant.
   { id: 'rgate-004', name: 'Competitive Research Review', requiresOwnerApproval: true, status: 'Open — pending deliverable', authorityStatus: 'approved', demonstration: false },
+  // Phase 4 review gate. Product Owner is primary authority. Acceptance of the architecture does
+  // NOT automatically authorize production implementation (separate ruling required).
+  { id: 'rgate-005', name: 'SCS Production Architecture Review', requiresOwnerApproval: true, status: 'Open — pending Product Owner review', authorityStatus: 'proposed', demonstration: false },
 ];
 
 // ---- Operational History — activation events preserved independently ----

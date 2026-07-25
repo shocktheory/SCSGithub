@@ -104,14 +104,28 @@ const osSystems: OSSystem[] = [
     owner: 'Sonja Ross',
     dependencies: ['os-sapdos', 'os-stacl', 'os-stp', 'os-sos'],
     relatedProducts: ['prod-kidlytics', 'prod-civicai'],
-    changeHistory: ['Phase 0 architecture approved', 'Phase 1 functional shell', 'Phase 2 Constitutional State Derivation accepted (commit a773bd6)', 'Transition to Product Execution — SCS now operational infrastructure'],
+    changeHistory: ['Phase 0 architecture approved', 'Phase 1 functional shell', 'Phase 2 Constitutional State Derivation accepted (commit a773bd6)', 'Transition to Product Execution — SCS constitutional capability operational', 'Phase 1 functional demonstration closed (accepted, demonstration scope)', 'Phase 4 Production Architecture authorized (planning only)'],
     authorityStatus: 'approved',
     constitutionalReview: false,
     confidence: 'high',
+    notes: 'This record reflects SCS CONSTITUTIONAL CAPABILITY (accepted, verified, operational). SCS SOFTWARE PRODUCT MATURITY is a separate dimension tracked on the prod-scs product record (functional demonstration; production architecture in Phase 4). "Operational infrastructure" is not a substitute for software-production status.',
   },
 ];
 
 const products: Product[] = [
+  {
+    id: 'prod-scs',
+    name: 'SCS Platform',
+    ecosystem: 'ShockTheory · Internal software platform',
+    purpose: 'The active software platform that implements approved ShockTheory OS concepts, stores and links authoritative records, derives governed organizational and product state, and presents dashboards, action queues, history, traceability, contradictions, and portfolio status — tracking its own development through the same governed structures.',
+    lifecycleStage: 'Phase 4 — Production Architecture (proposed, awaiting review)',
+    status: 'Active — internal platform, developed in parallel with Kidlytics',
+    owner: 'Sonja Ross (Product Owner) · #SCS (steward/implementer)',
+    authorityStatus: 'approved',
+    demonstration: false,
+    confidence: 'high',
+    notes: 'Software product maturity: Functional demonstration with an accepted constitutional core; production incomplete. Constitutional capability (separate dimension): Accepted, Verified, Operational. Phase/work/readiness are derived from linked governed records, not hard-coded.',
+  },
   {
     id: 'prod-kidlytics',
     name: 'Kidlytics',
@@ -448,6 +462,36 @@ const canonicalStatements: CanonicalStatement[] = [
 // Constitutional activity — only real, honest events. Cue's Phase-4 approval is
 // spec-stated but undated here, so its date is left empty rather than invented.
 const updates: Update[] = [
+  {
+    id: 'upd-scs-phase4',
+    code: 'ST-OS',
+    date: '2026-07-25',
+    summary: 'Product Owner confirmed SCS as an active internal platform product (in parallel with Kidlytics), closed the Phase 1 functional-demonstration scope (complete & accepted; production readiness not established), reconciled ProductOS as a legacy predecessor term, and authorized #SCS to prepare the Phase 4 SCS Production Architecture & Authorization Package (ST-DLV-2026-005) for review. No production implementation, migration, auth, or deployment is authorized.',
+    source: 'Sonja (Product Owner)',
+    scope: 'SCS',
+    affectedSystems: ['os-scs', 'prod-scs'],
+    decisionsCreated: ['dec-scs-phase4'],
+    documentsUpdated: ['dec-0003'],
+    syncStatus: 'Authorized — architecture planning',
+    authorityStatus: 'approved',
+    demonstration: false,
+    confidence: 'high',
+  },
+  {
+    id: 'upd-phase1-closed',
+    code: 'ST-REVIEW',
+    date: '2026-07-25',
+    summary: 'Phase 1 functional demonstration closed — complete and accepted for its demonstration scope (SCS Home, Executive Snapshot, Team Command Center, supporting navigation and review workspace). Production readiness not established; production implementation not started.',
+    source: 'Sonja (Product Owner)',
+    scope: 'SCS',
+    affectedSystems: ['os-scs'],
+    decisionsCreated: [],
+    documentsUpdated: [],
+    syncStatus: 'Accepted (demonstration scope)',
+    authorityStatus: 'approved',
+    demonstration: false,
+    confidence: 'high',
+  },
   {
     id: 'upd-cklr-research-assignment',
     code: 'ST-REVIEW',

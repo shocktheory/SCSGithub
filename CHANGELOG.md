@@ -3,6 +3,43 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-scs-phase4-architecture] — 2026-07-25
+
+**Phase 4 — SCS Production Architecture & Authorization (planning only).** Confirms SCS as an active
+internal platform product (in parallel with Kidlytics), closes the Phase 1 functional-demonstration
+scope, reconciles ProductOS as a legacy term, and prepares the production architecture package for
+review. **No production backend, migration, auth, integrations, or deployment was implemented or
+started** — architecture and governed-record tracking only. Respects the Constitutional Architecture
+Freeze (ST-DEC-2026-016): no new entities/schemas/concepts.
+
+### Added
+- **[PHASE_4_PRODUCTION_ARCHITECTURE.md](PHASE_4_PRODUCTION_ARCHITECTURE.md)** — the full 14-deliverable
+  package: app architecture (D3 **Slim 4** recommended), MySQL schema (23 tables mirroring the model)
+  + Dexie→SQL migration via the existing `StorageAdapter` seam, auth/roles/permissions (approval
+  boundary enforced server-side), authoritative-vs-derived data, self-governance, notifications (D5),
+  hosting/deploy (Nestify/`shocktheoryos.com`), security/privacy, validation, decision package, Phase
+  5–9 sequence, risks, ProductOS reconciliation, transition plan, and product-dashboard derivation.
+- **`prod-scs`** (SCS Platform) — active internal software-platform product record.
+- **Phase 4 Assignment Directive** (#SCS) — canonical id Product-Owner-pending (recommended
+  **ST-ADR-2026-006**, skipping the reserved ST-ADR-2026-004), **Active**, deliverable **ST-DLV-2026-005**,
+  gate **SCS Production Architecture Review**.
+- **`dec-scs-phase4`** (approved; canonical ST-DEC id Product-Owner-pending) — records the authorization.
+
+### Changed / reconciled
+- **`dec-0003` (ProductOS)** — reconciled to *legacy predecessor term*, history preserved (ruling text
+  unchanged); portfolio uses ShockTheory OS + SCS Platform.
+- **Phase 1 functional demonstration** recorded **closed — complete & accepted (demonstration scope)**;
+  production readiness not established.
+- SCS system record now separates **constitutional capability** (accepted/operational) from **software
+  product maturity** (functional demonstration; production incomplete).
+
+### Result (verified)
+- Active Assignments **1 → 2** (#CKL-R Working + #SCS Phase 4, valid independently of #SCS's Pending
+  activation); Deliverables Awaiting Review **1**; Waiting on Product Owner **1**. Two activated agents;
+  four Pending activation; no contradictions. ST-ADR-2026-004 remains reserved.
+- typecheck clean · 32 tests pass (16 derivation unchanged) · build succeeds · portfolio + assignment
+  screens inspected · no console errors.
+
 ## [0.1.0-agent-card-refinement] — 2026-07-25
 
 **Agent Card presentation refinements (presentation only).** Executive-readability polish on the

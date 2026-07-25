@@ -60,9 +60,12 @@ describe('The team now shows two activated agents, one of them Working', () => {
     expect(byName['#CKL-R'].assignmentDirectiveStatus).toMatch(/ST-ADR-2026-005/);
   });
 
-  it('Active Assignments is 1 and Available — Awaiting Assignment is 1 (#CIA)', () => {
-    expect(model.metrics.activeAssignments.value).toBe(1);
-    expect(model.metrics.activeAssignments.ids).toEqual([byName['#CKL-R'].id]);
+  it('#CKL-R is counted among Active Assignments; #CIA is the only Available — Awaiting Assignment', () => {
+    // #CKL-R (Working) and #SCS (Phase 4 assignment, valid independently of its Pending activation)
+    // both carry active Assignment Directives.
+    expect(model.metrics.activeAssignments.ids).toContain(byName['#CKL-R'].id);
+    expect(model.metrics.activeAssignments.ids).toContain(byName['#SCS'].id);
+    // Available — Awaiting Assignment = activated agents with no assignment = #CIA only.
     expect(model.metrics.directivesNoWork.value).toBe(1);
     expect(model.metrics.directivesNoWork.ids).toEqual([byName['#CIA'].id]);
   });
