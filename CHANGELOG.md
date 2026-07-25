@@ -3,6 +3,31 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-scs-phase4-corrections-rev2] — 2026-07-25
+
+**Phase 4 architecture — Approved with Conditions; corrected package (Rev 2) submitted.** The Product
+Owner accepted the direction and required corrections (Conditions A–J) before Phase 5. #SCS addressed
+all ten. **Specification only — no production implementation, migration, auth, or deployment.** Phase 5
+not yet cleared; identifiers remain Product-Owner-pending.
+
+### Added
+- **[PHASE_4_CORRECTIONS_REV2.md](PHASE_4_CORRECTIONS_REV2.md)** — 14 corrected deliverables:
+  **A** canonical **server-side** derivation (PHP port, golden-fixture parity; pass-through removed);
+  **B** governed API **commands** (propose/submit/activate/accept/…; no `authorityStatus`/acceptance/
+  activation via raw JSON); **C** relational integrity matrix (hard FKs vs *listed* intentional soft
+  refs); **D** record versioning + optimistic locking (no stale overwrite); **E** Technical Audit Log
+  vs Operational History boundary; **F** finalized auth = **secure server-managed sessions + MFA**
+  (not JWT-interchangeable); **G** role/authority matrix (agent ≠ human login; admin ≠ constitutional
+  authority); **H** import safety (dry-run, PO-confirmed, no "approved because JSON says so"); **I**
+  Slim/hosting treated **unverified** until checked, with fallbacks; **J** **narrowed Phase 5**
+  (backend/persistence/migration/parity only); plus correction-traceability table.
+### Changed
+- Base [PHASE_4_PRODUCTION_ARCHITECTURE.md](PHASE_4_PRODUCTION_ARCHITECTURE.md): removed the derived-
+  snapshot pass-through; API = governed commands; auth finalized; Phase 5 narrowed.
+- Gate **SCS Production Architecture Review** → *Approved with Conditions — corrections submitted; not
+  yet cleared for Phase 5*. Deliverable **ST-DLV-2026-005** → *Rev 2 corrected, in final review*.
+- typecheck clean · 32 tests pass (16 derivation unchanged) · build succeeds.
+
 ## [0.1.0-scs-phase4-architecture] — 2026-07-25
 
 **Phase 4 — SCS Production Architecture & Authorization (planning only).** Confirms SCS as an active

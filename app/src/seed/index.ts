@@ -463,6 +463,21 @@ const canonicalStatements: CanonicalStatement[] = [
 // spec-stated but undated here, so its date is left empty rather than invented.
 const updates: Update[] = [
   {
+    id: 'upd-scs-phase4-conditions',
+    code: 'ST-REVIEW',
+    date: '2026-07-25',
+    summary: 'SCS Production Architecture Review — Approved with Conditions. Product Owner accepted the direction but required corrections (server-side canonical derivation, governed API commands, DB-enforced integrity, versioning/concurrency, audit vs Operational History boundary, finalized session auth, role/authority enforcement, import safety, hosting verification, narrowed Phase 5) before Phase 5. #SCS submitted the corrected package (Rev 2) for final review. Phase 5 not yet cleared; identifiers remain Product-Owner-pending.',
+    source: 'Sonja (Product Owner) · #SCS',
+    scope: 'SCS',
+    affectedSystems: ['os-scs', 'prod-scs'],
+    decisionsCreated: [],
+    documentsUpdated: ['dlv-005'],
+    syncStatus: 'Approved with Conditions — corrected package resubmitted',
+    authorityStatus: 'reported',
+    demonstration: false,
+    confidence: 'high',
+  },
+  {
     id: 'upd-scs-phase4',
     code: 'ST-OS',
     date: '2026-07-25',

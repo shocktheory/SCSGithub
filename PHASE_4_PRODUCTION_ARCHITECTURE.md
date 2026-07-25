@@ -58,10 +58,11 @@ interface StorageAdapter {
 }
 ```
 
-**API architecture.** REST over `/api`, resource-per-collection, mirroring the adapter:
-`GET /api/{collection}`, `GET /api/{collection}/{id}`, `PUT /api/{collection}/{id}`, `DELETE /api/{collection}/{id}`, plus `GET /api/derived/team`, `GET /api/derived/home` for server-side derivation snapshots (optional cache; the canonical derivation remains deterministic and client-verifiable). `POST /api/export`, `POST /api/import`, guarded `POST /api/reset`.
+> **Rev 2 (Approved with Conditions, 2026-07-25):** the corrections required by the Product Owner Architecture Review Ruling are specified in **[PHASE_4_CORRECTIONS_REV2.md](PHASE_4_CORRECTIONS_REV2.md)** and supersede any conflicting text below. In particular: canonical derivation is **server-side** (the "pass-through of the client's derived snapshot" alternative is **removed**); the production API exposes **governed commands**, not unrestricted document replacement; and Phase 5 is narrowed to backend/persistence/migration/parity only.
 
-**Service / domain structure (server).** `Http` (routing, auth middleware, JSON) → `Domain` (the 23 collections as repositories) → `Derivation` (a PHP port OR a trusted pass-through of the client's derived snapshot — see §1.4 below) → `Integrations` (email, push) → `Persistence` (MySQL via PDO). Domain rules that already exist in TypeScript (Zod validators, derivation) are the source of truth; the server validates on write.
+**API architecture.** REST over `/api`. Reads are resource-per-collection (`GET /api/{collection}`, `GET /api/{collection}/{id}`) plus `GET /api/derived/*` served **only from server-computed, versioned derived state** (a disposable, reproducible cache of the canonical server derivation — never a browser-submitted snapshot). **Writes are governed commands, not unrestricted `PUT`/`DELETE`** (see Corrections Rev 2, Deliverable 3): `POST /api/commands/{command}`. Admin: dry-run-validated `POST /api/admin/import`, guarded `POST /api/admin/reset`. The generic `StorageAdapter` `put`/`remove` remain an **internal client abstraction only** — the client's `RemoteAdapter` maps them to governed commands; the server never exposes raw document replacement for governing records.
+
+**Service / domain structure (server).** `Http` (routing, auth + CSRF middleware, JSON) → `Commands` (governed transitions with actor/prior-state/target-state checks) → `Domain` (the 23 collections as repositories) → **`Derivation` (the canonical server-side engine — a PHP port of the TypeScript engine, parity-tested against golden fixtures)** → `Integrations` (email, push) → `Persistence` (MySQL via PDO, optimistic locking). The TypeScript derivation remains for **client-side verification and offline/demo mode only**; the **server derivation is canonical**. Domain rules (Zod validators, derivation) are the source of truth; the server validates and derives on write.
 
 **Environment model.** `local` (dev, SQLite or MySQL) → `staging` (Nestify, seeded demo) → `production` (Nestify, real records). Config via environment variables; no secrets in the repo.
 
@@ -126,7 +127,7 @@ Implemented in records as: a preserved-history note appended to `dec-0003` (ruli
 
 **Principle:** no confidential governance or product data is ever public. The current build is fully public/local; production requires an auth boundary **before** any real record is hosted.
 
-- **Authentication:** email + password with a strong hash (Argon2id), server sessions (HttpOnly, Secure, SameSite=Strict cookies) or short-lived JWT + refresh. Account recovery via emailed single-use token. Optional TOTP 2FA for the Product Owner.
+- **Authentication (finalized in Rev 2, Deliverable 7):** email + password with Argon2id, **secure server-managed sessions** (HttpOnly, Secure, SameSite=Strict cookies) — **not** interchangeable with JWT; bearer tokens only if a documented requirement justifies them. CSRF protection, session rotation/expiry, TOTP 2FA for the Product Owner, and emailed single-use recovery.
 - **Identities:** **Product Owner** (Sonja) — the only human with approval authority; **Agents/System identities** (#SOS, #SCS, #CKL, #CKP, #CIA, #CKL-R) — represented as governed records, not login accounts in v1 (agents act through #SCS-implemented workflows, not interactive logins); **Admin** (operational).
 - **Roles → permissions (least privilege):**
 
@@ -214,7 +215,7 @@ Each requires an explicit Product Owner ruling. **None is decided by #SCS.**
 
 ## Deliverable 12 — Recommended Phase 5–9 Implementation Sequence
 
-**5 Backend & Persistence** → **6 Auth, Roles & Permissions** → **7 Integrations** → **8 Validation** → **9 Deployment**. Each: its own scope, deliverable, review gate, Product Owner approval, and exit criteria (detailed in the directive's build plan). **None is authorized now.** Confidential real data is hosted only after Phase 6 (auth) + backups are accepted.
+**Revised in Rev 2 (Condition J):** **Phase 5 is narrowed** to *backend foundation, persistence, migrations, and `RemoteAdapter` parity only* — it does **not** authorize authentication rollout, email, Web Push, confidential-data migration, deployment, or go-live. **Phase 6 Auth** is separately gated; **no confidential production data may be hosted before the authentication boundary is accepted.** Sequence: **5 Backend & Persistence (narrow)** → **6 Auth, Roles & Permissions** → **7 Integrations** → **8 Validation** → **9 Deployment**. Each has its own scope, deliverable, gate, Product Owner approval, and exit criteria. **None is authorized now.**
 
 ---
 

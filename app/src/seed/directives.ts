@@ -80,7 +80,7 @@ export const deliverables: Deliverable[] = [
   // Required deliverable for ST-ADR-2026-005. Pending #CKL-R's research; NOT yet in review.
   { id: 'dlv-004', deliverableId: 'ST-DLV-2026-004', title: 'Kidlytics Competitive Landscape Report', assignmentDirective: 'adr-005', reviewGate: 'rgate-004', status: 'Pending — awaiting #CKL-R research', authorityStatus: 'approved', demonstration: false, notes: 'Must separate verified facts, reasonable inferences, unresolved questions, research limitations, and recommendations requiring Product Owner or #CKL review. Includes a complete source register.' },
   // Phase 4 deliverable — submitted for Product Owner review at the SCS Production Architecture Review gate.
-  { id: 'dlv-005', deliverableId: 'ST-DLV-2026-005', title: 'SCS Production Architecture & Authorization Package', assignmentDirective: 'adr-006', reviewGate: 'rgate-005', status: 'In review — SCS Production Architecture Review', authorityStatus: 'reported', demonstration: false, notes: 'Architecture and planning only (see PHASE_4_PRODUCTION_ARCHITECTURE.md). Acceptance is a Product Owner act and does not authorize production implementation.' },
+  { id: 'dlv-005', deliverableId: 'ST-DLV-2026-005', title: 'SCS Production Architecture & Authorization Package (Rev 2 — corrected)', assignmentDirective: 'adr-006', reviewGate: 'rgate-005', status: 'In review — corrections (Rev 2) submitted for final Product Owner review', authorityStatus: 'reported', demonstration: false, notes: 'Approved with Conditions at first review; corrections A–J addressed in PHASE_4_CORRECTIONS_REV2.md (with PHASE_4_PRODUCTION_ARCHITECTURE.md). Architecture only — acceptance is a Product Owner act and does not authorize production implementation. Phase 5 not yet cleared.' },
 ];
 
 export const reviewGates: Gate[] = [
@@ -91,7 +91,7 @@ export const reviewGates: Gate[] = [
   { id: 'rgate-004', name: 'Competitive Research Review', requiresOwnerApproval: true, status: 'Open — pending deliverable', authorityStatus: 'approved', demonstration: false },
   // Phase 4 review gate. Product Owner is primary authority. Acceptance of the architecture does
   // NOT automatically authorize production implementation (separate ruling required).
-  { id: 'rgate-005', name: 'SCS Production Architecture Review', requiresOwnerApproval: true, status: 'Open — pending Product Owner review', authorityStatus: 'proposed', demonstration: false },
+  { id: 'rgate-005', name: 'SCS Production Architecture Review', requiresOwnerApproval: true, status: 'Approved with Conditions — corrections submitted; awaiting final Product Owner review (not yet cleared for Phase 5)', authorityStatus: 'proposed', demonstration: false },
 ];
 
 // ---- Operational History — activation events preserved independently ----
