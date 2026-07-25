@@ -208,4 +208,15 @@ export const interimDecisions: Decision[] = [
     implementationConsequences: 'Traceability, version display, and reserved-concept handling are implemented; no expansion.',
     relatedDecisions: ['dec-0011'], queue: 'owner-action',
   }),
+  D({
+    id: 'dec-0017', decisionId: 'ST-DEC-2026-017', title: 'AGENT-005 (#CIA) constitutional activation',
+    area: 'Operating System', decisionClass: 'Operating System', status: 'Approved', date: '2026-07-24',
+    sourceDirective: 'Product Owner acceptance — AGENT-005 constitutional activation (2026-07-24)',
+    question: 'Is AGENT-005 (#CIA) constitutionally activated?',
+    ruling: 'AGENT-005 (#CIA) is constitutionally activated. ST-SDR-2026-005 v1.0 is Current; TEAM-001 membership is Active; the activation is recorded in Operational History. #CIA is Operational — Awaiting First Assignment.',
+    rationale: 'Records the Product Owner acceptance of the #CIA onboarding package so SCS can derive #CIA’s operational state from governing records.',
+    affectedArtifacts: ['#CIA', 'ST-SDR-2026-005', 'TEAM-001'],
+    dependencies: ['dec-0008'], implementationConsequences: 'SCS derives #CIA status Available and gate Awaiting Assignment from these records.',
+    relatedDecisions: ['dec-0008'], queue: 'owner-action',
+  }),
 ];

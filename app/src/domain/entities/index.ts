@@ -251,11 +251,11 @@ export interface AICollaborator extends Base {
   /** Standing constitutional responsibility (distinct from any current assignment). */
   standingResponsibility?: string;
   /**
-   * Whether the agent has completed constitutional onboarding (entered the governed
-   * operating environment). Absence of onboarding is NOT a divergence/stale finding.
-   * Defaults to true when omitted. An attribute on the existing Agent — not a new object.
+   * Team membership, using the existing approved "Team" concept (e.g. "TEAM-001 — Active").
+   * An attribute on the existing Agent — NOT a new constitutional object/registry.
+   * Operational activation is DERIVED from governing records, not from a manual flag.
    */
-  onboarded?: boolean;
+  teamMembership?: string;
 }
 
 export interface Assignment extends Base {

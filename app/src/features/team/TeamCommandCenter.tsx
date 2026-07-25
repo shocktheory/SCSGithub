@@ -3,14 +3,13 @@ import { Link } from 'react-router-dom';
 import { ShieldCheck, ShieldAlert, Info, ExternalLink, X } from 'lucide-react';
 import { useCollection, useIsSeed } from '../../lib/data';
 import { deriveTeam, type AgentCard } from '../../lib/team';
-import { canonicalDecId } from '../../lib/derive';
 import {
   PageHeader, Card, SectionTitle, StatTile, StatusBadge, DimensionTag, DimensionRow,
 } from '../../design-system/components';
-import type { AICollaborator, Assignment, Decision, Product } from '../../domain/entities';
+import type {
+  AICollaborator, Assignment, Decision, Product, StandingDirective, AssignmentDirective, OperationalHistoryEntry,
+} from '../../domain/entities';
 import './team.css';
-
-const DEC = (id?: string) => canonicalDecId(id);
 
 type View = 'team' | 'assignment' | 'governance';
 type Density = 'compact' | 'expanded' | 'collapsed';
@@ -21,6 +20,9 @@ export function TeamCommandCenter() {
   const assignments = useCollection<Assignment>('assignments');
   const decisions = useCollection<Decision>('decisions');
   const products = useCollection<Product>('products');
+  const standingDirectives = useCollection<StandingDirective>('standingDirectives');
+  const assignmentDirectives = useCollection<AssignmentDirective>('assignmentDirectives');
+  const operationalHistory = useCollection<OperationalHistoryEntry>('operationalHistory');
   const [view, setView] = useState<View>('team');
   const [density, setDensity] = useState<Density>('compact');
   const [filterIds, setFilterIds] = useState<string[] | null>(null);
@@ -28,7 +30,9 @@ export function TeamCommandCenter() {
 
   const model = deriveTeam({
     agents: agents.data ?? [], assignments: assignments.data ?? [],
-    decisions: decisions.data ?? [], products: products.data ?? [], isSeed,
+    decisions: decisions.data ?? [], products: products.data ?? [],
+    standingDirectives: standingDirectives.data ?? [], assignmentDirectives: assignmentDirectives.data ?? [],
+    operationalHistory: operationalHistory.data ?? [], isSeed,
   });
 
   const metricList = Object.values(model.metrics);
@@ -110,12 +114,12 @@ export function TeamCommandCenter() {
 
       {view === 'assignment' && (
         <Card>
-          {shown.filter((a) => a.assignment || !filterIds).map((a) => (
+          {shown.map((a) => (
             <div key={a.id} className="scs-row">
               <div className="scs-row__main">
-                <div className="scs-row__title">{a.name} — {a.assignment ?? 'No active assignment'}</div>
+                <div className="scs-row__title">{a.name} — {a.currentAssignment}</div>
                 <div className="scs-row__sub">
-                  {a.affected ? `${a.affected} · ` : ''}{a.deliverable ?? 'No deliverable'}{a.gate ? ` · gate: ${a.gate}` : ''}
+                  {a.affected ? `${a.affected} · ` : ''}{a.operationalReadiness}{a.currentGate ? ` · gate: ${a.currentGate}` : ''}
                 </div>
               </div>
               <DimensionRow>
@@ -153,11 +157,11 @@ function AgentCardView({ a, density }: { a: AgentCard; density: Density }) {
             <>
               <p className="scs-agent__role">{a.role}</p>
               <div className="scs-trace">
-                <Row k="Current assignment" v="None" />
-                <Row k="Synchronization" v="Not Yet Applicable" />
-                <Row k="Standing directive" v={a.standingDirectiveLabel} />
-                <Row k="Directive coverage" v="Not Active" />
-                <Row k="Current gate" v="Constitutional Onboarding" />
+                <Row k="Current assignment" v={a.currentAssignment} />
+                <Row k="Synchronization" v={a.synchronization} />
+                <Row k="Standing directive" v={a.standingDirectiveStatus} />
+                <Row k="Directive coverage" v={a.directiveCoverage} />
+                <Row k="Current gate" v={a.currentGate} />
               </div>
               <p style={{ marginTop: 12, fontSize: 12.5, color: 'var(--text-muted)', lineHeight: 1.5 }}>
                 AGENT-005 has not yet entered the governed operating environment. Awaiting a Product
@@ -213,23 +217,33 @@ function AgentCardView({ a, density }: { a: AgentCard; density: Density }) {
           </p>
         )}
         <div className="scs-trace">
-          <Row k="Current assignment" v={a.assignment ?? '—'} />
+          <Row k="Operational readiness" v={a.operationalReadiness} />
+          <Row k="Standing directive" v={a.roleDirectiveId ? <Link className="scs-trace__link" to="/standing-directives">{a.standingDirectiveStatus} ↗</Link> : <span className="scs-trace__missing">None on record</span>} />
+          <Row k="Current assignment" v={a.currentAssignment} />
+          <Row k="Synchronization" v={a.synchronization} />
+          <Row k="Directive coverage" v={<StatusBadge label={a.directiveCoverage} tone={a.directiveCoverage === 'Full' ? 'approved' : a.directiveCoverage === 'Partial' ? 'review' : 'risk'} />} />
+          <Row k="Current gate" v={a.currentGate} />
+          <Row k="Team membership" v={a.teamMembership} />
           {expanded && <Row k="Expected deliverable" v={a.deliverable ?? '—'} />}
           {expanded && a.waitingOn && <Row k="Waiting on" v={a.waitingOn} />}
           {expanded && <Row k="Blocker / risk" v={a.blocker ?? 'None'} />}
           {expanded && <Row k="Affected" v={a.affected ?? '—'} />}
-          {expanded && <Row k="Current gate" v={a.gate ?? 'Not gated'} />}
-          {expanded && <Row k="Synchronization" v={`${a.syncDisplay}${a.isDemonstration && a.syncDisplay !== 'Not Required' ? ' · demo' : ''}`} />}
-          <Row k="Directive coverage" v={<StatusBadge label={a.directiveCoverage} tone={a.directiveCoverage === 'Full' ? 'approved' : a.directiveCoverage === 'Partial' ? 'review' : 'risk'} />} />
-          <Row k="Standing / role directive" v={a.roleDirectiveId ? <Link className="scs-trace__link" to="/standing-directives">{DEC(a.roleDirectiveId)} ↗</Link> : <span className="scs-trace__missing">Missing</span>} />
-          <Row k="Assignment directive" v={a.assignmentDirectiveId ? <Link className="scs-trace__link" to="/assignment-directives">view ↗</Link> : (a.assignment ? <span className="scs-trace__missing">Missing</span> : '—')} />
-          {expanded && <Row k="Review gate → decision" v={a.reviewGate ? <Link className="scs-trace__link" to="/review-gates">{a.reviewGate} ↗</Link> : '—'} />}
+          {expanded && <Row k="Assignment directive" v={a.assignmentDirectiveId ? <Link className="scs-trace__link" to="/assignment-directives">view ↗</Link> : (a.assigned ? <span className="scs-trace__missing">Missing</span> : '—')} />}
         </div>
         {a.missingLinks.length > 0 && (
           <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
             {a.missingLinks.map((m) => (
               <span key={m} className="scs-badge scs-badge--risk"><ShieldAlert size={11} /> {m}</span>
             ))}
+          </div>
+        )}
+        {expanded && (
+          <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--divider)' }}>
+            <div className="scs-trace__k" style={{ marginBottom: 6 }}>Derived from · source records → logic</div>
+            <ul style={{ margin: 0, paddingLeft: 16, fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+              {a.trace.sourceRecords.map((s) => <li key={s}>{s}</li>)}
+            </ul>
+            <p style={{ margin: '6px 0 0', fontSize: 12, color: 'var(--text-muted)', fontStyle: 'italic' }}>{a.trace.logic}</p>
           </div>
         )}
       </Card>

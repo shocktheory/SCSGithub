@@ -14,6 +14,7 @@ import {
 import type {
   OSSystem, Product, Publication, PublicationPhase, AICollaborator, Assignment,
   NextAction, Gate, CanonicalStatement, Update, Artifact, Decision,
+  StandingDirective, AssignmentDirective, OperationalHistoryEntry,
 } from '../../domain/entities';
 import '../snapshot/snapshot.css';
 
@@ -34,6 +35,9 @@ export function SCSHomePage() {
   const artifacts = useCollection<Artifact>('artifacts');
   const decisions = useCollection<Decision>('decisions');
   const decisionCount = (decisions.data ?? []).length;
+  const standingDirectives = useCollection<StandingDirective>('standingDirectives');
+  const assignmentDirectives = useCollection<AssignmentDirective>('assignmentDirectives');
+  const operationalHistory = useCollection<OperationalHistoryEntry>('operationalHistory');
 
   const [filter, setFilter] = useState<'all' | 'Approval' | 'Unresolved decision'>('all');
 
@@ -91,7 +95,9 @@ export function SCSHomePage() {
   const latestChange = activity[0];
   const team = deriveTeam({
     agents: ai.data ?? [], assignments: assignments.data ?? [],
-    decisions: decisions.data ?? [], products: products.data ?? [], isSeed,
+    decisions: decisions.data ?? [], products: products.data ?? [],
+    standingDirectives: standingDirectives.data ?? [], assignmentDirectives: assignmentDirectives.data ?? [],
+    operationalHistory: operationalHistory.data ?? [], isSeed,
   });
 
   return (
