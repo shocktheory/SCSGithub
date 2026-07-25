@@ -71,6 +71,18 @@ export const assignmentDirectives: AssignmentDirective[] = [
     authorityStatus: 'approved', demonstration: false,
     notes: 'Phase 4 (architecture & planning) complete and accepted. This did NOT authorize production backend implementation, migration, authentication, integrations, hosting deployment, or go-live — Phase 5 requires a separate Product Owner production-implementation directive.',
   },
+  // Phase 5 — Backend Foundation & Persistence. Authorized (narrow) by the Product Owner
+  // Production Implementation Authorization Directive (2026-07-25). Canonical ST-ADR identifier
+  // Product-Owner-pending (recommended ST-ADR-2026-007); #SCS does not originate it. Valid
+  // independently of #SCS activation.
+  {
+    id: 'adr-007', directiveId: 'Pending Product Owner-authorized ST-ADR identifier (recommended: ST-ADR-2026-007)', agent: 'ai-scs',
+    title: 'SCS Backend Foundation & Persistence Implementation (Phase 5)',
+    status: 'Active',
+    standingDirective: 'sdr-002', deliverable: 'dlv-006', reviewGate: 'rgate-006', productOwnerDecision: 'dec-scs-phase5',
+    authorityStatus: 'approved', demonstration: false,
+    notes: 'NARROW scope: backend foundation, persistence, MySQL schema, migrations, RemoteAdapter, parity — dev/test with synthetic/demo data only. Does NOT authorize authentication rollout, confidential-data hosting, integrations, email, Web Push, deployment, or go-live. OS-CAP-001 not implemented.',
+  },
 ];
 
 export const deliverables: Deliverable[] = [
@@ -81,6 +93,8 @@ export const deliverables: Deliverable[] = [
   { id: 'dlv-004', deliverableId: 'ST-DLV-2026-004', title: 'Kidlytics Competitive Landscape Report', assignmentDirective: 'adr-005', reviewGate: 'rgate-004', status: 'Pending — awaiting #CKL-R research', authorityStatus: 'approved', demonstration: false, notes: 'Must separate verified facts, reasonable inferences, unresolved questions, research limitations, and recommendations requiring Product Owner or #CKL review. Includes a complete source register.' },
   // Phase 4 deliverable — submitted for Product Owner review at the SCS Production Architecture Review gate.
   { id: 'dlv-005', deliverableId: 'ST-DLV-2026-005', title: 'SCS Production Architecture & Authorization Package (Rev 2 — corrected)', assignmentDirective: 'adr-006', reviewGate: 'rgate-005', status: 'Accepted (Product Owner) — authoritative production-architecture planning baseline', authorityStatus: 'approved', demonstration: false, notes: 'Accepted 2026-07-25 as the authoritative production-architecture planning baseline (PHASE_4_PRODUCTION_ARCHITECTURE.md + PHASE_4_CORRECTIONS_REV2.md). Acceptance of the architecture does NOT authorize production implementation; Phase 5 requires a separate Product Owner directive.' },
+  // Phase 5 deliverable — submitted for the SCS Backend Foundation & Persistence Review gate.
+  { id: 'dlv-006', deliverableId: 'ST-DLV-2026-006', title: 'SCS Backend Foundation & Persistence Implementation Package', assignmentDirective: 'adr-007', reviewGate: 'rgate-006', status: 'In review — SCS Backend Foundation & Persistence Review', authorityStatus: 'reported', demonstration: false, notes: 'Client RemoteAdapter + parity harness (verified, 7 tests); Slim 4 PHP backend + MySQL schema/migrations + import tool (written; PHP/MySQL runtime is a host-verification item). See PHASE_5_IMPLEMENTATION.md. Dev/test only; no auth, no confidential data, no deployment.' },
 ];
 
 export const reviewGates: Gate[] = [
@@ -92,6 +106,8 @@ export const reviewGates: Gate[] = [
   // Phase 4 review gate. Product Owner is primary authority. Acceptance of the architecture does
   // NOT automatically authorize production implementation (separate ruling required).
   { id: 'rgate-005', name: 'SCS Production Architecture Review', requiresOwnerApproval: true, status: 'Approved — Phase 4 Production Architecture accepted (gate closed). Architecturally ready for Phase 5; Phase 5 implementation NOT authorized by this approval.', authorityStatus: 'approved', demonstration: false },
+  // Phase 5 review gate. Product Owner authority. Acceptance of Phase 5 does not auto-authorize Phase 6.
+  { id: 'rgate-006', name: 'SCS Backend Foundation & Persistence Review', requiresOwnerApproval: true, status: 'Open — pending Product Owner review', authorityStatus: 'proposed', demonstration: false },
 ];
 
 // ---- Operational History — activation events preserved independently ----

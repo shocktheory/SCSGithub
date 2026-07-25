@@ -1,0 +1,24 @@
+{
+  "name": "shocktheory/scs-server",
+  "description": "SCS governed persistence API (Phase 5 — backend foundation & persistence). Thin Slim 4 JSON API over MySQL; no auth, no deployment.",
+  "type": "project",
+  "require": {
+    "php": ">=8.2",
+    "slim/slim": "^4.12",
+    "slim/psr7": "^1.6",
+    "php-di/php-di": "^7.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^11.0"
+  },
+  "autoload": {
+    "psr-4": { "Scs\\": "src/" }
+  },
+  "autoload-dev": {
+    "psr-4": { "Scs\\Tests\\": "tests/" }
+  },
+  "scripts": {
+    "migrate": "php migrations/migrate.php",
+    "serve": "php -S localhost:8787 -t public"
+  }
+}

@@ -3,6 +3,37 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-scs-phase5-backend] — 2026-07-25
+
+**Phase 5 — Backend Foundation & Persistence (narrow, dev/test only).** First bounded
+production-implementation phase. Backend foundation + governed persistence + `RemoteAdapter` +
+parity. **No authentication rollout, confidential data, integrations, or deployment.** PHP/MySQL are
+not in the authoring environment, so the **client seam is fully verified** and the **PHP/MySQL backend
+is real, reviewable code whose runtime is a host-verification item** (not a faked pass).
+
+### Client (verified — 7 new tests)
+- **`app/src/storage/remoteAdapter.ts`** — implements the accepted `StorageAdapter` over an injectable
+  transport; automatic optimistic concurrency (version cache → `expectedVersion` → `ConflictError` on 409),
+  idempotency keys, structured errors.
+- **`adapter.ts`** selector — default **LocalAdapter** (demo unchanged); RemoteAdapter when `VITE_SCS_API_BASE` set.
+- **`testing/inMemoryApi.ts`** — executable contract mirror (test double + PHP-backend spec).
+- **`remoteAdapter.parity.test.ts`** — contract parity vs reference, export/import round-trip,
+  optimistic-concurrency (stale write rejected; newer record survives), idempotency, guarded reset, audit seam.
+
+### Server (written; runtime = host-verification item)
+- **Slim 4** app (`server/public/index.php`) + `src/` (Config, Database/PDO, Repository, Commands, Importer, Http);
+  refuses `SCS_ENV=production`. Governed `upsert` command (no authority change via raw JSON), dev delete,
+  validated import, guarded reset, derivation seam.
+- **`migrations/0001_init.sql`** — 23 governed tables (JSON `data` + version/timestamps + generated FK
+  columns per the Phase 4 integrity matrix); **`migrate.php`** deterministic runner.
+
+### Governed records & result
+- Phase 5 **Assignment Directive** (#SCS, pending id rec. ST-ADR-2026-007, Active), **ST-DLV-2026-006** in review,
+  **SCS Backend Foundation & Persistence Review** gate, **`dec-scs-phase5`** (approved; ST-DEC id pending).
+- SCS product **Work Status: Working (Phase 5)**; #SCS remains Pending activation (assignment valid independently).
+- Active Assignments **1 → 2**; Deliverables Awaiting Review **0 → 1**. typecheck clean · **39 tests pass** (16 derivation unchanged) · build succeeds · live preview verified.
+- **[PHASE_5_IMPLEMENTATION.md](PHASE_5_IMPLEMENTATION.md)** — 19-deliverable package incl. traceability + parity matrices + host-verification gaps.
+
 ## [0.1.0-scs-phase4-approved] — 2026-07-25
 
 **Phase 4 Production Architecture — APPROVED (final).** The Product Owner accepted the corrected

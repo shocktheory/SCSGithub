@@ -1,5 +1,5 @@
 import { QueryClient, useQuery } from '@tanstack/react-query';
-import { localAdapter } from '../storage/localAdapter';
+import { adapter } from '../storage/adapter';
 import { db } from '../storage/db';
 import type { CollectionName } from '../storage/StorageAdapter';
 
@@ -16,7 +16,7 @@ export const queryClient = new QueryClient({
 export function useCollection<T>(name: CollectionName) {
   return useQuery({
     queryKey: ['collection', name],
-    queryFn: () => localAdapter.list<T>(name),
+    queryFn: () => adapter.list<T>(name),
   });
 }
 

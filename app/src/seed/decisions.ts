@@ -295,4 +295,28 @@ export const interimDecisions: Decision[] = [
     confidence: 'high',
     notes: 'Canonical ST-DEC identifier Product-Owner-pending; not originated by #SCS.',
   },
+
+  // SCS Phase 5 authorization — records the Product Owner Production Implementation Authorization
+  // Directive (2026-07-25). Narrow: backend foundation & persistence only. Canonical ST-DEC id
+  // Product-Owner-pending; #SCS does not originate one.
+  {
+    id: 'dec-scs-phase5',
+    decisionId: 'Pending Product Owner-authorized ST-DEC identifier',
+    title: 'SCS Phase 5 — Backend Foundation & Persistence authorization',
+    area: 'SCS', decisionClass: 'Platform', status: 'Approved', date: '2026-07-25',
+    approvingAuthority: 'Sonja (Product Owner)',
+    sourceDirective: 'Product Owner Production Implementation Authorization Directive — "Phase 5 — Backend Foundation & Persistence Authorization" (2026-07-25)',
+    question: 'Is the narrow Phase 5 backend foundation & persistence implementation authorized?',
+    ruling: 'Authorizes ONLY: backend foundation, governed persistence, MySQL schema, migrations, RemoteAdapter implementation, and parity validation — dev/test with synthetic/demonstration/non-confidential data. Does NOT authorize production authentication, confidential-data hosting, integrations, email, Web Push, deployment, public access, cutover, launch, or OS-CAP-001 implementation. Each remains separately governed.',
+    rationale: 'First bounded production-implementation phase; proves the production persistence foundation without changing accepted product/constitutional meaning.',
+    affectedArtifacts: ['prod-scs', 'ST-ADR-2026-007 (pending)', 'ST-DLV-2026-006', 'SCS Backend Foundation & Persistence Review'],
+    implementationConsequences: 'SCS product Work Status = Working (Phase 5). #SCS remains Pending activation (assignment valid independently of activation). No production, auth, confidential data, or deployment.',
+    implementationStatus: 'In progress',
+    authoritativeTextByProductOwner: true,
+    queue: 'owner-action',
+    authorityStatus: 'approved',
+    demonstration: false,
+    confidence: 'high',
+    notes: 'Canonical ST-DEC identifier Product-Owner-pending; not originated by #SCS.',
+  },
 ];
