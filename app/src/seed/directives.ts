@@ -66,10 +66,10 @@ export const assignmentDirectives: AssignmentDirective[] = [
   {
     id: 'adr-006', directiveId: 'Pending Product Owner-authorized ST-ADR identifier (recommended: ST-ADR-2026-006)', agent: 'ai-scs',
     title: 'Prepare the SCS Production Architecture & Authorization Package (Phase 4)',
-    status: 'Active',
+    status: 'Closed — completed & accepted (Phase 4 Production Architecture approved as the authoritative planning baseline; canonical ST-ADR identifier remains Product-Owner-pending)',
     standingDirective: 'sdr-002', deliverable: 'dlv-005', reviewGate: 'rgate-005', productOwnerDecision: 'dec-scs-phase4',
     authorityStatus: 'approved', demonstration: false,
-    notes: 'Architecture and planning only. Does NOT authorize production backend implementation, migration, authentication, integrations, hosting deployment, or go-live — those require acceptance of this architecture and a separate Product Owner production-implementation authorization.',
+    notes: 'Phase 4 (architecture & planning) complete and accepted. This did NOT authorize production backend implementation, migration, authentication, integrations, hosting deployment, or go-live — Phase 5 requires a separate Product Owner production-implementation directive.',
   },
 ];
 
@@ -80,7 +80,7 @@ export const deliverables: Deliverable[] = [
   // Required deliverable for ST-ADR-2026-005. Pending #CKL-R's research; NOT yet in review.
   { id: 'dlv-004', deliverableId: 'ST-DLV-2026-004', title: 'Kidlytics Competitive Landscape Report', assignmentDirective: 'adr-005', reviewGate: 'rgate-004', status: 'Pending — awaiting #CKL-R research', authorityStatus: 'approved', demonstration: false, notes: 'Must separate verified facts, reasonable inferences, unresolved questions, research limitations, and recommendations requiring Product Owner or #CKL review. Includes a complete source register.' },
   // Phase 4 deliverable — submitted for Product Owner review at the SCS Production Architecture Review gate.
-  { id: 'dlv-005', deliverableId: 'ST-DLV-2026-005', title: 'SCS Production Architecture & Authorization Package (Rev 2 — corrected)', assignmentDirective: 'adr-006', reviewGate: 'rgate-005', status: 'In review — corrections (Rev 2) submitted for final Product Owner review', authorityStatus: 'reported', demonstration: false, notes: 'Approved with Conditions at first review; corrections A–J addressed in PHASE_4_CORRECTIONS_REV2.md (with PHASE_4_PRODUCTION_ARCHITECTURE.md). Architecture only — acceptance is a Product Owner act and does not authorize production implementation. Phase 5 not yet cleared.' },
+  { id: 'dlv-005', deliverableId: 'ST-DLV-2026-005', title: 'SCS Production Architecture & Authorization Package (Rev 2 — corrected)', assignmentDirective: 'adr-006', reviewGate: 'rgate-005', status: 'Accepted (Product Owner) — authoritative production-architecture planning baseline', authorityStatus: 'approved', demonstration: false, notes: 'Accepted 2026-07-25 as the authoritative production-architecture planning baseline (PHASE_4_PRODUCTION_ARCHITECTURE.md + PHASE_4_CORRECTIONS_REV2.md). Acceptance of the architecture does NOT authorize production implementation; Phase 5 requires a separate Product Owner directive.' },
 ];
 
 export const reviewGates: Gate[] = [
@@ -91,7 +91,7 @@ export const reviewGates: Gate[] = [
   { id: 'rgate-004', name: 'Competitive Research Review', requiresOwnerApproval: true, status: 'Open — pending deliverable', authorityStatus: 'approved', demonstration: false },
   // Phase 4 review gate. Product Owner is primary authority. Acceptance of the architecture does
   // NOT automatically authorize production implementation (separate ruling required).
-  { id: 'rgate-005', name: 'SCS Production Architecture Review', requiresOwnerApproval: true, status: 'Approved with Conditions — corrections submitted; awaiting final Product Owner review (not yet cleared for Phase 5)', authorityStatus: 'proposed', demonstration: false },
+  { id: 'rgate-005', name: 'SCS Production Architecture Review', requiresOwnerApproval: true, status: 'Approved — Phase 4 Production Architecture accepted (gate closed). Architecturally ready for Phase 5; Phase 5 implementation NOT authorized by this approval.', authorityStatus: 'approved', demonstration: false },
 ];
 
 // ---- Operational History — activation events preserved independently ----

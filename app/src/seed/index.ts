@@ -104,7 +104,7 @@ const osSystems: OSSystem[] = [
     owner: 'Sonja Ross',
     dependencies: ['os-sapdos', 'os-stacl', 'os-stp', 'os-sos'],
     relatedProducts: ['prod-kidlytics', 'prod-civicai'],
-    changeHistory: ['Phase 0 architecture approved', 'Phase 1 functional shell', 'Phase 2 Constitutional State Derivation accepted (commit a773bd6)', 'Transition to Product Execution — SCS constitutional capability operational', 'Phase 1 functional demonstration closed (accepted, demonstration scope)', 'Phase 4 Production Architecture authorized (planning only)'],
+    changeHistory: ['Phase 0 architecture approved', 'Phase 1 functional shell', 'Phase 2 Constitutional State Derivation accepted (commit a773bd6)', 'Transition to Product Execution — SCS constitutional capability operational', 'Phase 1 functional demonstration closed (accepted, demonstration scope)', 'Phase 4 Production Architecture authorized (planning only)', 'Phase 4 Production Architecture accepted (planning baseline; architecturally ready for Phase 5; Phase 5 not authorized)'],
     authorityStatus: 'approved',
     constitutionalReview: false,
     confidence: 'high',
@@ -118,7 +118,7 @@ const products: Product[] = [
     name: 'SCS Platform',
     ecosystem: 'ShockTheory · Internal software platform',
     purpose: 'The active software platform that implements approved ShockTheory OS concepts, stores and links authoritative records, derives governed organizational and product state, and presents dashboards, action queues, history, traceability, contradictions, and portfolio status — tracking its own development through the same governed structures.',
-    lifecycleStage: 'Phase 4 — Production Architecture (proposed, awaiting review)',
+    lifecycleStage: 'Phase 4 Production Architecture accepted — architecturally ready for Phase 5 (implementation not authorized)',
     status: 'Active — internal platform, developed in parallel with Kidlytics',
     owner: 'Sonja Ross (Product Owner) · #SCS (steward/implementer)',
     authorityStatus: 'approved',
@@ -462,6 +462,21 @@ const canonicalStatements: CanonicalStatement[] = [
 // Constitutional activity — only real, honest events. Cue's Phase-4 approval is
 // spec-stated but undated here, so its date is left empty rather than invented.
 const updates: Update[] = [
+  {
+    id: 'upd-scs-phase4-approved',
+    code: 'ST-REVIEW',
+    date: '2026-07-25',
+    summary: 'SCS Production Architecture Review — APPROVED (final). The corrected Phase 4 package (Rev 2) is accepted as the authoritative production-architecture planning baseline; ST-DLV-2026-005 accepted, the review gate closed (Approved), and the Phase 4 Assignment Directive completed & accepted (canonical ST-ADR identifier remains Product-Owner-pending). SCS is architecturally ready for Phase 5. This approval does NOT authorize production implementation, deployment, authentication rollout, data hosting, or integrations — Phase 5 requires a separate Product Owner directive.',
+    source: 'Sonja (Product Owner)',
+    scope: 'SCS',
+    affectedSystems: ['os-scs', 'prod-scs'],
+    decisionsCreated: [],
+    documentsUpdated: ['dlv-005', 'rgate-005', 'adr-006', 'dec-scs-phase4'],
+    syncStatus: 'Approved — architectural baseline accepted',
+    authorityStatus: 'approved',
+    demonstration: false,
+    confidence: 'high',
+  },
   {
     id: 'upd-scs-phase4-conditions',
     code: 'ST-REVIEW',

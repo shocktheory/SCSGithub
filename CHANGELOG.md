@@ -3,6 +3,25 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-scs-phase4-approved] — 2026-07-25
+
+**Phase 4 Production Architecture — APPROVED (final).** The Product Owner accepted the corrected
+(Rev 2) package as the authoritative production-architecture planning baseline. Recording only — no
+production implementation; Phase 5 not authorized.
+
+- Gate **SCS Production Architecture Review** → **Approved** (closed).
+- Deliverable **ST-DLV-2026-005** → **Accepted** (authoritative planning baseline).
+- Phase 4 **Assignment Directive** → **Closed — completed & accepted** (canonical ST-ADR id remains
+  Product-Owner-pending; ST-ADR-2026-006 advisory only).
+- `dec-scs-phase4` implementation status → **Verified and Accepted**; SCS product record →
+  *architecturally ready for Phase 5 (implementation not authorized)*.
+- **Result:** Active Assignments **2 → 1** (only #CKL-R; #SCS Phase 4 assignment closed); Deliverables
+  Awaiting Review **1 → 0**; Waiting on Product Owner **1 → 0**. Two activated agents; four Pending
+  activation; no contradictions. #SCS remains Pending activation. **No canonical identifier assigned.**
+- **Not authorized by this approval:** production implementation, deployment, authentication rollout,
+  confidential data hosting, email, push, hosting migration, go-live — each separately governed.
+- typecheck clean · 32 tests pass (16 derivation unchanged) · build succeeds · live preview verified.
+
 ## [0.1.0-scs-phase4-corrections-rev2] — 2026-07-25
 
 **Phase 4 architecture — Approved with Conditions; corrected package (Rev 2) submitted.** The Product
