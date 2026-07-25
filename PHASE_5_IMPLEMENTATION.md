@@ -133,6 +133,34 @@ Confirmed: **no** authentication rollout, confidential-data hosting, integration
 
 ---
 
+---
+
+## Host Runtime Verification (correction round — Return for Correction)
+
+**Product Owner disposition:** *Return for Correction — host runtime verification required.* The client seam is verified; the PHP/MySQL backend must be **executed**.
+
+**Authoring-environment finding (proven, not asserted):** this environment has **no PHP, no MySQL, no Docker/podman, no Homebrew, and no network to package registries** (`getcomposer.org` times out; only `github.com`/`api.github.com` are reachable). Therefore the PHP/MySQL runtime **cannot be established or executed here**, and — per the directive — I did **not** swap MySQL, weaken the architecture, or represent any unexecuted step as passed.
+
+**What I did instead — make the required verification turnkey and automated where a runtime exists:**
+- **`server/tests/PersistenceTest.php`** (PHPUnit) — runs against **real MySQL**: table creation, upsert/list/get/update, **optimistic-concurrency 409**, **idempotency**, **foreign-key rejection**, **transaction rollback**, **import dry-run/apply**, schema-mismatch rejection.
+- **`app/tests/remoteAdapter.e2e.test.ts`** — the **actual** `RemoteAdapter` (not the in-memory API) against the **running PHP/MySQL backend**, gated by `SCS_E2E_BASE`. Skips locally; runs in CI. Covers health, CRUD round-trip, optimistic concurrency, import/export, guarded reset.
+- **`.github/workflows/phase5-verify.yml`** — GitHub Actions job with a **MySQL 8 service** + **PHP 8.2**: PHP syntax, `composer`, migrations (+status), PHPUnit, boot backend, frontend typecheck/tests/build, then the **end-to-end RemoteAdapter↔real-backend** test. This executes every acceptance-threshold item on infrastructure that has the runtime.
+- **`server/docker-compose.yml`** + **`scripts/verify-phase5.sh`** — one-command local host verification (PHP 8.2 + MySQL 8) for a reviewer with Docker.
+
+**Executed vs. not (honest):**
+
+| Check | Executed here | Where it executes |
+| --- | --- | --- |
+| Frontend typecheck / unit tests / build | ✅ (39 pass; e2e 5 skipped) | local + CI |
+| Client RemoteAdapter parity (in-memory) | ✅ (7 pass) | local + CI |
+| PHP syntax (`php -l`) | ❌ no PHP | CI / host |
+| composer install, migrations, DB constraints | ❌ no PHP/MySQL | CI / host |
+| PHPUnit persistence / concurrency / idempotency / import / rollback | ❌ | CI / host |
+| E2E RemoteAdapter ↔ real PHP/MySQL | ❌ (skipped locally) | CI / host |
+| Nestify hosting capabilities | ❌ (no access) | host verification |
+
+**Product Owner decision required (genuine blocker):** executed PHP/MySQL runtime results cannot be produced in this sealed environment. Options: (a) let the pushed **CI workflow** run on GitHub and review its results/logs in the Actions tab; (b) run `scripts/verify-phase5.sh` (or `docker compose`) on a host with PHP 8.2 + MySQL 8; (c) provide me a runtime with those tools and network. Any of these yields the required evidence; I will fold the executed results into this same deliverable and resubmit. Per the STOP condition ("the required runtime cannot be established as written"), I am returning this decision rather than fabricating results.
+
 ## Readiness statement
 
 **SCS Phase 5 Backend Foundation & Persistence IS ready for Product Owner acceptance at the contract level** — the client-side seam and parity are fully verified, and the backend is complete and reviewable — **subject to host-side runtime verification** (PHP/MySQL execution, migration run, Nestify capabilities), which Phase 5 does not authorize deploying. The Product Owner may Approve, Approve with Conditions (e.g., require host runtime verification), Return for Correction, Reject, or Defer.

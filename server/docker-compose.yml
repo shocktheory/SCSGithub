@@ -1,0 +1,37 @@
+# Local host runtime verification for Phase 5 (dev/test only; synthetic data only).
+# Brings up MySQL 8 + a PHP 8.2 CLI container mounting the repo. Run `scripts/verify-phase5.sh`
+# (or the steps in server/README.md). Not for production.
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: scs_test
+    ports: [ "3306:3306" ]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  php:
+    image: php:8.2-cli
+    working_dir: /repo/server
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SCS_ENV: test
+      DB_DSN: "mysql:host=mysql;port=3306;dbname=scs_test;charset=utf8mb4"
+      DB_USER: root
+      DB_PASSWORD: root
+      RESET_TOKEN: CONFIRM-RESET
+    volumes:
+      - ..:/repo
+    command: >-
+      bash -lc "docker-php-ext-install pdo pdo_mysql >/dev/null 2>&1;
+      curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer;
+      composer update --no-interaction --no-progress;
+      php migrations/migrate.php;
+      vendor/bin/phpunit --colors=never;
+      php -S 0.0.0.0:8787 -t public"

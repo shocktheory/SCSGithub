@@ -275,9 +275,9 @@ const aiCollaborators: AICollaborator[] = [
     role: 'SCS architecture, design, implementation, testing, repository delivery, and technical documentation.',
     modelProvider: 'Claude (Anthropic)',
     authorityScope: 'Designs and builds SCS but is not SCS and holds no constitutional authority. May not approve.',
-    currentTask: 'Phase 5 — SCS Backend Foundation & Persistence implementation (RemoteAdapter + parity verified; PHP/MySQL backend written). Submitted ST-DLV-2026-006 for review.',
-    waitingState: 'Product Owner review (SCS Backend Foundation & Persistence Review)',
-    expectedNextAction: 'Await Product Owner disposition of the Phase 5 package.',
+    currentTask: 'Phase 5 correction — host runtime verification. Client seam verified; runtime-verification harness + CI added to execute the PHP/MySQL backend, migrations, persistence, and end-to-end parity where a runtime exists (no PHP/MySQL locally).',
+    waitingState: 'Awaiting executed runtime results (CI / capable host), then resubmission to the Backend Foundation & Persistence Review',
+    expectedNextAction: 'Obtain executed PHP/MySQL + e2e runtime results (CI or host) and resubmit the corrected package.',
     syncState: 'Synchronized',
     lastSynced: '2026-07-25',
     governingRecord: 'dec-0007',
@@ -462,6 +462,21 @@ const canonicalStatements: CanonicalStatement[] = [
 // Constitutional activity — only real, honest events. Cue's Phase-4 approval is
 // spec-stated but undated here, so its date is left empty rather than invented.
 const updates: Update[] = [
+  {
+    id: 'upd-scs-phase5-returned',
+    code: 'ST-REVIEW',
+    date: '2026-07-25',
+    summary: 'SCS Backend Foundation & Persistence Review — Returned for Correction (host runtime verification required). Valid work acknowledged; Phase 5 cannot be accepted until the PHP/MySQL backend, migrations, persistence, and end-to-end RemoteAdapter parity are executed against a real runtime. #SCS added a turnkey verification harness (PHPUnit backend tests, env-gated e2e vs a real backend, docker-compose, verify-phase5.sh, and a CI workflow that runs the full PHP 8.2 + MySQL 8 verification). The authoring environment has no PHP/MySQL/Docker/network; executed runtime results must come from CI or a capable host. Records preserved: assignment active, deliverable returned, gate open, identifiers Product-Owner-pending.',
+    source: 'Sonja (Product Owner) · #SCS',
+    scope: 'SCS',
+    affectedSystems: ['os-scs', 'prod-scs'],
+    decisionsCreated: [],
+    documentsUpdated: ['dlv-006', 'rgate-006'],
+    syncStatus: 'Returned for Correction — runtime verification pending (CI/host)',
+    authorityStatus: 'reported',
+    demonstration: false,
+    confidence: 'high',
+  },
   {
     id: 'upd-scs-phase5-start',
     code: 'ST-OS',

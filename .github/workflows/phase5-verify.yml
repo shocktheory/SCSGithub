@@ -1,0 +1,100 @@
+name: Phase 5 Runtime Verification
+
+# Executes the host runtime verification the Product Owner required (PHP 8.2 + MySQL 8):
+# PHP syntax, composer install, migrations, DB constraints, governed persistence, optimistic
+# concurrency, idempotency, import, transaction rollback, and END-TO-END RemoteAdapter <-> real
+# PHP/MySQL backend parity — plus the frontend typecheck/tests/build. Runs where a runtime exists
+# (GitHub runners), because the authoring environment has no PHP/MySQL/Docker/network.
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  runtime-verification:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: scs_test
+        ports: [ '3306:3306' ]
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    env:
+      SCS_ENV: test
+      DB_DSN: "mysql:host=127.0.0.1;port=3306;dbname=scs_test;charset=utf8mb4"
+      DB_USER: root
+      DB_PASSWORD: root
+      RESET_TOKEN: CONFIRM-RESET
+      DERIVATION_VERSION: "0.1.0"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo, pdo_mysql, mbstring
+          tools: composer
+
+      - name: PHP syntax check (all server files)
+        run: |
+          set -e
+          find server -name '*.php' -print0 | while IFS= read -r -d '' f; do php -l "$f"; done
+
+      - name: Composer install
+        working-directory: server
+        run: composer update --no-interaction --no-progress --prefer-dist
+
+      - name: Wait for MySQL
+        run: |
+          for i in $(seq 1 30); do
+            mysqladmin ping -h 127.0.0.1 -proot --silent && break || sleep 2;
+          done
+
+      - name: Run migrations (+ status)
+        working-directory: server
+        run: |
+          php migrations/migrate.php
+          php migrations/migrate.php status
+
+      - name: PHPUnit — persistence / concurrency / idempotency / import / rollback / constraints
+        working-directory: server
+        run: vendor/bin/phpunit --colors=never
+
+      - name: Boot backend
+        working-directory: server
+        run: |
+          php -S 127.0.0.1:8787 -t public > server.log 2>&1 &
+          for i in $(seq 1 20); do curl -sf http://127.0.0.1:8787/api/health && break || sleep 1; done
+          echo; curl -sf http://127.0.0.1:8787/api/health
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Frontend install
+        working-directory: app
+        run: npm ci
+
+      - name: Frontend typecheck + unit tests + build
+        working-directory: app
+        run: |
+          npx tsc -p tsconfig.app.json --noEmit
+          npx vitest run
+          npx vite build
+
+      - name: E2E — RemoteAdapter <-> real PHP/MySQL backend
+        working-directory: app
+        env:
+          SCS_E2E_BASE: http://127.0.0.1:8787
+        run: npx vitest run tests/remoteAdapter.e2e.test.ts
+
+      - name: Backend log (on failure)
+        if: failure()
+        run: cat server/server.log || true

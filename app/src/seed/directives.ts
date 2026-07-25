@@ -94,7 +94,7 @@ export const deliverables: Deliverable[] = [
   // Phase 4 deliverable — submitted for Product Owner review at the SCS Production Architecture Review gate.
   { id: 'dlv-005', deliverableId: 'ST-DLV-2026-005', title: 'SCS Production Architecture & Authorization Package (Rev 2 — corrected)', assignmentDirective: 'adr-006', reviewGate: 'rgate-005', status: 'Accepted (Product Owner) — authoritative production-architecture planning baseline', authorityStatus: 'approved', demonstration: false, notes: 'Accepted 2026-07-25 as the authoritative production-architecture planning baseline (PHASE_4_PRODUCTION_ARCHITECTURE.md + PHASE_4_CORRECTIONS_REV2.md). Acceptance of the architecture does NOT authorize production implementation; Phase 5 requires a separate Product Owner directive.' },
   // Phase 5 deliverable — submitted for the SCS Backend Foundation & Persistence Review gate.
-  { id: 'dlv-006', deliverableId: 'ST-DLV-2026-006', title: 'SCS Backend Foundation & Persistence Implementation Package', assignmentDirective: 'adr-007', reviewGate: 'rgate-006', status: 'In review — SCS Backend Foundation & Persistence Review', authorityStatus: 'reported', demonstration: false, notes: 'Client RemoteAdapter + parity harness (verified, 7 tests); Slim 4 PHP backend + MySQL schema/migrations + import tool (written; PHP/MySQL runtime is a host-verification item). See PHASE_5_IMPLEMENTATION.md. Dev/test only; no auth, no confidential data, no deployment.' },
+  { id: 'dlv-006', deliverableId: 'ST-DLV-2026-006', title: 'SCS Backend Foundation & Persistence Implementation Package', assignmentDirective: 'adr-007', reviewGate: 'rgate-006', status: 'Returned for Correction — host runtime verification required (not accepted)', authorityStatus: 'reported', demonstration: false, notes: 'Product Owner disposition: Return for Correction (host runtime verification required). Client seam verified (7 parity tests). Runtime-verification harness added — PHPUnit backend tests, env-gated e2e (real RemoteAdapter ↔ real PHP/MySQL), docker-compose, scripts/verify-phase5.sh, and CI workflow .github/workflows/phase5-verify.yml that executes the full PHP 8.2 + MySQL 8 verification on runners. The authoring environment has no PHP/MySQL/Docker/network, so executed runtime results must come from CI or a capable host. See PHASE_5_IMPLEMENTATION.md.' },
 ];
 
 export const reviewGates: Gate[] = [
@@ -107,7 +107,7 @@ export const reviewGates: Gate[] = [
   // NOT automatically authorize production implementation (separate ruling required).
   { id: 'rgate-005', name: 'SCS Production Architecture Review', requiresOwnerApproval: true, status: 'Approved — Phase 4 Production Architecture accepted (gate closed). Architecturally ready for Phase 5; Phase 5 implementation NOT authorized by this approval.', authorityStatus: 'approved', demonstration: false },
   // Phase 5 review gate. Product Owner authority. Acceptance of Phase 5 does not auto-authorize Phase 6.
-  { id: 'rgate-006', name: 'SCS Backend Foundation & Persistence Review', requiresOwnerApproval: true, status: 'Open — pending Product Owner review', authorityStatus: 'proposed', demonstration: false },
+  { id: 'rgate-006', name: 'SCS Backend Foundation & Persistence Review', requiresOwnerApproval: true, status: 'Open — Returned for Correction (host runtime verification required); not accepted, not closed', authorityStatus: 'proposed', demonstration: false },
 ];
 
 // ---- Operational History — activation events preserved independently ----

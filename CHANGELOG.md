@@ -3,6 +3,32 @@
 All notable changes to SCS are recorded here. Format loosely follows Keep a Changelog.
 Dates are absolute.
 
+## [0.1.0-scs-phase5-runtime-verification] — 2026-07-25
+
+**Phase 5 — Return for Correction: host runtime verification harness.** The Product Owner returned
+Phase 5 requiring the PHP/MySQL backend to be **executed** (not just written). The authoring
+environment is sealed — **no PHP, MySQL, Docker, or package-registry network** — so the runtime
+cannot be executed here; I did not fake results or swap MySQL. Instead I made the verification
+**turnkey and automated where a runtime exists**, and preserved the returned records.
+
+### Added (verification harness)
+- **`server/tests/PersistenceTest.php`** — PHPUnit against real MySQL: table creation, upsert/get/
+  update, **optimistic-concurrency 409**, **idempotency**, **FK rejection**, **transaction rollback**,
+  **import dry-run/apply**, schema-mismatch rejection.
+- **`app/tests/remoteAdapter.e2e.test.ts`** — the **real** RemoteAdapter ↔ **real** PHP/MySQL backend
+  (gated by `SCS_E2E_BASE`; skips locally, runs in CI).
+- **`.github/workflows/phase5-verify.yml`** — MySQL 8 service + PHP 8.2: syntax, composer, migrations,
+  PHPUnit, boot backend, frontend typecheck/tests/build, then end-to-end parity. Executes every
+  acceptance-threshold item on runners that have the runtime.
+- **`server/docker-compose.yml`** + **`scripts/verify-phase5.sh`** — one-command local host verification.
+- **`server/phpunit.xml`**; `PHASE_5_IMPLEMENTATION.md` gains a Host Runtime Verification section with
+  an honest executed-vs-not table and the Product Owner decision.
+
+### Records preserved (per directive §2)
+- Deliverable **ST-DLV-2026-006** → *Returned for Correction (host runtime verification required)*;
+  gate **open**; assignment **active**; identifiers **Product-Owner-pending**. Nothing closed/accepted.
+- Local: typecheck clean · **39 pass + 5 e2e skipped** · build succeeds.
+
 ## [0.1.0-scs-phase5-backend] — 2026-07-25
 
 **Phase 5 — Backend Foundation & Persistence (narrow, dev/test only).** First bounded
