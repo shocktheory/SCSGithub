@@ -1,6 +1,6 @@
 # SCS Phase 8 Implementation — Constitutional Observability (Technical Audit · Evidence · Governance Visibility · Administration)
 
-**Status:** Proposed — submitted to the **Phase 8 Implementation Review** gate. **#SCS does not self-accept.**
+**Status:** **Accepted** — Product Owner disposition of the Phase 8 Implementation Review: *Implemented, Verified & Accepted* (2026-07-25). ST-DLV-2026-014 accepted; rgate-014 closed Approved; adr-015 closed. Accepted revision commit `7eb4f3f` (`759cc26` preserved as documented remediation). Does **not** authorize Phase 9, confidential data, hosting, deployment, or launch.
 **Authority:** Product Owner Implementation Authorization Directive — *Authorize Phase 8 Implementation* (2026-07-25), within the accepted Phase 8 Authorization Package and the five permanent constitutional doctrines (Authentication & Authority · Constitutional Derivation · Governed Command · Constitutional Evidence · Constitutional Observability Principles).
 **Runtime verification:** GitHub Actions (real PHP 8.2 + MySQL 8) — migrations 0001–0004, PHPUnit (persistence, auth, derivation, commands, **observability**), backend boot, and the **constitutional-observability e2e**. See the commit's CI run.
 
