@@ -22,6 +22,7 @@ import { DeliverablesPage } from '../features/deliverables/DeliverablesPage';
 import { ReviewGatesPage } from '../features/gates/ReviewGatesPage';
 import { OperationalHistoryPage } from '../features/history/OperationalHistoryPage';
 import { GovernanceDashboardPage } from '../features/governance/GovernanceDashboardPage';
+import { OperationalDashboardPage } from '../features/operations/OperationalDashboardPage';
 import { SettingsPage } from '../features/settings/SettingsPage';
 import { PlaceholderPage } from '../features/PlaceholderPage';
 
@@ -65,6 +66,7 @@ export function App() {
             <Route path="/review-gates" element={<ReviewGatesPage />} />
             <Route path="/operational-history" element={<OperationalHistoryPage />} />
             <Route path="/governance" element={<GovernanceDashboardPage />} />
+            <Route path="/operations" element={<OperationalDashboardPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             {NAV.filter((n) => n.status !== 'live').map((n) => (
               <Route key={n.path} path={n.path} element={<PlaceholderPage item={n} />} />

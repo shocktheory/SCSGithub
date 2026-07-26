@@ -116,6 +116,12 @@ jobs:
           SCS_E2E_BASE: http://127.0.0.1:8787
         run: npx vitest run tests/observability.e2e.test.ts
 
+      - name: E2E — Constitutional operational awareness (Phase 9 notifications/workflows/queues)
+        working-directory: app
+        env:
+          SCS_E2E_BASE: http://127.0.0.1:8787
+        run: npx vitest run tests/operations.e2e.test.ts
+
       - name: Backend log (on failure)
         if: failure()
         run: cat server/server.log || true

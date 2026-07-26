@@ -1,7 +1,7 @@
 import {
   Home, ClipboardList, Network, Scale, Landmark, ClipboardCheck, FolderTree, Quote,
   Package, BookOpen, Users, UserPlus, PackageCheck, DoorOpen, Activity, Target, AlertTriangle, Settings,
-  Eye,
+  Eye, Bell,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -63,6 +63,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { path: '/review-gates', label: 'Review Gates', icon: DoorOpen, status: 'live' },
       { path: '/operational-history', label: 'Operational History', icon: Activity, status: 'live' },
       { path: '/governance', label: 'Governance Dashboard', icon: Eye, status: 'live', phase: 8, badge: 'Phase 8', badgeTip: 'Phase 8 — derived, read-only constitutional governance visibility.' },
+      { path: '/operations', label: 'Operational Dashboard', icon: Bell, status: 'live', phase: 9, badge: 'Phase 9', badgeTip: 'Phase 9 — derived, read-only operational awareness (notifications, queues, escalation). Never approves; distinct from the Governance Dashboard.' },
       { path: '/benchmarks', label: 'Benchmarks', icon: Target, ...planned(3, 'The registry of governing quality standards — what each benchmark governs and does not.') } as NavItem,
       { path: '/risks', label: 'Risks & Divergence', icon: AlertTriangle, ...planned(3, 'Governed risks — drift, conflicting authority, missing decisions — with evidence and correction.') } as NavItem,
     ],

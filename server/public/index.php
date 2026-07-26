@@ -30,6 +30,8 @@ use Scs\Http;
 use Scs\Derivation;
 use Scs\VersionException;
 use Scs\Audit;
+use Scs\Operations;
+use Scs\Notifications;
 
 $config = Config::fromEnv();
 if ($config->env === 'production') {
@@ -46,6 +48,8 @@ $audit = new Audit($db); // Phase 8: Technical Audit Log (observes governed acti
 $cmd  = new Commands($repo, $auth, $audit);
 $import = new Importer($repo, $config);
 $derive = new Derivation(); // Phase 7: canonical derivation engine (owns its derivation_version)
+$ops = new Operations();          // Phase 9: operational awareness (derived, read-only; never authority)
+$notify = new Notifications($db); // Phase 9: Notification History (append-only, distinct stream)
 
 /** Load the authoritative collections needed for constitutional derivation (records only). */
 $loadCollections = static function () use ($repo): array {
@@ -183,6 +187,37 @@ $app->get('/api/audit', fn(Request $r, Response $s) =>
 /** Independent audit-integrity verification (recomputes the hash-chain). */
 $app->get('/api/audit/verify', fn(Request $r, Response $s) =>
     Http::json($s, ['source' => 'server'] + $audit->verifyIntegrity()));
+
+// ===== Phase 9: Constitutional Operational Awareness =======================================
+// Operational awareness is DERIVED and READ-ONLY. Notifications/workflows/queues/escalation never
+// create constitutional authority and never modify constitutional state. Notification History is a
+// third stream, distinct from the Technical Audit Log and Operational History.
+
+/** Operational awareness — derived, read-only. Optional `asOf` (explicit time; never wall clock). */
+$app->get('/api/derived/operations', function (Request $r, Response $s) use ($ops, $loadCollections) {
+    $asOf = $r->getQueryParams()['asOf'] ?? null;
+    return Http::json($s, ['view' => 'operations'] + $ops->derive($loadCollections(), is_string($asOf) ? $asOf : null));
+});
+
+/**
+ * Generate (surface) notifications: derive from constitutional state and APPEND newly-surfaced ones
+ * to Notification History (de-duplicated). This records what was surfaced; it changes NO governed
+ * record and grants NO authority. Returns the derived notifications + how many were newly recorded.
+ */
+$app->post('/api/notifications/generate', function (Request $r, Response $s) use ($ops, $notify, $loadCollections, $reqId) {
+    $b = (array)$r->getParsedBody();
+    $asOf = is_string($b['asOf'] ?? null) ? $b['asOf'] : null;
+    $model = $ops->derive($loadCollections(), $asOf);
+    $recorded = 0;
+    foreach ($model['notifications'] as $n) {
+        if ($notify->record($n, $reqId($r))) $recorded++;
+    }
+    return Http::json($s, ['source' => 'server', 'derived' => count($model['notifications']), 'newlyRecorded' => $recorded, 'notifications' => $model['notifications']]);
+});
+
+/** Notification History — append-only operational stream (read-only). */
+$app->get('/api/notifications', fn(Request $r, Response $s) =>
+    Http::json($s, ['source' => 'server', 'count' => $notify->count(), 'notifications' => $notify->list(500)]));
 
 /** Generic derivation seam (fallback). Specific views are registered above (static-before-variable). */
 $app->get('/api/derived/{view}', fn(Request $r, Response $s, array $a) =>
