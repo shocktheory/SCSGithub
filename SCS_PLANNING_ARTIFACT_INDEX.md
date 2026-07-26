@@ -5,6 +5,7 @@
 **Directive:** Product Owner Governance Enhancement Directive — *Establish the SCS Planning Artifact Index as the Authoritative Registry of Accepted Planning Documentation*
 **Prepared by:** #SCS (governed implementation steward)
 **Disposition:** **Accepted** (Product Owner, 2026-07-26; rgate-020 Accepted & closed) — the **permanent authoritative registry** of governed planning documentation within the SCS Constitutional Governance Framework. The four-part structure (Main Registry + Appendices A/B/C) is the approved governing organization unless superseded by a future Product Owner directive. Future Product Owner reviews reference this registry before accepting new planning artifacts, and **no accepted planning artifact shall exist outside the registry**.
+**Operational status:** **Operational — standing governance requirement** (Product Owner Governance Establishment Directive, 2026-07-26; adr-022 / rgate-021). The Index is no longer a one-time deliverable: it is a continuously maintained governance registry. See **§0.1 Standing Operational Requirement & Maintenance Protocol**.
 **Date:** 2026-07-26
 
 ---
@@ -32,6 +33,30 @@ Governed **planning** documentation: production-architecture and baseline docume
 
 ### Governance rule (living document)
 Whenever a planning artifact is **created, accepted, revised, superseded, withdrawn, or archived**, this Index is updated **as part of the same governance workflow**. Canonical identifiers (ST-ADR / ST-DLV / ST-OPH / Baseline) remain Product-Owner-pending; recommended identifiers are placeholders until the Product Owner originates them.
+
+---
+
+## 0.1 Standing Operational Requirement & Maintenance Protocol
+
+*Established by the Product Owner Governance Establishment Directive — "Establish the SCS Planning Artifact Index as an Operational Governance Requirement" (2026-07-26). Effective immediately; operates as a permanent governance component until superseded by a future Product Owner directive.*
+
+**Standing operational requirement.** No governed planning artifact may exist outside this Index. Whenever a planning artifact is **created · revised · submitted for review · accepted · superseded · withdrawn · archived**, this Index is updated **as part of the same governance workflow** — **no separate directive is required** to perform the update.
+
+**Registry authority.** This Index is the authoritative source for determining: accepted planning artifacts · planning status · governing review gates · governing relationships · supersession history · implementation applicability · planning dependencies. Future Product Owner planning reviews reference this Index before accepting new planning documentation.
+
+**Maintenance protocol — required fields for every future planning artifact.** Each future governed planning artifact shall automatically carry, and be entered in this Index with:
+1. **Planning Artifact Identifier** (PAI-NNN in this Index; deliverable ST-DLV where applicable);
+2. **Registry entry** (a row in §1 and a detailed entry in §2);
+3. **Dependency relationships** (prerequisite / related / superseded / successor);
+4. **Governing review gate** (rgate-NNN);
+5. **Implementation applicability** (Future Use classification);
+6. **Supersession status** where applicable.
+
+**Governance classification (unchanged).** The Index remains a governance registry · a planning-management artifact · a traceability mechanism. It remains **not** a constitutional doctrine · **not** an implementation artifact · **not** an operational record · **not** implementation authority.
+
+**Relationship to existing governance.** The Index **complements but does not replace** Constitutional Doctrines · Operational History · Activity Log · Decision Records · Review Gates · Deliverables · Assignments — each retains its existing constitutional role.
+
+**Operational governance capabilities (Product-Owner-recognized).** Constitutional Governance · Planning Governance · **Planning Registry** · Review Gate Governance · Deliverable Governance · Assignment Governance · Operational History · Decision Traceability are **operational**. **Implementation Governance remains separately gated.**
 
 ---
 
