@@ -38,6 +38,10 @@ final class OperationsTest extends TestCase
         $this->repo->resetAll();
         $this->db->pdo()->exec('DELETE FROM notification_history');
         $this->db->pdo()->exec('DELETE FROM audit_log');
+        // Assignment Directives carry a hard FK (agent -> ai_collaborators.id); seed the referenced
+        // agents before any directive is created.
+        $this->repo->upsert('aiCollaborators', ['id' => 'ai-x', 'name' => '#X']);
+        $this->repo->upsert('aiCollaborators', ['id' => 'ai-y', 'name' => '#Y']);
         $this->ops = new Operations();
         $this->notify = new Notifications($this->db);
     }
