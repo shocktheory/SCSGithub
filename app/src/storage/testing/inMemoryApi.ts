@@ -19,7 +19,7 @@ export const COLLECTION_NAMES: CollectionName[] = [
   'canonicalStatements', 'canonicalConcepts', 'aiCollaborators', 'assignments', 'benchmarks',
   'risks', 'updates', 'artifacts', 'reviewItems', 'nextActions', 'relationships',
   'standingDirectives', 'assignmentDirectives', 'deliverables', 'operationalHistory',
-  'teams', 'teamMemberships',
+  'teams', 'teamMemberships', 'evidence',
 ];
 
 type Stored = { record: { id: string } & Record<string, unknown>; version: number; archived?: boolean };
