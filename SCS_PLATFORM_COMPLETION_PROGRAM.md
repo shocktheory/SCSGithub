@@ -1,6 +1,6 @@
 # SCS Platform Completion Program (Rev 2)
 
-**Status:** Accepted (Rev 2) — governing completion roadmap (approved by Product Owner, commit `b6c9305`). **Completion Register updated 2026-07-25** to reflect Product-Owner acceptance of Phase 6 (Identity, Authority: Roles & Permissions, Trust attribution); estimate recomputed ≈ 25% → ≈ 40% using the approved domain weighting (§9). Roadmap structure, domains, weights, and governance model are unchanged — only Register statuses and the roll-up were recalculated, as directed.
+**Status:** Accepted (Rev 2) — governing completion roadmap (approved by Product Owner, commit `b6c9305`). **Completion Register updated 2026-07-25** to reflect Product-Owner acceptance of Phase 6 (Identity, Authority: Roles & Permissions, Trust attribution) and Phase 7 (Authority: Server-Side Authority & Derivation — completing the Authority domain); estimate recomputed ≈ 25% → ≈ 40% → ≈ 50% using the approved domain weighting (§9). Roadmap structure, domains, weights, and governance model are unchanged — only Register statuses and the roll-up were recalculated, as directed.
 **Authority:** Product Owner Platform Completion Mandate (2026-07-25) + Product Owner Rev 2 Acceptance (2026-07-25) + Product Owner Phase 6 Implementation Disposition — *Accepted* (2026-07-25, Register-update instruction).
 **Baseline of record:** SCS Production Baseline v1.0 (accepted; commit `a1b3a29`) — **not altered**.
 **Prepared by:** #SCS (implementation; no constitutional authority — acceptance is a Product Owner act).
@@ -30,7 +30,7 @@ The prior strong sections (executive summary, completion definition, phase gover
 
 SCS is fundamentally a **governance platform**: it exists to record, govern, derive, and present authoritative constitutional and product state — with a software substrate underneath. It has an accepted foundation (Phases 0–5 + Production Baseline v1.0): a proven local/remote persistence seam, a runtime-verified Slim 4 + MySQL backend, governed commands, optimistic concurrency, import tooling, and a full governance model. **This is a foundation, not a finished platform.**
 
-Completion is now a **binding requirement**: SCS must become **secure, operational, and production-ready** for authorized ShockTheory use — and it must define **how it evolves** thereafter. This program defines completion as a **capability hierarchy across ten platform domains**, sequences it through **narrow, independently-gated Phases 6–12**, tracks it in a **capability-based Completion Register**, and estimates current progress at **≈ 40% accepted** (capability-weighted; recomputed after Phase 6 acceptance on 2026-07-25 — see §9). Phase governance is preserved end to end.
+Completion is now a **binding requirement**: SCS must become **secure, operational, and production-ready** for authorized ShockTheory use — and it must define **how it evolves** thereafter. This program defines completion as a **capability hierarchy across ten platform domains**, sequences it through **narrow, independently-gated Phases 6–12**, tracks it in a **capability-based Completion Register**, and estimates current progress at **≈ 50% accepted** (capability-weighted governance measure — not a production-readiness claim; recomputed after Phase 7 acceptance on 2026-07-25 — see §9). Phase governance is preserved end to end.
 
 ---
 
@@ -97,7 +97,7 @@ The **SCS Completion Program** is authorized for planning; it does **not** elimi
 | Phase | Name | Domains / capabilities advanced |
 | --- | --- | --- |
 | **6** ✅ *Accepted 2026-07-25* | Authentication, Roles & Permissions | Identity (Authentication & Identity Lifecycle); Authority (Roles & Permissions); Trust (attribution seam); Quality (authz/negative tests) — **Implemented, Verified & Accepted** |
-| **7** | Server-Side Derivation & Authority Completion | Authority (Server-Side Authority & Derivation); Platform Architecture (API governance, versioning) begins |
+| **7** ✅ *Accepted 2026-07-25* | Server-Side Derivation & Authority Completion | Authority (Server-Side Authority & Derivation); Platform Architecture (version governance) begins — **Implemented, Verified & Accepted** |
 | **8** | Audit, Operational History & Administrative Controls | Trust (Platform Trust); Governance (Governed Product Operations completion); Operations (Administration) |
 | **9** | Notifications & Operational Workflows | Operations (Notifications & Work Awareness) |
 | **10** | Hosting, Security & Production Operations | Operations (Hosting & Deployment, Operational Readiness); Security; Reliability (exercised recovery); Platform Architecture (evolution policy) |
@@ -114,22 +114,22 @@ Statuses: **NS** Not Started · **Partial** · **Acc** Accepted (Implemented + V
 
 | Domain | Capability | Status | Verification evidence (executed) |
 | --- | --- | --- | --- |
-| Governance | Governed Product Operations | **Partial** (records/gates/dispositions/OpHistory Accepted; governed `upsert` **and** `approve` command + server-side authorization boundary now Accepted; admin operational workflows = Phase 8) | governance records; CI; Phase 6 CI (30d4216) |
+| Governance | Governed Product Operations | **Partial** (records/gates/dispositions/OpHistory Accepted; the **complete governed command vocabulary** — propose…retire — on a server-validated state machine now Accepted (Phase 7); admin operational workflows = Phase 8) | governance records; CI; Phase 7 CI (a8ac4eb) |
 | Governance | Phase & Program Governance | **Acc** | every phase gated + Product-Owner-disposed |
 | Identity | Authentication & Identity Lifecycle | **Acc** (Phase 6, dev/test runtime-verified) — Argon2id, server-managed sessions, PO MFA, rotation/revocation/expiry/recovery/lockout, actor identification, auth-event evidence; production operationalization pending hosting | Phase 6 CI (30d4216): AuthTest ×13, auth e2e ×3 |
 | Authority | Roles & Permissions | **Acc** (Phase 6, dev/test runtime-verified) — role/permission matrix, authorization middleware, PO-only `approve` (fresh MFA), agents propose-only, admins cannot set authority, denied-action handling, permission tests | Phase 6 CI (30d4216): AuthTest + auth e2e negative scenarios |
-| Authority | Server-Side Authority & Derivation | **Partial** (seam + governed-command authority boundary Accepted; full canonical server-side derivation = Phase 7) | `/api/derived` seam; version stamp; Phase 6 approval boundary |
+| Authority | Server-Side Authority & Derivation | **Acc** (Phase 7, dev/test runtime-verified) — canonical server-side derivation engine (deterministic/reproducible/explainable/versioned), authoritative-record inputs, non-authoritative client state, complete governed commands, prohibited generic authority mutation, deterministic-output + client/server parity tests; production operationalization pending hosting | Phase 7 CI (a8ac4eb): DerivationTest, CommandTest, derivation parity e2e |
 | Trust | Platform Trust | **Partial** (OpHistory + provenance + **authenticated attribution seam & approval integrity** now Accepted; full Technical Audit Log + retention/accountability = Phase 8) | OpHistory records; `mutation_attributions`/`auth_events`; Phase 6 CI |
 | Operations | Administration & Governed Configuration | **NS** | — |
 | Operations | Notifications & Work Awareness | **NS** | — |
 | Operations | Operational Readiness | **NS** | — |
 | Operations | Hosting & Deployment | **NS** (Nestify unverified) | — |
 | Security | Security & Confidential-Data Readiness | **Partial** (parameterized DB access, input validation, refuses production env; Phase 6 session/credential security — Argon2id, HttpOnly/Secure/SameSite cookies, CSRF, lockout — Accepted; confidential-data-at-rest/key-management NS) | server code; CI; Phase 6 CI |
-| Reliability | Reliability & Recovery | **Partial** (integrity/concurrency/idempotency/health verified; exercised DR/restore NS) | CI PHPUnit + e2e (run 30168236724) |
-| Platform Architecture | Platform Architecture Completion | **NS** | — |
+| Reliability | Reliability & Recovery | **Partial** (integrity/concurrency/idempotency/health + Phase 7 determinism/replay/reproducibility/drift verified; exercised DR/restore NS) | CI PHPUnit + e2e; Phase 7 replay/drift |
+| Platform Architecture | Platform Architecture Completion | **Partial** (Phase 7: independent derivation_version/schema_version governance + compatibility begun; full API governance/extensibility/evolution NS) | Phase 7 version governance + compatibility tests |
 | Platform Evolution | Platform Evolution Governance | **NS** | — |
 | Launch | Production Launch & Operational Acceptance | **NS** | — |
-| *(cross-cut)* | Quality & Verification | **Partial** (frontend/backend/e2e/migration/runtime green; **authz/negative-path mandatory regression tests now Accepted** — Phase 6; perf/a11y/UAT NS) | CI green (2ae3a64); Phase 6 CI (30d4216) |
+| *(cross-cut)* | Quality & Verification | **Partial** (frontend/backend/e2e/migration/runtime green; authz/negative-path regressions — Phase 6; **Phase 7 determinism/replay/parity/transition/drift regressions now Accepted**; perf/a11y/UAT NS) | CI green; Phase 7 CI (a8ac4eb) |
 | *(cross-cut)* | Operational Documentation | **Partial** (architecture/data-model/setup/baseline exist; runbooks NS) | Phase 4/5 docs; baseline |
 
 ---
@@ -146,33 +146,33 @@ Statuses: **NS** Not Started · **Partial** · **Acc** Accepted (Implemented + V
 
 **Domain weights (sum 100, governance-first):** Governance 12 · Identity 10 · Authority 12 · Trust 8 · Operations 12 · Security 8 · Reliability 8 · Platform Architecture 6 · Platform Evolution 6 · Launch 4 · Quality & Verification 8 · Operational Documentation 6.
 
-**Current accepted estimate ≈ 40%** (capability-weighted), recomputed from the Register after **Phase 6 (Identity, Authority: Roles & Permissions, Trust attribution) was Product-Owner-Accepted (2026-07-25)**. The prior figure was ≈ 25%; the increase is Phase 6 crossing the acceptance bar for an entire domain (Identity) plus a capability of Authority, and lifting Trust/Security/Quality.
+**Current accepted estimate ≈ 50%** (capability-weighted), recomputed from the Register after **Phase 7 (Server-Side Constitutional Derivation & Canonical State Authority) was Product-Owner-Accepted (2026-07-25)**. The prior figure was ≈ 40%; the increase is Phase 7 crossing the acceptance bar for the **second and final Authority capability** (Server-Side Authority & Derivation) — completing the Authority domain — plus lifting Governance (complete governed command architecture), Quality (determinism/replay/parity/drift regressions), Reliability (replay/reproducibility), and beginning Platform Architecture (version governance).
 
 **Domain roll-up (weight × accepted-requirement fraction):**
 
 | Domain | Weight | Accepted fraction | Credit |
 | --- | --- | --- | --- |
-| Governance | 12 | ~0.80 (operations records/gates/dispositions + governed `upsert`/`approve`/authz boundary; admin workflows Phase 8) | ~9.6 |
+| Governance | 12 | ~0.85 (records/gates/dispositions + complete governed command architecture; admin workflows Phase 8) | ~10.2 |
 | Identity | 10 | ~0.90 (full lifecycle accepted dev/test; production operationalization + client login UI pending) | ~9.0 |
-| Authority | 12 | ~0.52 (Roles & Permissions accepted; Server-Side Derivation Phase 7 seam only) | ~6.2 |
-| Trust | 8 | ~0.60 (attribution + approval integrity + OpHistory accepted; Technical Audit Log/retention Phase 8) | ~4.8 |
+| Authority | 12 | ~0.95 (BOTH capabilities accepted — Roles & Permissions + Server-Side Authority & Derivation; production operationalization pending) | ~11.4 |
+| Trust | 8 | ~0.62 (attribution + approval integrity + OpHistory accepted; Technical Audit Log/retention Phase 8) | ~5.0 |
 | Operations | 12 | ~0.02 (Not Started) | ~0.2 |
 | Security | 8 | ~0.30 (session/credential security accepted; confidential-data readiness NS) | ~2.4 |
-| Reliability | 8 | ~0.40 (integrity/concurrency/idempotency/health; recovery not exercised) | ~3.2 |
-| Platform Architecture | 6 | 0 | 0 |
+| Reliability | 8 | ~0.50 (integrity/concurrency/idempotency/health + determinism/replay/reproducibility/drift; exercised DR/restore NS) | ~4.0 |
+| Platform Architecture | 6 | ~0.15 (independent version governance + compatibility begun; API governance/extensibility/evolution NS) | ~0.9 |
 | Platform Evolution | 6 | 0 | 0 |
 | Launch | 4 | 0 | 0 |
-| Quality & Verification | 8 | ~0.50 (foundation + authz/negative regression tests; perf/a11y/UAT NS) | ~4.0 |
-| Operational Documentation | 6 | ~0.30 (architecture/data-model/baseline/Phase 6 docs; runbooks NS) | ~1.8 |
-| **Total** | **100** | | **≈ 41 → reported ≈ 40%** |
+| Quality & Verification | 8 | ~0.58 (foundation + authz/negative + determinism/replay/parity/drift regressions; perf/a11y/UAT NS) | ~4.6 |
+| Operational Documentation | 6 | ~0.30 (architecture/data-model/baseline/Phase 6–7 docs; runbooks NS) | ~1.8 |
+| **Total** | **100** | | **≈ 49.5 → reported ≈ 50%** |
 
-**Limitations (no fabricated precision):** an order-of-magnitude planning figure, sensitive to the Product-Owner-approvable weights and to per-capability accepted-fraction judgment, measuring *accepted capability requirements against the completion definition* — not effort or calendar. "Accepted (dev/test)" is not "operationalized in production"; the completion definition still requires operationalization, which no capability has yet reached. Recomputed from the Register as capabilities are accepted.
+**Limitations (no fabricated precision):** an order-of-magnitude **governance** planning figure — **not a production-readiness claim** — sensitive to the Product-Owner-approvable weights and to per-capability accepted-fraction judgment, measuring *accepted capability requirements against the completion definition* — not effort or calendar. "Accepted (dev/test)" is not "operationalized in production"; the completion definition still requires operationalization, which no capability has yet reached. Recomputed from the Register as capabilities are accepted.
 
 ---
 
 ## 10. Current-State Reconciliation (Baseline v1.0 vs completion definition)
 
-*Forward-looking; the accepted baseline is not altered.* **Accepted:** governance model, persistence foundation, adapter parity, governed upsert, concurrency, idempotency, bounded import, client derivation, CI runtime verification, **Identity (Authentication & Identity Lifecycle — Phase 6)**, **Authority: Roles & Permissions + server-side approval boundary (Phase 6)** — the last three dev/test-verified and Product-Owner-Accepted 2026-07-25, production operationalization pending. **Partial:** server-side derivation (seam + authority boundary; full derivation Phase 7), Trust (OpHistory/provenance + authenticated attribution & approval integrity accepted; Technical Audit Log Phase 8), Security (parameterized access/validation + session/credential security accepted; confidential-data readiness NS), Reliability (properties verified; recovery not exercised), Quality (foundation + authz/negative regression matrix; perf/a11y/UAT NS), Documentation (specs + Phase 6 doc, not runbooks). **Absent:** full Server-Side Derivation, Platform Trust/Technical Audit, Notifications, Administration, Operational Readiness, Hosting, confidential-data Security, Platform Architecture governance, Platform Evolution governance, Launch. **Blocked/decision-gated:** Nestify verification, hosting selection, confidential-data authorization, Phase 7 authorization. **Ready after authorization:** Phase 7.
+*Forward-looking; the accepted baseline is not altered.* **Accepted:** governance model, persistence foundation, adapter parity, governed commands (full vocabulary propose…retire), concurrency, idempotency, bounded import, CI runtime verification, **Identity (Authentication & Identity Lifecycle — Phase 6)**, **Authority: Roles & Permissions (Phase 6)**, **Authority: Server-Side Constitutional Derivation & Canonical State Authority (Phase 7)** — the Authority domain is now complete (dev/test-verified, Product-Owner-Accepted 2026-07-25; production operationalization pending). **Partial:** Trust (OpHistory/provenance + authenticated attribution & approval integrity accepted; Technical Audit Log Phase 8), Security (parameterized access/validation + session/credential security accepted; confidential-data readiness NS), Reliability (properties + determinism/replay/reproducibility/drift verified; recovery not exercised), Platform Architecture (version governance begun; API governance/extensibility/evolution NS), Quality (foundation + authz/negative + determinism/replay/parity/drift regressions; perf/a11y/UAT NS), Documentation (specs + Phase 6–7 docs, not runbooks). **Absent:** Platform Trust/Technical Audit, Notifications, Administration, Operational Readiness, Hosting, confidential-data Security, full Platform Architecture governance, Platform Evolution governance, Launch. **Blocked/decision-gated:** Nestify verification, hosting selection, confidential-data authorization, Phase 8 authorization. **Ready after authorization:** Phase 8.
 
 ---
 
