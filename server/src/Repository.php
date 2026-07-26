@@ -161,8 +161,16 @@ final class Repository
 
     public function resetAll(): void
     {
+        // Dev/test only. Wipe every collection table. FK checks are disabled for the wipe so the
+        // delete order across hard-FK tables (e.g. assignment_directives -> ai_collaborators) cannot
+        // cause a constraint error; they are restored immediately afterward.
         $this->db->transaction(function (PDO $pdo) {
-            foreach (Http::COLLECTIONS as $c) $pdo->exec("DELETE FROM `{$this->table($c)}`");
+            $pdo->exec('SET FOREIGN_KEY_CHECKS=0');
+            try {
+                foreach (Http::COLLECTIONS as $c) $pdo->exec("DELETE FROM `{$this->table($c)}`");
+            } finally {
+                $pdo->exec('SET FOREIGN_KEY_CHECKS=1');
+            }
         });
     }
 
