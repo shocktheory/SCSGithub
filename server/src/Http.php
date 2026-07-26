@@ -10,13 +10,13 @@ use Throwable;
 /** JSON helpers, collection allow-list, and structured error handling. */
 final class Http
 {
-    /** The 23 governed collections (mirrors the client CollectionName / server tables). */
+    /** Governed collections (mirrors the client CollectionName / server tables). Phase 8 adds `evidence`. */
     public const COLLECTIONS = [
         'osSystems','products','publications','publicationPhases','gates','decisions',
         'canonicalStatements','canonicalConcepts','aiCollaborators','assignments','benchmarks',
         'risks','updates','artifacts','reviewItems','nextActions','relationships',
         'standingDirectives','assignmentDirectives','deliverables','operationalHistory',
-        'teams','teamMemberships',
+        'teams','teamMemberships','evidence',
     ];
 
     public static function json(Response $response, mixed $data, int $status = null): Response

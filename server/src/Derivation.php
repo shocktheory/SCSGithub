@@ -305,4 +305,67 @@ final class Derivation
             ],
         ];
     }
+
+    // ===== Governance Visibility (Phase 8) — derived, READ-ONLY governance status ==============
+
+    /**
+     * Derive the governance-visibility model from authoritative records. This is observation only:
+     * it computes review/approval/implementation/acceptance/readiness status and constitutional
+     * health, and NEVER mutates state (Constitutional Observability Principles).
+     *
+     * @param array<string,array<int,array<string,mixed>>> $c
+     * @return array<string,mixed>
+     */
+    public function deriveGovernance(array $c): array
+    {
+        $gates = $c['gates'] ?? [];
+        $deliverables = $c['deliverables'] ?? [];
+        $decisions = $c['decisions'] ?? [];
+        $directives = $c['assignmentDirectives'] ?? [];
+        $ophistory = $c['operationalHistory'] ?? [];
+        $evidence = $c['evidence'] ?? [];
+
+        $matches = static fn(string $s, string $re): bool => (bool)preg_match($re, $s);
+        $statusOf = static fn(array $r): string => (string)($r['status'] ?? '');
+
+        // Review status — gates open vs closed/approved.
+        $gatesOpen = array_values(array_filter($gates, static fn($g) => $matches($statusOf($g), '/open|pending/i')));
+        $gatesClosed = array_values(array_filter($gates, static fn($g) => $matches($statusOf($g), '/closed|approved/i')));
+
+        // Approval / acceptance status — deliverables in review vs accepted.
+        $dlvInReview = array_values(array_filter($deliverables, static fn($d) => $matches($statusOf($d), '/in review|proposed|pending/i')));
+        $dlvAccepted = array_values(array_filter($deliverables, static fn($d) => $matches($statusOf($d), '/accepted/i')));
+
+        // Decision status.
+        $decApproved = array_values(array_filter($decisions, static fn($d) => ($d['authorityStatus'] ?? null) === 'approved' || $matches((string)($d['status'] ?? ''), '/approved/i')));
+
+        // Directive (implementation) status.
+        $dirActive = array_values(array_filter($directives, static fn($d) => $matches($statusOf($d), '/active/i')));
+        $dirClosed = array_values(array_filter($directives, static fn($d) => $matches($statusOf($d), '/closed/i')));
+
+        // Constitutional health — contradictions from the team derivation.
+        $team = $this->deriveTeam($c);
+        $contradictions = $team['metrics']['contradictions'] ?? 0;
+
+        // Evidence readiness (Phase 8) — accepted (immutable) vs pending.
+        $evAccepted = array_values(array_filter($evidence, static fn($e) => !empty($e['acceptance'])));
+
+        return [
+            'reviewQueue'    => ['open' => count($gatesOpen), 'closed' => count($gatesClosed), 'openGates' => array_map(static fn($g) => $g['name'] ?? $g['id'] ?? '', $gatesOpen)],
+            'approvalQueue'  => ['deliverablesInReview' => count($dlvInReview), 'items' => array_map(static fn($d) => $d['deliverableId'] ?? $d['id'] ?? '', $dlvInReview)],
+            'deliverables'   => ['total' => count($deliverables), 'inReview' => count($dlvInReview), 'accepted' => count($dlvAccepted)],
+            'decisions'      => ['total' => count($decisions), 'approved' => count($decApproved)],
+            'directives'     => ['total' => count($directives), 'active' => count($dirActive), 'closed' => count($dirClosed)],
+            'operationalHistory' => ['entries' => count($ophistory)],
+            'evidence'       => ['total' => count($evidence), 'accepted' => count($evAccepted)],
+            'constitutionalHealth' => [
+                'contradictions' => $contradictions,
+                'pendingApprovals' => count($dlvInReview),
+                'openReviewGates' => count($gatesOpen),
+                'healthy' => $contradictions === 0,
+            ],
+            'readOnly' => true,
+            'source' => 'server',
+        ];
+    }
 }

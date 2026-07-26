@@ -29,6 +29,7 @@ use Scs\Totp;
 use Scs\Http;
 use Scs\Derivation;
 use Scs\VersionException;
+use Scs\Audit;
 
 $config = Config::fromEnv();
 if ($config->env === 'production') {
@@ -41,14 +42,15 @@ if ($config->env === 'production') {
 $db   = new Database($config);
 $repo = new Repository($db);
 $auth = new Auth($db);
-$cmd  = new Commands($repo, $auth);
+$audit = new Audit($db); // Phase 8: Technical Audit Log (observes governed activity; never authority)
+$cmd  = new Commands($repo, $auth, $audit);
 $import = new Importer($repo, $config);
 $derive = new Derivation(); // Phase 7: canonical derivation engine (owns its derivation_version)
 
 /** Load the authoritative collections needed for constitutional derivation (records only). */
 $loadCollections = static function () use ($repo): array {
     $out = [];
-    foreach (['aiCollaborators','decisions','standingDirectives','assignmentDirectives','operationalHistory','teams','teamMemberships','deliverables','gates'] as $c) {
+    foreach (['aiCollaborators','decisions','standingDirectives','assignmentDirectives','operationalHistory','teams','teamMemberships','deliverables','gates','evidence'] as $c) {
         $out[$c] = array_map(static fn($r) => $r['record'], $repo->list($c));
     }
     return $out;
@@ -159,6 +161,28 @@ $app->post('/api/replay', function (Request $r, Response $s) use ($derive, $repo
         'reproduced' => $reproduced, 'output' => $output,
     ]);
 });
+
+// ===== Phase 8: Constitutional Observability ==============================================
+// Governance visibility is DERIVED and READ-ONLY (never mutates state). The Technical Audit Log is
+// append-only and independently verifiable. Neither becomes constitutional authority.
+
+/** Governance visibility — derived, read-only governance status + constitutional health. */
+$app->get('/api/derived/governance', function (Request $r, Response $s) use ($derive, $loadCollections) {
+    $collections = $loadCollections();
+    return Http::json($s, [
+        'view' => 'governance', 'source' => 'server', 'readOnly' => true,
+        'derivationVersion' => $derive->derivationVersion(), 'schemaVersion' => $derive->schemaVersion(),
+        'governance' => $derive->deriveGovernance($collections),
+    ]);
+});
+
+/** Technical Audit Log — append-only event stream (read-only). */
+$app->get('/api/audit', fn(Request $r, Response $s) =>
+    Http::json($s, ['source' => 'server', 'count' => $audit->count(), 'events' => $audit->list(500)]));
+
+/** Independent audit-integrity verification (recomputes the hash-chain). */
+$app->get('/api/audit/verify', fn(Request $r, Response $s) =>
+    Http::json($s, ['source' => 'server'] + $audit->verifyIntegrity()));
 
 /** Generic derivation seam (fallback). Specific views are registered above (static-before-variable). */
 $app->get('/api/derived/{view}', fn(Request $r, Response $s, array $a) =>

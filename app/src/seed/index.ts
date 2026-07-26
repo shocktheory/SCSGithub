@@ -118,8 +118,8 @@ const products: Product[] = [
     name: 'SCS Platform',
     ecosystem: 'ShockTheory · Internal software platform',
     purpose: 'The active software platform that implements approved ShockTheory OS concepts, stores and links authoritative records, derives governed organizational and product state, and presents dashboards, action queues, history, traceability, contradictions, and portfolio status — tracking its own development through the same governed structures.',
-    lifecycleStage: 'Phase 7 Accepted · Phase 8 Authorization Package Accepted · Awaiting Phase 8 Implementation Authorization',
-    status: 'Active — internal platform. Phase 7 (Server-Side Constitutional Derivation & Canonical State Authority) Accepted — the server is the sole constitutional derivation authority. Phase 6 Accepted · Baseline v1.0 Established · Completion Program Rev 2 Governing (~50% accepted) · Phase 8 Authorization Package (constitutional observability) Accepted as the governing Phase 8 planning document. Phase 8 implementation NOT authorized (awaits a separate Product Owner Phase 8 Implementation Authorization Directive). Five permanent constitutional doctrines now govern (Auth & Authority · Derivation · Governed Command · Evidence · Observability). Not Operational, Not Production, not launched.',
+    lifecycleStage: 'Phase 7 Accepted · Phase 8 Implementation in Review',
+    status: 'Active — internal platform. Phase 7 (Server-Side Constitutional Derivation & Canonical State Authority) Accepted — the server is the sole constitutional derivation authority. Phase 6 Accepted · Baseline v1.0 Established · Completion Program Rev 2 Governing (~50% accepted) · Phase 8 Authorization Package Accepted · Phase 8 Implementation (Constitutional Observability — Technical Audit Log, Evidence, governance visibility, administrative controls) runtime-verified in CI and submitted for review — not yet accepted. Five permanent constitutional doctrines govern (Auth & Authority · Derivation · Governed Command · Evidence · Observability). Not Operational, Not Production, not launched.',
     owner: 'Sonja Ross (Product Owner) · #SCS (steward/implementer)',
     authorityStatus: 'approved',
     demonstration: false,
@@ -462,6 +462,21 @@ const canonicalStatements: CanonicalStatement[] = [
 // Constitutional activity — only real, honest events. Cue's Phase-4 approval is
 // spec-stated but undated here, so its date is left empty rather than invented.
 const updates: Update[] = [
+  {
+    id: 'upd-scs-phase8-impl',
+    code: 'ST-REVIEW',
+    date: '2026-07-25',
+    summary: 'Product Owner authorized Phase 8 implementation. #SCS implemented Constitutional Observability: the Technical Audit Log (Scs\\Audit — immutable, append-only, attributable, tamper-evident hash-chain, independently verifiable; every governed command applied AND rejected is recorded), Operational History kept distinct from the Technical Audit Log (cross-referenced, never duplicated), governance visibility (Scs\\Derivation::deriveGovernance — derived, read-only) at /api/derived/governance, administrative controls (admin ≠ constitutional authority), Constitutional Evidence as a governed collection (immutable once accepted; never becomes authority) + lifecycle, the internal Governance Dashboard (client read-only at /governance, not production monitoring), administrative security, and audit integrity (migration 0004; GET /api/audit + /api/audit/verify). Runtime-verified end-to-end in CI (PHP 8.2 + MySQL 8): ObservabilityTest, DerivationTest, CommandTest, PersistenceTest, AuthTest, plus the constitutional-observability e2e. Submitted ST-DLV-2026-014 to the Phase 8 Implementation Review (rgate-014). #SCS did NOT self-accept. Excluded: notifications, hosting, deployment, confidential data, production monitoring/operations, external integrations, public access, launch.',
+    source: 'Sonja (Product Owner) · #SCS',
+    scope: 'SCS',
+    affectedSystems: ['os-scs', 'prod-scs'],
+    decisionsCreated: [],
+    documentsUpdated: ['adr-015', 'dlv-014', 'rgate-014', 'oh-022', 'prod-scs', 'SCS_PHASE_8_IMPLEMENTATION.md'],
+    syncStatus: 'Working — Phase 8 implementation runtime-verified; submitted for review (not self-accepted)',
+    authorityStatus: 'reported',
+    demonstration: false,
+    confidence: 'high',
+  },
   {
     id: 'upd-scs-phase8-authpkg-accepted',
     code: 'ST-REVIEW',
