@@ -27,6 +27,8 @@ use Scs\Importer;
 use Scs\Auth;
 use Scs\Totp;
 use Scs\Http;
+use Scs\Derivation;
+use Scs\VersionException;
 
 $config = Config::fromEnv();
 if ($config->env === 'production') {
@@ -41,6 +43,16 @@ $repo = new Repository($db);
 $auth = new Auth($db);
 $cmd  = new Commands($repo, $auth);
 $import = new Importer($repo, $config);
+$derive = new Derivation(); // Phase 7: canonical derivation engine (owns its derivation_version)
+
+/** Load the authoritative collections needed for constitutional derivation (records only). */
+$loadCollections = static function () use ($repo): array {
+    $out = [];
+    foreach (['aiCollaborators','decisions','standingDirectives','assignmentDirectives','operationalHistory','teams','teamMemberships','deliverables','gates'] as $c) {
+        $out[$c] = array_map(static fn($r) => $r['record'], $repo->list($c));
+    }
+    return $out;
+};
 
 /** Resolve the authenticated actor (if any) from the session cookie. Never throws. */
 $resolveActor = static function (Request $r) use ($auth): ?array {
@@ -67,9 +79,90 @@ $errorMiddleware->setDefaultErrorHandler(Http::errorHandler());
 $app->get('/api/health', fn(Request $r, Response $s) =>
     Http::json($s, ['status' => 'ok', 'env' => $config->env, 'schemaVersion' => Repository::SCHEMA_VERSION]));
 
-/** Server-side canonical derivation seam (never trusts a client snapshot). */
+// ===== Phase 7: Server-side canonical constitutional derivation ============================
+// The server is the sole derivation authority. It never trusts a client-computed snapshot; it
+// derives from the authoritative records it persists. Outputs are versioned, hashed, explainable.
+
+/** Derivation version surface (schema_version and derivation_version are independent). */
+$app->get('/api/derivation/version', fn(Request $r, Response $s) =>
+    Http::json($s, ['derivationVersion' => $derive->derivationVersion(), 'schemaVersion' => $derive->schemaVersion(), 'source' => 'server']));
+
+/** Whole-team constitutional derivation from the authoritative records (canonical). */
+$app->get('/api/derived/team', function (Request $r, Response $s) use ($derive, $loadCollections, $repo) {
+    $collections = $loadCollections();
+    $output = $derive->deriveTeam($collections);
+    $hash = $derive->inputHash($collections);
+    $repo->saveDerivation('team', $hash, $derive->derivationVersion(), $derive->schemaVersion(), $output);
+    return Http::json($s, [
+        'view' => 'team', 'source' => 'server',
+        'derivationVersion' => $derive->derivationVersion(), 'schemaVersion' => $derive->schemaVersion(),
+        'inputHash' => $hash, 'output' => $output,
+    ]);
+});
+
+/**
+ * Derive a single agent's constitutional state from an explicit evidence input. This is the pure
+ * derivation surface used for client/server parity (identical input → identical output) and for
+ * replay. The client may PROPOSE an input to be derived; it never authors the derived output.
+ */
+$app->post('/api/derived/agent-state', function (Request $r, Response $s) use ($derive, $repo) {
+    $b = (array)$r->getParsedBody();
+    $input = is_array($b['input'] ?? null) ? $b['input'] : $b;
+    try {
+        $derive->assertCompatible(isset($b['derivationVersion']) ? (string)$b['derivationVersion'] : null,
+                                  isset($b['schemaVersion']) ? (string)$b['schemaVersion'] : null);
+    } catch (VersionException $e) {
+        return Http::json($s->withStatus(409), ['error' => $e->getMessage(), 'derivationVersion' => $derive->derivationVersion(), 'schemaVersion' => $derive->schemaVersion()]);
+    }
+    $output = $derive->deriveAgentState($input);
+    $hash = $derive->inputHash($input);
+    $repo->saveDerivation('agent-state', $hash, $derive->derivationVersion(), $derive->schemaVersion(), $output);
+    return Http::json($s, [
+        'view' => 'agent-state', 'source' => 'server',
+        'derivationVersion' => $derive->derivationVersion(), 'schemaVersion' => $derive->schemaVersion(),
+        'inputHash' => $hash, 'state' => $output,
+    ]);
+});
+
+/**
+ * Deterministic replay: recompute a derivation from an explicit input at a derivation version and
+ * report whether it reproduces the recorded output (drift detection). A version/schema mismatch is
+ * a predictable 409 (mandatory regression). Only 'agent-state' and 'team' views are replayable.
+ */
+$app->post('/api/replay', function (Request $r, Response $s) use ($derive, $repo) {
+    $b = (array)$r->getParsedBody();
+    $view = (string)($b['view'] ?? 'agent-state');
+    try {
+        $derive->assertCompatible(isset($b['derivationVersion']) ? (string)$b['derivationVersion'] : null,
+                                  isset($b['schemaVersion']) ? (string)$b['schemaVersion'] : null);
+    } catch (VersionException $e) {
+        return Http::json($s->withStatus(409), ['error' => $e->getMessage(), 'derivationVersion' => $derive->derivationVersion()]);
+    }
+    $input = $b['input'] ?? null;
+    if (!is_array($input)) {
+        return Http::json($s->withStatus(422), ['error' => 'replay requires an input object']);
+    }
+    $output = match ($view) {
+        'team'        => $derive->deriveTeam($input),
+        'agent-state' => $derive->deriveAgentState($input),
+        default       => null,
+    };
+    if ($output === null) {
+        return Http::json($s->withStatus(422), ['error' => "unknown replay view: {$view}"]);
+    }
+    $hash = $derive->inputHash($input);
+    $stored = $repo->getDerivation($view, $hash, $derive->derivationVersion());
+    $reproduced = $stored === null ? null : (Derivation::canonicalize($stored['output']) === Derivation::canonicalize($output));
+    return Http::json($s, [
+        'view' => $view, 'source' => 'server', 'inputHash' => $hash,
+        'derivationVersion' => $derive->derivationVersion(), 'schemaVersion' => $derive->schemaVersion(),
+        'reproduced' => $reproduced, 'output' => $output,
+    ]);
+});
+
+/** Generic derivation seam (fallback). Specific views are registered above (static-before-variable). */
 $app->get('/api/derived/{view}', fn(Request $r, Response $s, array $a) =>
-    Http::json($s, ['view' => $a['view'], 'derivationVersion' => $config->derivationVersion, 'source' => 'server', 'note' => 'derivation-foundation-seam']));
+    Http::json($s, ['view' => $a['view'], 'derivationVersion' => $derive->derivationVersion(), 'schemaVersion' => $derive->schemaVersion(), 'source' => 'server', 'note' => 'no canonical derivation registered for this view']));
 
 // ===== Identity / auth =====================================================================
 $app->post('/api/auth/login', function (Request $r, Response $s) use ($auth, $reqId, $sessionCookie) {

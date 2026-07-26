@@ -9,10 +9,12 @@ use Psr\Http\Message\ResponseInterface as Response;
  * Governed command dispatcher. Authority changes never happen through raw document replacement.
  *
  * Phase 5: `upsert` (optimistic concurrency + idempotency).
- * Phase 6: authorization enforcement + the Product-Owner-only `approve` command + attribution.
- *   - `upsert` may NOT set an elevated authority (approved/accepted/activated); that requires `approve`.
- *   - `approve` requires an authenticated Product Owner with fresh MFA (Authz::canApprove).
- *   - every mutation records an attribution (actor + request id).
+ * Phase 6: authorization enforcement + Product-Owner-only `approve` + attribution.
+ * Phase 7: the COMPLETE governed command vocabulary on a server-validated state machine —
+ *   propose · approve · accept · activate · reject · supersede · archive · restore · retire.
+ *   Every command validates authority, current state, preconditions, the approval boundary,
+ *   concurrency (expectedVersion), idempotency, and preserves attribution. No command bypasses
+ *   server validation; rejected transitions fail predictably.
  */
 final class Commands
 {
@@ -24,24 +26,30 @@ final class Commands
     public function handle(string $command, array $body, Response $response, ?array $actor = null, ?string $requestId = null): Response
     {
         return match ($command) {
-            'upsert'  => $this->upsert($body, $response, $actor, $requestId),
+            'upsert'  => $this->write($body, $response, $actor, $requestId, 'upsert'),
+            'propose' => $this->write($body, $response, $actor, $requestId, 'propose'),
             'approve' => $this->approve($body, $response, $actor, $requestId),
+            'accept', 'activate', 'reject', 'supersede', 'archive', 'restore', 'retire'
+                      => $this->transition($command, $body, $response, $actor, $requestId),
             default   => Http::json($response->withStatus(404), ['error' => "unknown command: {$command}"]),
         };
     }
 
-    private function upsert(array $body, Response $response, ?array $actor, ?string $requestId): Response
+    // ===== propose / upsert (guarded write; never elevates authority) ==========================
+
+    private function write(array $body, Response $response, ?array $actor, ?string $requestId, string $label): Response
     {
         $collection = (string)($body['collection'] ?? '');
         Http::assertCollection($collection);
         $record = $body['record'] ?? null;
         if (!is_array($record) || !isset($record['id'])) {
-            return Http::json($response->withStatus(422), ['error' => 'invalid upsert: record with id required']);
+            return Http::json($response->withStatus(422), ['error' => 'invalid write: record with id required']);
         }
         if (!Authz::can($actor, 'propose')) {
             return Http::json($response->withStatus(403), ['error' => 'not permitted to write records']);
         }
-        // The approval boundary: a plain upsert may never set elevated authority — that requires `approve`.
+        // The approval boundary: propose/upsert may NEVER set elevated authority — that requires an
+        // approval command exercised by the Product Owner.
         $incomingAuthority = $record['authorityStatus'] ?? null;
         if (Authz::isElevatedAuthority(is_string($incomingAuthority) ? $incomingAuthority : null)) {
             return Http::json($response->withStatus(403), ['error' => 'authority elevation requires an approval command (POST /api/commands/approve by the Product Owner)']);
@@ -49,8 +57,7 @@ final class Commands
         $existing = $this->repo->get($collection, (string)$record['id']);
         if ($existing !== null && ($existing['record']['authorityStatus'] ?? null) !== $incomingAuthority
             && Authz::isElevatedAuthority($existing['record']['authorityStatus'] ?? null)) {
-            // Cannot downgrade/alter an already-approved record's authority via upsert.
-            return Http::json($response->withStatus(403), ['error' => 'cannot change the authority of an approved record via upsert']);
+            return Http::json($response->withStatus(403), ['error' => 'cannot change the authority of an approved record via ' . $label]);
         }
 
         $key = (string)($body['idempotencyKey'] ?? '');
@@ -65,39 +72,108 @@ final class Commands
             return Http::json($response->withStatus(409), ['currentVersion' => $current ?? 0, 'currentRecord' => $existing2['record'] ?? null]);
         }
         $version = $this->repo->upsert($collection, $record);
-        $this->repo->attribute($collection, (string)$record['id'], $actor, 'upsert', $requestId);
+        $this->repo->attribute($collection, (string)$record['id'], $actor, $label, $requestId);
         $payload = ['record' => $record, 'version' => $version];
         if ($key !== '') $this->idempotency[$key] = [200, $payload];
         return Http::json($response, $payload);
     }
 
-    /** Product-Owner-only authority transition (approve/accept/activate). */
+    // ===== approve (Phase 6 API: optional transition → approved|accepted|activated) ============
+
     private function approve(array $body, Response $response, ?array $actor, ?string $requestId): Response
     {
-        if ($actor === null) {
-            return Http::json($response->withStatus(401), ['error' => 'authentication required']);
+        $transition = (string)($body['transition'] ?? 'approved');
+        $command = match ($transition) {
+            'approved'  => 'approve',
+            'accepted'  => 'accept',
+            'activated' => 'activate',
+            default     => null,
+        };
+        if ($command === null) {
+            return Http::json($response->withStatus(422), ['error' => 'invalid transition']);
         }
-        if (!Authz::canApprove($actor)) {
-            return Http::json($response->withStatus(403), ['error' => 'only an authenticated Product Owner (with fresh MFA) may exercise approval authority']);
-        }
+        return $this->transition($command, $body, $response, $actor, $requestId);
+    }
+
+    // ===== the generic governed transition (approval + lifecycle commands) =====================
+
+    private function transition(string $command, array $body, Response $response, ?array $actor, ?string $requestId): Response
+    {
         $collection = (string)($body['collection'] ?? '');
         Http::assertCollection($collection);
         $id = (string)($body['id'] ?? '');
-        $transition = (string)($body['transition'] ?? 'approved');
-        if (!in_array($transition, ['approved', 'accepted', 'activated'], true)) {
-            return Http::json($response->withStatus(422), ['error' => 'invalid transition']);
+        if ($id === '') {
+            return Http::json($response->withStatus(422), ['error' => 'record id required']);
         }
-        $existing = $this->repo->get($collection, $id);
+
+        // ---- Authorization (per-command, least privilege) ----
+        // State-independent authority is checked BEFORE reading the record, so an unauthorized
+        // actor is denied (401/403) regardless of whether the target exists.
+        if ($actor === null) {
+            return Http::json($response->withStatus(401), ['error' => 'authentication required']);
+        }
+        if (in_array($command, StateMachine::APPROVAL_COMMANDS, true) && !Authz::canApprove($actor)) {
+            return Http::json($response->withStatus(403), ['error' => 'only an authenticated Product Owner (with fresh MFA) may exercise approval authority']);
+        }
+        if (in_array($command, StateMachine::ADMIN_COMMANDS, true) && !Authz::can($actor, 'admin')) {
+            return Http::json($response->withStatus(403), ['error' => "the '{$command}' command requires an administrator or the Product Owner"]);
+        }
+
+        $existing = $this->repo->getAny($collection, $id);
         if ($existing === null) {
             return Http::json($response->withStatus(404), ['error' => 'record not found']);
         }
+        $state = StateMachine::stateOf($existing['record']);
+
+        // Reject authorization is state-dependent: rejecting an approved record is a PO act.
+        if ($command === 'reject') {
+            $ok = $state === 'approved' ? Authz::canApprove($actor) : Authz::can($actor, 'propose');
+            if (!$ok) {
+                $msg = $state === 'approved' ? 'rejecting an approved record requires the Product Owner' : 'not permitted to reject records';
+                return Http::json($response->withStatus(403), ['error' => $msg]);
+            }
+        }
+
+        // ---- Idempotency ----
+        $key = (string)($body['idempotencyKey'] ?? '');
+        if ($key !== '' && isset($this->idempotency[$key])) {
+            [$status, $payload] = $this->idempotency[$key];
+            return Http::json($response->withStatus($status), $payload);
+        }
+
+        // ---- Optimistic concurrency ----
+        $expected = array_key_exists('expectedVersion', $body) ? (int)$body['expectedVersion'] : null;
+        if ($expected !== null && $existing['version'] !== $expected) {
+            return Http::json($response->withStatus(409), ['currentVersion' => $existing['version'], 'currentRecord' => $existing['record']]);
+        }
+
+        // ---- State-transition validation (predictable rejection) ----
+        try {
+            StateMachine::validate($command, $state);
+        } catch (TransitionException $e) {
+            return Http::json($response->withStatus(422), ['error' => $e->getMessage(), 'fromState' => $state, 'command' => $command]);
+        }
+
+        // ---- Apply the effect ----
         $record = $existing['record'];
-        $record['authorityStatus'] = $transition === 'approved' ? 'approved' : $record['authorityStatus'] ?? 'reported';
-        $record['acceptance'] = $transition === 'accepted' ? true : ($record['acceptance'] ?? null);
-        $record['activation'] = $transition === 'activated' ? true : ($record['activation'] ?? null);
-        $version = $this->repo->upsert($collection, $record);
-        $this->repo->attribute($collection, $id, $actor, 'approve:' . $transition, $requestId);
-        $this->auth?->event($actor['id'], 'approve', $requestId, "{$collection}/{$id}:{$transition}");
-        return Http::json($response, ['record' => $record, 'version' => $version, 'approvedBy' => $actor['id']]);
+        $archived = null;
+        switch ($command) {
+            case 'approve':   $record['authorityStatus'] = 'approved'; break;
+            case 'accept':    $record['acceptance'] = true; break;
+            case 'activate':  $record['activation'] = true; break;
+            case 'reject':    $record['lifecycleState'] = 'rejected';   if (isset($body['reason'])) $record['rejectionReason'] = (string)$body['reason']; break;
+            case 'supersede': $record['lifecycleState'] = 'superseded'; if (isset($body['supersededBy'])) $record['supersededBy'] = (string)$body['supersededBy']; break;
+            case 'archive':   $record['lifecycleState'] = 'archived';  $archived = 1; break;
+            case 'restore':   $record['lifecycleState'] = 'restored';  $archived = 0; break;
+            case 'retire':    $record['lifecycleState'] = 'retired';   $archived = 1; break;
+        }
+        $version = $this->repo->upsert($collection, $record, $archived);
+        $this->repo->attribute($collection, $id, $actor, $command, $requestId);
+        if (in_array($command, StateMachine::APPROVAL_COMMANDS, true)) {
+            $this->auth?->event($actor['id'], $command, $requestId, "{$collection}/{$id}");
+        }
+        $payload = ['record' => $record, 'version' => $version, 'command' => $command, 'fromState' => $state, 'toState' => StateMachine::stateOf($record), 'actor' => $actor['id']];
+        if ($key !== '') $this->idempotency[$key] = [200, $payload];
+        return Http::json($response, $payload);
     }
 }

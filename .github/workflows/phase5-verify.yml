@@ -30,7 +30,7 @@ jobs:
       DB_USER: root
       DB_PASSWORD: root
       RESET_TOKEN: CONFIRM-RESET
-      DERIVATION_VERSION: "0.1.0"
+      DERIVATION_VERSION: "1.0.0"
     steps:
       - uses: actions/checkout@v4
 
@@ -103,6 +103,12 @@ jobs:
         env:
           SCS_E2E_BASE: http://127.0.0.1:8787
         run: npx vitest run tests/auth.e2e.test.ts
+
+      - name: E2E — Server-side derivation & client/server parity (Phase 7)
+        working-directory: app
+        env:
+          SCS_E2E_BASE: http://127.0.0.1:8787
+        run: npx vitest run tests/derivation.e2e.test.ts
 
       - name: Backend log (on failure)
         if: failure()
