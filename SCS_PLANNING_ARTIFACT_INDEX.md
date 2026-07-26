@@ -79,6 +79,7 @@ Whenever a planning artifact is **created, accepted, revised, superseded, withdr
 | PAI-012 | Operational Readiness Principles | 1.0 | (Required Addition to Phase 9 Auth Pkg) | Accepted | 2026-07-26 | Accepted | Governing Planning Artifact (standard) |
 | PAI-013 | Migration Ledger | living | (Phase 7 permanent artifact) | Accepted | 2026-07-25 | Accepted (living) | Governing Planning Artifact |
 | PAI-014 | SCS Planning Artifact Index *(this document)* | 1.0 | ST-DLV-2026-020 | Accepted | 2026-07-26 | Accepted | Governing Planning Artifact |
+| PAI-015 | DigitalOcean Provider Independence Assessment | Preparation v1.0 | ST-DLV-2026-021 | **In Review** | — | In Review | Provider-Specific Planning Artifact |
 
 ---
 
@@ -215,6 +216,17 @@ Whenever a planning artifact is **created, accepted, revised, superseded, withdr
 - **Constitutional Relationship:** no constitutional impact (registry only) — **not** doctrine, **not** implementation, **not** operational record
 - **Dependencies:** Catalogs all entries above; maintained as part of every planning-artifact governance workflow
 - **Future Use:** the permanent authoritative registry of governed planning documentation. Future Product Owner reviews reference this registry before accepting new planning artifacts; no accepted planning artifact shall exist outside it.
+
+### PAI-015 — DigitalOcean Provider Independence Assessment (Preparation v1.0)
+- **File:** `DIGITALOCEAN_PROVIDER_INDEPENDENCE_ASSESSMENT.md`
+- **Identification:** Identifier ST-DLV-2026-021 · Version Preparation 1.0 · Type Provider Independence Assessment (planning; provider-specific)
+- **Governance:** Originating Assignment adr-023 · Governing Review Gate rgate-022 · Disposition **In Review** · Acceptance Date — · Status **In Review**
+- **Scope:** Provider-Specific Planning Artifact (Planning + Future Reference)
+- **Constitutional Relationship:** supports implementation planning — confirms a provider change has **no constitutional impact**
+- **Dependencies:** Supplements (does not modify) **PAI-010** (DigitalOcean Deployment Configuration Package); follows **PAI-011** (PIA Standard); references PAI-008, PAI-009; supported by PAI-002, PAI-012, PAI-013
+- **Future Use:** governing planning reference for the Product-Owner-selected provider (DigitalOcean). *First artifact registered under the operational Planning Artifact Index (per the §0.1 maintenance protocol).* Creates no implementation authority; all implementation dependencies remain gated behind a future Phase 10 Implementation Authorization.
+
+*Note: PAI-010 (DigitalOcean Deployment Configuration Package) is now **supplemented by PAI-015**; PAI-010 itself is unmodified.*
 
 ---
 
