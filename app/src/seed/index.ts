@@ -463,6 +463,21 @@ const canonicalStatements: CanonicalStatement[] = [
 // spec-stated but undated here, so its date is left empty rather than invented.
 const updates: Update[] = [
   {
+    id: 'upd-scsr-interim-baseline',
+    code: 'ST-SYNC',
+    date: '2026-07-26',
+    summary: 'Product Owner Interim Authorization — Provisional SCS Infrastructure Requirements Baseline. The Product Owner confirmed the Phase 10 Authorization Package remains IN REVIEW (rgate-017 open; NOT accepted; not a governing baseline; not certifiable as accepted), commended #SCS for refusing to represent an in-review artifact as approved, and authorized a PROVISIONAL baseline solely to support #SCS-R Assignment #001 — without accepting the Phase 10 package or authorizing implementation/provider-selection/deployment/confidential-data. #SCS issued Provisional SCS Infrastructure Requirements Baseline v1.0 (SCS_INFRASTRUCTURE_REQUIREMENTS_BASELINE.md), classifying every requirement by source authority: Accepted Baseline (IR-A, from accepted Baseline v1.0 + Phases 5–9 + doctrines + Operational Readiness Principles) · Derived from Accepted Architecture (IR-D) · Provisional Planning (IR-P, from the in-review Phase 10 package only) · Product Owner Pending (IR-Q). Per the directive, #SCS did NOT close rgate-017, did NOT alter the Phase 10 package, and created only the provisional baseline + a planning Operational History update. rgate-017 continues to be held open; provider decision authority remains Product-Owner-only; provisional ≠ acceptance.',
+    source: 'Sonja (Product Owner) · #SCS · #SCS-R',
+    scope: 'SCS',
+    affectedSystems: ['os-scs', 'prod-scs'],
+    decisionsCreated: [],
+    documentsUpdated: ['oh-030', 'SCS_INFRASTRUCTURE_REQUIREMENTS_BASELINE.md'],
+    syncStatus: 'Interim baseline issued to #SCS-R; Phase 10 Authorization Package remains in review (rgate-017 held open)',
+    authorityStatus: 'reported',
+    demonstration: false,
+    confidence: 'high',
+  },
+  {
     id: 'upd-scsr-preflight-baseline',
     code: 'ST-SYNC',
     date: '2026-07-26',
