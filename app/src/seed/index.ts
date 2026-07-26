@@ -463,6 +463,21 @@ const canonicalStatements: CanonicalStatement[] = [
 // spec-stated but undated here, so its date is left empty rather than invented.
 const updates: Update[] = [
   {
+    id: 'upd-scsr-preflight-baseline',
+    code: 'ST-SYNC',
+    date: '2026-07-26',
+    summary: '#SCS-R Assignment #001 preflight — provisional requirements baseline handoff. #SCS-R requested the APPROVED SCS infrastructure requirements baseline and confirmation of alignment with the ACCEPTED Phase 10 Authorization Package. #SCS responded with constitutional honesty: the Phase 10 Authorization Package (ST-DLV-2026-017) is IN REVIEW (rgate-017), NOT accepted — so no accepted baseline exists and Preflight Item 4 cannot be certified. #SCS provided a clearly-labeled PROVISIONAL baseline (SCS_INFRASTRUCTURE_REQUIREMENTS_BASELINE.md v0.9-DRAFT — non-confidential, provider-neutral, INFRA-R/P/O/D identifiers with pass/fail classification), answered #SCS-R\'s seven items honestly, recommended NO provider, and did NOT create/activate/task #SCS-R (a Product Owner act). Recommended sequence: Product Owner disposes of the Phase 10 package → #SCS re-issues the baseline as v1.0 (Accepted) → #SCS-R clears preflight. No research/implementation/acceptance authority transferred; provider decision authority remains Product-Owner-only.',
+    source: '#SCS-R · #SCS',
+    scope: 'SCS',
+    affectedSystems: ['os-scs', 'prod-scs'],
+    decisionsCreated: [],
+    documentsUpdated: ['oh-029', 'SCS_INFRASTRUCTURE_REQUIREMENTS_BASELINE.md'],
+    syncStatus: 'Blocked at #SCS-R preflight — approved baseline gated on Product Owner disposition of the Phase 10 Authorization Package',
+    authorityStatus: 'reported',
+    demonstration: false,
+    confidence: 'high',
+  },
+  {
     id: 'upd-scs-phase10-authpkg',
     code: 'ST-REVIEW',
     date: '2026-07-26',
