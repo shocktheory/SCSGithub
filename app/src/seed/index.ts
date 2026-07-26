@@ -104,7 +104,7 @@ const osSystems: OSSystem[] = [
     owner: 'Sonja Ross',
     dependencies: ['os-sapdos', 'os-stacl', 'os-stp', 'os-sos'],
     relatedProducts: ['prod-kidlytics', 'prod-civicai'],
-    changeHistory: ['Phase 0 architecture approved', 'Phase 1 functional shell', 'Phase 2 Constitutional State Derivation accepted (commit a773bd6)', 'Transition to Product Execution — SCS constitutional capability operational', 'Phase 1 functional demonstration closed (accepted, demonstration scope)', 'Phase 4 Production Architecture authorized (planning only)', 'Phase 4 Production Architecture accepted (planning baseline; architecturally ready for Phase 5; Phase 5 not authorized)', 'Phase 5 Backend Foundation & Persistence accepted (runtime-verified PHP 8.2 + MySQL 8)', 'Production Baseline v1.0 established (accepted, immutable)', 'Platform Completion Program Rev 2 accepted (governing roadmap)', 'Phase 6 Authorization Package accepted (planning)', 'Phase 6 Implementation — Identity, Authority & Trust — accepted (Implemented, Verified & Accepted 2026-07-25; dev/test runtime-verified; Phase 7 not authorized)'],
+    changeHistory: ['Phase 0 architecture approved', 'Phase 1 functional shell', 'Phase 2 Constitutional State Derivation accepted (commit a773bd6)', 'Transition to Product Execution — SCS constitutional capability operational', 'Phase 1 functional demonstration closed (accepted, demonstration scope)', 'Phase 4 Production Architecture authorized (planning only)', 'Phase 4 Production Architecture accepted (planning baseline; architecturally ready for Phase 5; Phase 5 not authorized)', 'Phase 5 Backend Foundation & Persistence accepted (runtime-verified PHP 8.2 + MySQL 8)', 'Production Baseline v1.0 established (accepted, immutable)', 'Platform Completion Program Rev 2 accepted (governing roadmap)', 'Phase 6 Implementation — Identity, Authority & Trust — accepted', 'Phase 7 Implementation — Server-Side Constitutional Derivation & Canonical State Authority — accepted', 'Phase 8 Implementation — Constitutional Observability — accepted', 'Phase 9 Implementation — Constitutional Operational Awareness — accepted', 'Phase 10 Authorization Package (Hosting, Security & Production Operations) accepted (planning; implementation separately gated); Infrastructure Requirements Baseline v2.0 accepted', 'AELAS v1.0 (AI Employee Lifecycle & Activation Standard) recognized as an approved governing standard (2026-07-26; awareness synchronized; no implementation authorized)'],
     authorityStatus: 'approved',
     constitutionalReview: false,
     confidence: 'high',
@@ -462,6 +462,21 @@ const canonicalStatements: CanonicalStatement[] = [
 // Constitutional activity — only real, honest events. Cue's Phase-4 approval is
 // spec-stated but undated here, so its date is left empty rather than invented.
 const updates: Update[] = [
+  {
+    id: 'upd-scs-aelas-sync',
+    code: 'ST-SYNC',
+    date: '2026-07-26',
+    summary: 'Governance Synchronization — AELAS Version 1.0 (AI Employee Lifecycle & Activation Standard) recognized as an APPROVED, EFFECTIVE ShockTheory OS enterprise governance standard (effective 2026-07-26), now part of the approved governance baseline. #SCS synchronized AWARENESS only: recognized AELAS\'s separation principle (existence/authority/activation/assignment/submission/acceptance/lifecycle are separate governed events; no event implies the next; platform state never originates authority) and its three distinct, non-collapsible status fields (Employee Status · Lifecycle Status · Current Assignment Status); recognized #SCS-R as the first operational precedent under AELAS (example, not authority source, not a dependency); recorded the future "SCS AI Workforce Governance & Lifecycle Management" capability as STRATEGIC INTENT ONLY (placeholder names; not approved implementation identifiers) with the automation boundary that SCS may derive/validate/present/record lifecycle state but never originate authority. NO implementation authority granted; #SCS begins no spec/schema/workflow/UI/automation/migration/testing/deployment work. Synchronization altered nothing (Baseline v1.0, accepted Phases 6–9, Phase 10 planning, Infrastructure Baseline v2.0, #SCS-R Assignment #001, Completion Register, review gates, PO-pending decisions, deferred identifiers all unchanged; Phase 10 implementation still NOT authorized). CONFLICT CHECK: No material architecture conflict identified at synchronization — AELAS aligns with and formalizes SCS\'s existing separation-of-states + authority principles; operationalizing its richer status vocabularies is future separately-authorized work (distinct fields, never collapsed).',
+    source: 'Sonja (Product Owner) · #SCS',
+    scope: 'SCS',
+    affectedSystems: ['os-scs', 'prod-scs'],
+    decisionsCreated: [],
+    documentsUpdated: ['oh-032'],
+    syncStatus: 'Synchronized — AELAS v1.0 awareness recognized; no implementation authority; current workstream unchanged',
+    authorityStatus: 'reported',
+    demonstration: false,
+    confidence: 'high',
+  },
   {
     id: 'upd-scs-phase10-authpkg-accepted',
     code: 'ST-REVIEW',
