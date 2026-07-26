@@ -119,7 +119,7 @@ const products: Product[] = [
     ecosystem: 'ShockTheory · Internal software platform',
     purpose: 'The active software platform that implements approved ShockTheory OS concepts, stores and links authoritative records, derives governed organizational and product state, and presents dashboards, action queues, history, traceability, contradictions, and portfolio status — tracking its own development through the same governed structures.',
     lifecycleStage: 'Phase 6 Accepted · Awaiting Phase 7 Authorization',
-    status: 'Active — internal platform. Phase 6 (Identity, Authority & Trust) Implemented, Verified & Accepted · Baseline v1.0 Established · Completion Program Rev 2 Governing (~40% accepted). Phase 7 Authorization Package (server-side derivation) in Product Owner review — planning only; Phase 7 implementation NOT authorized. Not Operational, Not Production, not launched.',
+    status: 'Active — internal platform. Phase 6 (Identity, Authority & Trust) Implemented, Verified & Accepted · Baseline v1.0 Established · Completion Program Rev 2 Governing (~40% accepted) · Phase 7 Authorization Package (server-side derivation) Accepted as the governing Phase 7 planning document. Phase 7 implementation NOT authorized (awaits a separate Product Owner Phase 7 Implementation Authorization Directive). Not Operational, Not Production, not launched.',
     owner: 'Sonja Ross (Product Owner) · #SCS (steward/implementer)',
     authorityStatus: 'approved',
     demonstration: false,
@@ -275,9 +275,9 @@ const aiCollaborators: AICollaborator[] = [
     role: 'SCS architecture, design, implementation, testing, repository delivery, and technical documentation.',
     modelProvider: 'Claude (Anthropic)',
     authorityScope: 'Designs and builds SCS but is not SCS and holds no constitutional authority. May not approve.',
-    currentTask: 'Phase 7 AUTHORIZATION PACKAGE prepared (planning only) — server-side constitutional derivation & canonical state authority fully specified (derivation architecture, complete governed command model, client/server responsibility matrix, state transitions, version governance, parity, failure handling, security, verification strategy not executed, 11-item PO decision queue). Submitted ST-DLV-2026-011 to the Phase 7 Authorization Package Review (rgate-011). Only planning records created; NO decision record, NO implementation, NO server-side derivation, NO deployment/hosting/confidential data/launch. #SCS did not self-authorize.',
-    waitingState: 'Product Owner review (Phase 7 Authorization Package Review)',
-    expectedNextAction: 'Await Product Owner disposition of the Phase 7 Authorization Package. Begin no Phase 7 implementation / server-side derivation / hosting / deployment / confidential-data / launch work until separately authorized.',
+    currentTask: 'Phase 7 AUTHORIZATION PACKAGE ACCEPTED by Product Owner (2026-07-25) as the governing Phase 7 planning document. Recorded acceptance: ST-DLV-2026-011 accepted, rgate-011 closed, adr-012 closed; seven PO decisions recorded. Produced the Required Addition CONSTITUTIONAL_DERIVATION_PRINCIPLES.md (permanent constitutional architecture). No implementation-governed records created; NO Phase 7 implementation begun.',
+    waitingState: 'Awaiting a separate Product Owner Phase 7 Implementation Authorization Directive',
+    expectedNextAction: 'Begin no Phase 7 implementation, server-side derivation engine, governed-command implementation, hosting, deployment, confidential data, or launch until the separate Phase 7 Implementation Authorization Directive is issued.',
     syncState: 'Synchronized',
     lastSynced: '2026-07-25',
     governingRecord: 'dec-0007',
@@ -462,6 +462,21 @@ const canonicalStatements: CanonicalStatement[] = [
 // Constitutional activity — only real, honest events. Cue's Phase-4 approval is
 // spec-stated but undated here, so its date is left empty rather than invented.
 const updates: Update[] = [
+  {
+    id: 'upd-scs-phase7-authpkg-accepted',
+    code: 'ST-REVIEW',
+    date: '2026-07-25',
+    summary: 'Phase 7 Authorization Package Review — APPROVED. Product Owner accepted the package (commit 24b97b9) as the governing Phase 7 planning document: ST-DLV-2026-011 accepted; Phase 7 Authorization Package Review Gate (rgate-011) closed Approved; planning assignment adr-012 closed. Seven decisions approved (server sole constitutional authority; governed command vocabulary propose…retire; separate schema_version/derivation_version; permanent responsibility matrix with PO architectural review for boundary-blurring; permanent migration ledger until client constitutional derivation is eliminated; deterministic replay as a constitutional requirement; server-enforced Product-Owner-only approval boundary). Required Addition produced: CONSTITUTIONAL_DERIVATION_PRINCIPLES.md (permanent constitutional architecture doctrine, companion to Authentication & Authority Principles). Phase 7 IMPLEMENTATION NOT AUTHORIZED — no implementation assignment, review gate, or implementation-governed records created. Baseline v1.0 unchanged; confidential data/deployment/launch not authorized. Next governed document: a separate Product Owner Phase 7 Implementation Authorization Directive. Canonical identifiers remain Product-Owner-pending.',
+    source: 'Sonja (Product Owner) · #SCS',
+    scope: 'SCS',
+    affectedSystems: ['os-scs', 'prod-scs'],
+    decisionsCreated: [],
+    documentsUpdated: ['dlv-011', 'rgate-011', 'adr-012', 'oh-017', 'prod-scs', 'CONSTITUTIONAL_DERIVATION_PRINCIPLES.md'],
+    syncStatus: 'Approved — Phase 7 Authorization Package accepted (governing planning document); Phase 7 implementation not authorized',
+    authorityStatus: 'approved',
+    demonstration: false,
+    confidence: 'high',
+  },
   {
     id: 'upd-scs-phase7-authpkg',
     code: 'ST-REVIEW',
