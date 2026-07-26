@@ -137,9 +137,11 @@ final class OperationsTest extends TestCase
         $this->seedReviewWork();
         $model = $this->ops->derive($this->collections(), null);
         // The Product Owner review queue lists work but selecting it changes nothing constitutional.
+        // Both records were seeded without an elevated authority, so their constitutional state is the
+        // default 'reported' — and deriving/queuing does not change it.
         $this->assertNotEmpty($model['reviewQueues']['productOwner']);
         $this->assertSame('reported', StateMachine::stateOf($this->repo->getAny('deliverables', 'd1')['record']));
-        $this->assertSame('proposed', StateMachine::stateOf($this->repo->getAny('gates', 'g1')['record'] ?? ['authorityStatus' => 'proposed']));
+        $this->assertSame('reported', StateMachine::stateOf($this->repo->getAny('gates', 'g1')['record']));
     }
 
     public function testOperationalModelHasNoMutationSurface(): void
