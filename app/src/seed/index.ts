@@ -994,6 +994,7 @@ export const seedWorkspace: WorkspaceBackup = {
     reviewItems: [],
     nextActions,
     relationships: [],
+    evidence: [],
     ...Object.fromEntries(empty.map((k) => [k, []])),
   } as WorkspaceBackup['collections'],
 };

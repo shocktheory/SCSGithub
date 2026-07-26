@@ -30,6 +30,7 @@ export class SCSDatabase extends Dexie {
   operationalHistory!: Table<Record<string, unknown>, string>;
   teams!: Table<Record<string, unknown>, string>;
   teamMemberships!: Table<Record<string, unknown>, string>;
+  evidence!: Table<Record<string, unknown>, string>;
   meta!: Table<{ key: string; value: unknown }, string>;
 
   constructor() {
@@ -66,6 +67,10 @@ export class SCSDatabase extends Dexie {
       teams: 'id',
       teamMemberships: 'id, agent, team',
     });
+    // v4 (Phase 8): Constitutional Evidence as a governed collection.
+    this.version(4).stores({
+      evidence: 'id, authorityStatus',
+    });
   }
 }
 
@@ -93,6 +98,7 @@ export const COLLECTIONS: CollectionName[] = [
   'operationalHistory',
   'teams',
   'teamMemberships',
+  'evidence',
 ];
 
 export const db = new SCSDatabase();

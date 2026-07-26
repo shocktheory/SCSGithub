@@ -35,7 +35,8 @@ export type CollectionName =
   | 'deliverables'
   | 'operationalHistory'
   | 'teams'
-  | 'teamMemberships';
+  | 'teamMemberships'
+  | 'evidence';
 
 export interface WorkspaceBackup {
   schemaVersion: typeof SCHEMA_VERSION;
