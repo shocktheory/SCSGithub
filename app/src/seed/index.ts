@@ -463,6 +463,21 @@ const canonicalStatements: CanonicalStatement[] = [
 // spec-stated but undated here, so its date is left empty rather than invented.
 const updates: Update[] = [
   {
+    id: 'upd-scs-do-deploy-blocker',
+    code: 'ST-LOCK',
+    date: '2026-07-26',
+    summary: 'Deployment Readiness Blocker — DigitalOcean App Platform "No components detected" for shocktheory/SCSGithub@main. #SCS factual diagnosis: the repo is a governance MONOREPO — root holds documentation/governance records and NO root deployment manifest (by design); deployable code lives in subdirectories app/ (React/Vite static; app/package.json) and server/ (PHP 8.2 + Slim 4; server/composer.json). DigitalOcean scans root, finds no manifest, detects no component — the blocker is the subdirectory structure, not the DO config. #SCS provided the required factual return but PRESERVED THE CONSTITUTIONAL BOUNDARY: Phase 10 implementation is NOT authorized; hosting-provider selection is Product-Owner-Pending and BLOCKED pending accepted #SCS-R Assignment #001 research (DigitalOcean is NOT a governed-approved provider); deployment authority/secrets/production DB/environment are unauthorized; the backend refuses SCS_ENV=production by design. Per the directive, #SCS did NOT guess a source directory or deployment command to enable continuation and recommends autodeploy remain DISABLED. No app created; no infrastructure/DB/worker/scheduler/domain/secret/production resource provisioned. Proceeding to a live deploy requires a separate Product Owner Phase 10 Implementation Authorization + a governed provider-selection decision.',
+    source: 'Sonja (Product Owner) · #SCS',
+    scope: 'SCS',
+    affectedSystems: ['os-scs', 'prod-scs'],
+    decisionsCreated: [],
+    documentsUpdated: ['oh-033'],
+    syncStatus: 'Blocker — deployment attempted outside authorization; boundary preserved (Phase 10 implementation & provider selection NOT authorized); autodeploy recommended disabled',
+    authorityStatus: 'reported',
+    demonstration: false,
+    confidence: 'high',
+  },
+  {
     id: 'upd-scs-aelas-sync',
     code: 'ST-SYNC',
     date: '2026-07-26',
