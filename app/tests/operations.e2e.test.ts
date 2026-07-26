@@ -12,11 +12,15 @@ const json = (body: unknown) => ({ method: 'POST', headers: { 'Content-Type': 'a
 describe.skipIf(!BASE)('Phase 9 E2E — operational awareness (derived, read-only; never authority)', () => {
   beforeAll(async () => {
     await api('/api/admin/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ confirmationToken: 'CONFIRM-RESET' }) });
-    // Seed one in-review deliverable and one open gate directly (import path; no auth needed for admin reset+import in dev/test).
-    await api('/api/admin/import', json({ schemaVersion: '0.1.0', exportedAt: 'x', isSeed: true, collections: {
-      deliverables: [{ id: 'd1', deliverableId: 'ST-DLV-E2E', status: 'In review' }],
-      gates: [{ id: 'g1', name: 'E2E Review', status: 'Open — pending Product Owner review' }],
+    // Seed one in-review deliverable and one open gate via the bounded import pipeline. The Importer
+    // expects a { backup: { schemaVersion, collections } } envelope and validates the schema version.
+    const res = await api('/api/admin/import', json({ backup: {
+      schemaVersion: '0.1.0', exportedAt: 'x', isSeed: true, collections: {
+        deliverables: [{ id: 'd1', deliverableId: 'ST-DLV-E2E', status: 'In review' }],
+        gates: [{ id: 'g1', name: 'E2E Review', status: 'Open — pending Product Owner review' }],
+      },
     } }));
+    if (res.status !== 200) throw new Error(`seed import failed: ${res.status} ${await res.text()}`);
   });
 
   it('operational awareness is derived, read-only, and server-sourced', async () => {
