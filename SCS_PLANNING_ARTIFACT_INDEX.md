@@ -4,7 +4,7 @@
 **Deliverable:** ST-DLV-2026-020 (canonical identifier Product-Owner-pending)
 **Directive:** Product Owner Governance Enhancement Directive — *Establish the SCS Planning Artifact Index as the Authoritative Registry of Accepted Planning Documentation*
 **Prepared by:** #SCS (governed implementation steward)
-**Disposition:** **In review** — submitted to the SCS Planning Artifact Index Review gate (rgate-020) for Product Owner review. Upon Product Owner acceptance this becomes the permanent authoritative registry of governed planning documentation.
+**Disposition:** **Accepted** (Product Owner, 2026-07-26; rgate-020 Accepted & closed) — the **permanent authoritative registry** of governed planning documentation within the SCS Constitutional Governance Framework. The four-part structure (Main Registry + Appendices A/B/C) is the approved governing organization unless superseded by a future Product Owner directive. Future Product Owner reviews reference this registry before accepting new planning artifacts, and **no accepted planning artifact shall exist outside the registry**.
 **Date:** 2026-07-26
 
 ---
@@ -53,7 +53,7 @@ Whenever a planning artifact is **created, accepted, revised, superseded, withdr
 | PAI-011 | Provider Independence Assessment (PIA) Standard | 1.0 | ST-DLV-2026-019 | Accepted / Effective | 2026-07-26 | Accepted | Governing Planning Artifact |
 | PAI-012 | Operational Readiness Principles | 1.0 | (Required Addition to Phase 9 Auth Pkg) | Accepted | 2026-07-26 | Accepted | Governing Planning Artifact (standard) |
 | PAI-013 | Migration Ledger | living | (Phase 7 permanent artifact) | Accepted | 2026-07-25 | Accepted (living) | Governing Planning Artifact |
-| PAI-014 | SCS Planning Artifact Index *(this document)* | 1.0 | ST-DLV-2026-020 | **In Review** | — | In Review | Governing Planning Artifact |
+| PAI-014 | SCS Planning Artifact Index *(this document)* | 1.0 | ST-DLV-2026-020 | Accepted | 2026-07-26 | Accepted | Governing Planning Artifact |
 
 ---
 
@@ -185,11 +185,11 @@ Whenever a planning artifact is **created, accepted, revised, superseded, withdr
 ### PAI-014 — SCS Planning Artifact Index *(this document)*
 - **File:** `SCS_PLANNING_ARTIFACT_INDEX.md`
 - **Identification:** Identifier ST-DLV-2026-020 · Version 1.0 · Type Governance Registry (planning management)
-- **Governance:** Originating Assignment adr-021 · Governing Review Gate rgate-020 · Disposition **In Review** · Acceptance Date — · Status **In Review**
+- **Governance:** Originating Assignment adr-021 · Governing Review Gate rgate-020 · Disposition **Accepted** · Acceptance Date 2026-07-26 · Status **Accepted**
 - **Scope:** Governing Planning Artifact
 - **Constitutional Relationship:** no constitutional impact (registry only) — **not** doctrine, **not** implementation, **not** operational record
 - **Dependencies:** Catalogs all entries above; maintained as part of every planning-artifact governance workflow
-- **Future Use:** upon Product Owner acceptance, the permanent authoritative registry of governed planning documentation
+- **Future Use:** the permanent authoritative registry of governed planning documentation. Future Product Owner reviews reference this registry before accepting new planning artifacts; no accepted planning artifact shall exist outside it.
 
 ---
 
@@ -224,4 +224,4 @@ Implementation packages record *implemented* work and are implementation artifac
 
 ---
 
-*Governance record references — Assignment adr-021; Deliverable dlv-020 / ST-DLV-2026-020; Review Gate rgate-020 (open, awaiting Product Owner review); Operational History oh-037. #SCS does not self-accept; this Index awaits Product Owner disposition. Canonical identifiers remain Product-Owner-pending.*
+*Governance record references — Assignment adr-021 (closed, completed & accepted); Deliverable dlv-020 / ST-DLV-2026-020 (Accepted); Review Gate rgate-020 (Accepted & closed, 2026-07-26); Operational History oh-037 (submission), oh-038 (acceptance). Accepted by the Product Owner as the permanent authoritative registry of governed planning documentation. Canonical identifiers remain Product-Owner-pending.*
