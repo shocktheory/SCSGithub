@@ -202,9 +202,9 @@ Administrative authentication and permissions extend the Phase 6 matrix; every a
 
 At Phase 8 *implementation* (if authorized), the CI runtime channel would produce: **audit verification** (append-only, chain integrity, broken-chain detection), **evidence verification** (schema, immutability, supersession), **replay verification** (reconstruct history from audit + derivation refs), **attribution verification** (every event attributed), **governance verification** (Audit vs OpHistory separation; visibility read-only), and **administrative verification** (SoD, admin≠authority, emergency path audited). Acceptance thresholds defined here; execution belongs to a separately-authorized implementation phase.
 
-## 14. Constitutional Evidence Principles (**Proposed** — fourth constitutional companion, established at acceptance)
+## 14. Constitutional Evidence Principles (**Established** — fourth constitutional companion)
 
-*Drafted here as directed (capability J); to be established as the permanent `CONSTITUTIONAL_EVIDENCE_PRINCIPLES.md` upon Product Owner acceptance, alongside the existing trilogy.*
+*Drafted here as directed (capability J), and — following Product Owner acceptance of this package (2026-07-25, Decision 8) — **established** as the permanent [CONSTITUTIONAL_EVIDENCE_PRINCIPLES.md](CONSTITUTIONAL_EVIDENCE_PRINCIPLES.md), alongside the existing trilogy. The Product Owner additionally required a fifth companion, [CONSTITUTIONAL_OBSERVABILITY_PRINCIPLES.md](CONSTITUTIONAL_OBSERVABILITY_PRINCIPLES.md), completing the constitutional operating model. The principles below are the authoritative text.*
 
 1. **Evidence supports constitutional decisions.** It informs an authority act; it is not the act.
 2. **Evidence is immutable once accepted.** Accepted evidence is never edited in place.
