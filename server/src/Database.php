@@ -15,11 +15,17 @@ final class Database
     public function pdo(): PDO
     {
         if ($this->pdo === null) {
-            $this->pdo = new PDO($this->config->dsn, $this->config->dbUser, $this->config->dbPassword, [
+            $options = [
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES   => false,
-            ]);
+            ];
+            // Phase 10: managed-database TLS. When a CA path is provided (e.g. DigitalOcean Managed
+            // MySQL), verify the server certificate. Absent (dev/test) → unchanged behavior.
+            if ($this->config->sslCa !== '' && defined('PDO::MYSQL_ATTR_SSL_CA')) {
+                $options[PDO::MYSQL_ATTR_SSL_CA] = $this->config->sslCa;
+            }
+            $this->pdo = new PDO($this->config->dsn, $this->config->dbUser, $this->config->dbPassword, $options);
         }
         return $this->pdo;
     }

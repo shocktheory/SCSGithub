@@ -253,6 +253,7 @@ Implementation packages record *implemented* work and are implementation artifac
 | Phase 7 — Server-Side Derivation & Canonical State Authority | `SCS_PHASE_7_IMPLEMENTATION.md` | PAI-005 | ST-DLV-2026-012 |
 | Phase 8 — Constitutional Observability | `SCS_PHASE_8_IMPLEMENTATION.md` | PAI-006 | ST-DLV-2026-014 |
 | Phase 9 — Constitutional Operational Awareness | `SCS_PHASE_9_IMPLEMENTATION.md` | PAI-007 | ST-DLV-2026-016 |
+| Phase 10 — Hosting, Security & Production Operations (DigitalOcean) *(in review, rgate-024)* | `SCS_PHASE_10_IMPLEMENTATION.md` | PAI-008 / PAI-010 / PAI-015 | ST-DLV-2026-023 |
 
 ## Appendix C — Out of Scope (noted for completeness)
 

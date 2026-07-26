@@ -1,0 +1,116 @@
+# DigitalOcean App Platform — SCS App Spec (Phase 10 Implementation)
+#
+# Authorized by the Product Owner Phase 10 Implementation Authorization Directive.
+# This spec DEFINES the deployment; it does not deploy. Creating the app, provisioning the managed
+# database, setting secret VALUES, adding domains, and production activation remain separate,
+# Product-Owner-governed events.
+#
+# Boundaries encoded here:
+#   * No `domains:` block — DNS/TLS is NOT authorized under this directive.
+#   * Secret VALUES are never committed — DB_PASSWORD is a managed-DB binding; anything the Product
+#     Owner must supply is declared type: SECRET with the value left to the DO control panel.
+#   * The backend fails closed in production if configuration is incomplete (see src/Config.php).
+#
+# Repository root cause of "No components detected": SCS is a monorepo with no root manifest;
+# components below point at /app (frontend) and /server (backend) explicitly.
+
+name: scs
+region: nyc
+
+# ---- Frontend: React + Vite static site (source in /app) --------------------------------------
+static_sites:
+  - name: scs-web
+    source_dir: /app
+    github:
+      repo: shocktheory/SCSGithub
+      branch: main
+      deploy_on_push: false        # autodeploy stays OFF (governed deploys only)
+    build_command: npm ci && npm run build
+    output_dir: dist
+    catchall_document: index.html  # SPA (HashRouter) — serve index.html for all routes
+    envs:
+      # Build-time API base. FINALIZE to the deployed scs-api ingress/host before the production
+      # build (build-time coupling). Not a secret.
+      - key: VITE_SCS_API_BASE
+        scope: BUILD_TIME
+        value: https://api.scs.shocktheoryos.com
+
+# ---- Backend: PHP 8 + Slim 4 web service (source in /server) -----------------------------------
+services:
+  - name: scs-api
+    source_dir: /server
+    github:
+      repo: shocktheory/SCSGithub
+      branch: main
+      deploy_on_push: false
+    environment_slug: php
+    run_command: heroku-php-apache2 public/
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    http_port: 8080
+    health_check:
+      http_path: /api/health         # returns {status, env, schemaVersion, ready}
+    envs:
+      - key: SCS_ENV
+        scope: RUN_TIME
+        value: production
+      - key: DERIVATION_VERSION
+        scope: RUN_TIME
+        value: "1.0.0"
+      # Managed-database bindings (provided by DO from the scs-db component; not committed secrets).
+      - key: DB_DSN
+        scope: RUN_TIME
+        value: mysql:host=${scs-db.HOSTNAME};port=${scs-db.PORT};dbname=${scs-db.DATABASE};charset=utf8mb4
+      - key: DB_USER
+        scope: RUN_TIME
+        value: ${scs-db.USERNAME}
+      - key: DB_PASSWORD
+        scope: RUN_TIME
+        value: ${scs-db.PASSWORD}
+      # TLS CA for the managed database. DB_SSL_CA must be a FILE PATH; the managed-DB CA
+      # (${scs-db.CA_CERT}) is materialized to that path at deploy time (see SCS_PHASE_10_IMPLEMENTATION.md).
+      - key: DB_SSL_CA
+        scope: RUN_TIME
+        value: ""                    # set to the CA file path once materialized
+
+# ---- Pre-deploy migration job (forward-only; runs `php migrations/migrate.php`) -----------------
+jobs:
+  - name: scs-migrate
+    kind: PRE_DEPLOY
+    source_dir: /server
+    github:
+      repo: shocktheory/SCSGithub
+      branch: main
+      deploy_on_push: false
+    environment_slug: php
+    run_command: php migrations/migrate.php
+    instance_size_slug: basic-xxs
+    envs:
+      - key: SCS_ENV
+        scope: RUN_TIME
+        value: production
+      - key: DB_DSN
+        scope: RUN_TIME
+        value: mysql:host=${scs-db.HOSTNAME};port=${scs-db.PORT};dbname=${scs-db.DATABASE};charset=utf8mb4
+      - key: DB_USER
+        scope: RUN_TIME
+        value: ${scs-db.USERNAME}
+      - key: DB_PASSWORD
+        scope: RUN_TIME
+        value: ${scs-db.PASSWORD}
+      - key: DB_SSL_CA
+        scope: RUN_TIME
+        value: ""
+
+# ---- Managed MySQL 8 (dev DB here; a production cluster is provisioned separately, gated) -------
+databases:
+  - name: scs-db
+    engine: MYSQL
+    version: "8"
+    production: false               # flip to true only under separate production authorization
+
+# NOTE — periodic notification generation (Phase 9, POST /api/notifications/generate) needs a
+# recurring trigger. DO App Platform jobs are deploy-hooks (PRE/POST/FAILED_DEPLOY), not cron, so
+# scs-notify is NOT expressed here; its scheduler (a DO Function scheduled trigger or equivalent)
+# is a deployment-finalization item recorded in SCS_PHASE_10_IMPLEMENTATION.md. Absence here is
+# deliberate, not an omission.

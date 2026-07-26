@@ -34,11 +34,19 @@ use Scs\Operations;
 use Scs\Notifications;
 
 $config = Config::fromEnv();
-if ($config->env === 'production') {
-    http_response_code(403);
-    header('Content-Type: application/json');
-    echo json_encode(['error' => 'Phase 5/6 is not authorized for production. Set SCS_ENV=development|test.']);
-    exit;
+// Phase 10: production is a supported environment. It FAILS CLOSED if required production
+// configuration is missing — the app refuses to serve rather than run with development defaults.
+// (Deployment and production activation remain separate, Product-Owner-governed events; this code
+// only makes a correctly-configured production environment able to boot.)
+if ($config->isProduction()) {
+    $missing = $config->productionReadiness();
+    if ($missing !== []) {
+        http_response_code(503);
+        header('Content-Type: application/json');
+        // Requirement NAMES only — never secret values.
+        echo json_encode(['error' => 'production configuration incomplete', 'missing' => $missing]);
+        exit;
+    }
 }
 
 $db   = new Database($config);
@@ -78,12 +86,22 @@ $sessionCookie = static function (Response $s, string $sid): Response {
 $app = AppFactory::create();
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
-$errorMiddleware = $app->addErrorMiddleware($config->env !== 'production', true, true);
+// Baseline security headers on every response (Phase 10 hardening). Deny framing, forbid MIME
+// sniffing, and suppress referrer leakage. TLS/HSTS is terminated at the platform edge (not here).
+$app->add(static function (Request $r, $handler): Response {
+    $resp = $handler->handle($r);
+    return $resp
+        ->withHeader('X-Content-Type-Options', 'nosniff')
+        ->withHeader('X-Frame-Options', 'DENY')
+        ->withHeader('Referrer-Policy', 'no-referrer');
+});
+// Error details are shown in dev/test only; production surfaces generic errors.
+$errorMiddleware = $app->addErrorMiddleware(!$config->isProduction(), true, true);
 $errorMiddleware->setDefaultErrorHandler(Http::errorHandler());
 
-/** Health. */
+/** Health / readiness. `ready` reflects production-config completeness (always true in dev/test). */
 $app->get('/api/health', fn(Request $r, Response $s) =>
-    Http::json($s, ['status' => 'ok', 'env' => $config->env, 'schemaVersion' => Repository::SCHEMA_VERSION]));
+    Http::json($s, ['status' => 'ok', 'env' => $config->env, 'schemaVersion' => Repository::SCHEMA_VERSION, 'ready' => $config->isProductionReady()]));
 
 // ===== Phase 7: Server-side canonical constitutional derivation ============================
 // The server is the sole derivation authority. It never trusts a client-computed snapshot; it
@@ -280,12 +298,16 @@ $app->post('/api/commands/{command}', function (Request $r, Response $s, array $
 // ===== Admin (static routes BEFORE the generic /api/{collection} variable routes) ===========
 $app->post('/api/admin/import', fn(Request $r, Response $s) => $import->run((array)$r->getParsedBody(), $s));
 $app->get('/api/admin/export', fn(Request $r, Response $s) => Http::json($s, $repo->exportWorkspace()));
-$app->post('/api/admin/reset', function (Request $r, Response $s) use ($repo, $config) {
-    $token = (string)(((array)$r->getParsedBody())['confirmationToken'] ?? '');
-    if ($token !== $config->resetToken) return Http::json($s->withStatus(400), ['error' => 'missing confirmation token']);
-    $repo->resetAll();
-    return Http::json($s, ['ok' => true]);
-});
+// Destructive workspace reset — DEV/TEST ONLY. Not registered in production (defense in depth:
+// the endpoint does not exist there, independent of the RESET_TOKEN value).
+if (!$config->isProduction()) {
+    $app->post('/api/admin/reset', function (Request $r, Response $s) use ($repo, $config) {
+        $token = (string)(((array)$r->getParsedBody())['confirmationToken'] ?? '');
+        if ($token !== $config->resetToken) return Http::json($s->withStatus(400), ['error' => 'missing confirmation token']);
+        $repo->resetAll();
+        return Http::json($s, ['ok' => true]);
+    });
+}
 
 // ===== Generic collection reads / dev delete (variable routes — registered LAST) ============
 $app->get('/api/{collection}', function (Request $r, Response $s, array $a) use ($repo) {

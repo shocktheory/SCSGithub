@@ -18,9 +18,16 @@ use Scs\Config;
 use Scs\Database;
 
 $config = Config::fromEnv();
-if ($config->env === 'production') { fwrite(STDERR, "refused: migrations are not authorized for production in Phase 5\n"); exit(2); }
 
 $cmd = $argv[1] ?? 'apply';
+// Phase 10: forward-only migrations (apply/status) ARE supported in production — the DigitalOcean
+// pre-deploy job runs `php migrations/migrate.php`. The DESTRUCTIVE `reset` (drop + reapply) stays
+// dev/test only and is refused in production. Production also fails closed if config is incomplete.
+if ($config->isProduction()) {
+    if ($cmd === 'reset') { fwrite(STDERR, "refused: destructive `reset` is not permitted in production\n"); exit(2); }
+    $missing = $config->productionReadiness();
+    if ($missing !== []) { fwrite(STDERR, "refused: production configuration incomplete: " . implode(', ', $missing) . "\n"); exit(2); }
+}
 $db = new Database($config);
 $pdo = $db->pdo();
 
