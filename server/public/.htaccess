@@ -1,0 +1,9 @@
+# Front-controller routing for Apache (DigitalOcean runs `heroku-php-apache2 public/`).
+# Any request that is not a real file is routed to public/index.php so the Slim app
+# handles it (e.g. /api/health). This mirrors the CI/dev router-script behavior
+# (`php -S ... public/index.php`) and adds no application logic.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [QSA,L]
+</IfModule>
